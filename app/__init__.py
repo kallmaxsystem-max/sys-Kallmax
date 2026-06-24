@@ -1,6 +1,13 @@
 from flask import Flask
 import os
 
+# Intentar cargar .env si existe (para Namecheap)
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass  # dotenv no instalado, continuar sin él
+
 def create_app():
     app = Flask(__name__, template_folder='templates', static_folder='static')
     
