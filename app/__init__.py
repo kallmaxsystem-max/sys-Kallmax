@@ -1,10 +1,11 @@
 from flask import Flask
+import os
 
 def create_app():
     app = Flask(__name__, template_folder='templates', static_folder='static')
     
-    # Configure session
-    app.secret_key = 'your-secret-key-change-in-production'
+    # Configure session - usar variable de entorno en producción
+    app.secret_key = os.environ.get('SECRET_KEY', 'your-secret-key-change-in-production')
     
     # Register blueprints
     from app.routes import main_bp, tasks_bp, calendar_bp, analytics_bp, team_bp, settings_bp, help_bp, auth_bp
