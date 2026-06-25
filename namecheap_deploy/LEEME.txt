@@ -1,0 +1,15 @@
+INSTRUCCIONES RAPIDAS 
+ 
+1. Sube todos estos archivos a public_html en cPanel 
+2. En cPanel, ve a "Setup Python App" 
+3. Crea una aplicacion Python 3.11 
+4. Application startup file: passenger_wsgi.py 
+5. Entry point: application 
+6. En SSH/Terminal: 
+   cd ~/public_html 
+   source ~/virtualenv/.../bin/activate 
+   pip install -r requirements.txt 
+7. Edita .env con tu SECRET_KEY 
+8. Reinicia la app en cPanel 
+ 
+Para mas detalles, lee GUIA_SUBIR_NAMECHEAP.md 

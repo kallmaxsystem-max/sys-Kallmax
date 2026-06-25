@@ -1,37 +1,54 @@
-# Tasko - Gestión Moderna de Tareas
+# KallMax - Sistema de Gestión Inmobiliaria
 
-Una aplicación de gestión de tareas construida con **Flask + Python** (migrado desde Next.js + React).
+Sistema de gestión para corredores inmobiliarios desarrollado con Flask y MySQL.
 
-## 🚀 Características
+## 📋 Tabla de Contenidos
 
-- **Dashboard Intuitivo**: Visualiza todas tus tareas y métricas en un solo lugar
-- **Gestión de Tareas**: Organiza, filtra y gestiona tus tareas por estado y prioridad
-- **Calendario**: Visualiza eventos y fechas límite de forma clara
-- **Analytics**: Obtén insights sobre tu productividad y la del equipo
-- **Gestión de Equipo**: Colabora con tu equipo, visualiza miembros y su estado
-- **Configuración Personalizada**: Ajusta tus preferencias y configuración de seguridad
-- **Tema Claro/Oscuro**: Interfaz adaptable según tus preferencias
-- **Responsive**: Diseño mobile-first que funciona en todos los dispositivos
+- [Descripción](#descripción)
+- [Tecnologías](#tecnologías)
+- [Configuración Local](#configuración-local)
+- [Despliegue en Producción](#despliegue-en-producción)
+- [Base de Datos](#base-de-datos)
+- [Estructura del Proyecto](#estructura-del-proyecto)
 
-## 📋 Requisitos Previos
+---
 
-- Python 3.8 o superior
-- pip (gestor de paquetes de Python)
+## 📝 Descripción
 
-## 🔧 Instalación
+KallMax es un sistema de gestión para corredores inmobiliarios que incluye:
+- Gestión de usuarios y asesores
+- Sistema de autenticación
+- Gestión de clientes
+- Calendario de actividades
+- Dashboard de analíticas
+- Sistema de tareas
 
-### 1. Clonar o descargar el proyecto
+---
+
+## 🛠 Tecnologías
+
+- **Backend:** Flask 3.0.3
+- **Base de Datos:** MySQL 8.0
+- **Frontend:** HTML, CSS, JavaScript
+- **Servidor Producción:** Passenger (Namecheap)
+- **Dependencias:** Ver `requirements.txt`
+
+---
+
+## 💻 Configuración Local
+
+### 1. Clonar repositorio
 
 ```bash
 git clone <repository-url>
-cd /vercel/share/v0-project
+cd sys-Kallmax
 ```
 
-### 2. Crear un entorno virtual (opcional pero recomendado)
+### 2. Crear entorno virtual
 
 ```bash
-python3 -m venv venv
-source venv/bin/activate  # En Windows: venv\Scripts\activate
+python -m venv venv
+venv\Scripts\activate  # Windows
 ```
 
 ### 3. Instalar dependencias
@@ -40,148 +57,180 @@ source venv/bin/activate  # En Windows: venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-## ▶️ Ejecutar la Aplicación
+### 4. Configurar variables de entorno
 
-```bash
-python3 main.py
+Editar archivo `.env`:
+
+```env
+SECRET_KEY=7c705c25adc799bf3444babc43da4bb48fe11dfee5dd826a242ad7f5b71533cd
+DEBUG=True
+
+# Base de Datos
+DB_HOST=localhost
+DB_PORT=3306
+DB_USER=kallgwkn_user
+DB_PASSWORD=TU_PASSWORD_AQUI
+DB_NAME=kallgwkn_kallmax_bd
 ```
 
-La aplicación estará disponible en: **http://localhost:5000**
+### 5. Ejecutar aplicación
+
+```bash
+python main.py
+```
+
+Abrir en navegador: http://localhost:5000
+
+### 6. Verificar conexión a BD
+
+```bash
+python verificar_conexion.py
+```
+
+---
+
+## 🚀 Despliegue en Producción
+
+### Producción: Namecheap
+
+**URL:** https://kallmaxcorredores.com
+
+#### Subir archivos con WinSCP:
+
+1. **Conectar:**
+   - Host: `162.213.251.186`
+   - Usuario: `kallgwkn`
+   - Password: `#215292159xD`
+
+2. **Subir archivos desde `namecheap_deploy/`:**
+   - Todos los archivos → `/home/kallgwkn/kallmax_app/`
+
+3. **Editar `.env` en servidor:**
+   ```env
+   SECRET_KEY=7c705c25adc799bf3444babc43da4bb48fe11dfee5dd826a242ad7f5b71533cd
+   DEBUG=False
+   
+   DB_HOST=localhost
+   DB_PORT=3306
+   DB_USER=kallgwkn_user
+   DB_PASSWORD=PASSWORD_MYSQL_REAL
+   DB_NAME=kallgwkn_kallmax_bd
+   ```
+
+4. **Reiniciar aplicación:**
+   - cPanel → Setup Python App → Restart
+   - O crear archivo: `touch ~/kallmax_app/tmp/restart.txt`
+
+#### Logs de Producción:
+
+```bash
+tail -f ~/kallmax_app/logs/kallmax.log
+```
+
+---
+
+## 🗄 Base de Datos
+
+### Credenciales Producción (Namecheap):
+
+```
+Host: localhost
+Port: 3306
+User: kallgwkn_user
+Database: kallgwkn_kallmax_bd
+Password: [Obtener desde cPanel → MySQL Databases]
+```
+
+### Backup de Base de Datos:
+
+- **Archivo:** `kallmax_backup_fixed.sql`
+- **Estado:** Ya importado en Namecheap
+
+### Importar backup (si es necesario):
+
+1. Ir a phpMyAdmin en cPanel
+2. Seleccionar base de datos `kallgwkn_kallmax_bd`
+3. Importar → Seleccionar archivo `kallmax_backup_fixed.sql`
+4. Click en "Importar"
+
+---
 
 ## 📁 Estructura del Proyecto
 
 ```
-/vercel/share/v0-project/
+sys-Kallmax/
 ├── app/
-│   ├── __init__.py           # Inicialización de Flask
-│   ├── routes/               # Rutas de la aplicación
-│   │   ├── main.py          # Rutas principales (Dashboard, Logout)
-│   │   ├── tasks.py         # Ruta de Tareas
-│   │   ├── calendar.py      # Ruta de Calendario
-│   │   ├── analytics.py     # Ruta de Analytics
-│   │   ├── team.py          # Ruta de Equipo
-│   │   ├── settings.py      # Ruta de Configuración
-│   │   ├── help.py          # Ruta de Ayuda
-│   │   └── __init__.py      # Inicialización de blueprints
-│   ├── templates/           # Plantillas Jinja2 HTML
-│   │   ├── base.html        # Plantilla base (layout)
-│   │   ├── dashboard.html   # Página de Dashboard
-│   │   ├── tasks.html       # Página de Tareas
-│   │   ├── calendar.html    # Página de Calendario
-│   │   ├── analytics.html   # Página de Analytics
-│   │   ├── team.html        # Página de Equipo
-│   │   ├── settings.html    # Página de Configuración
-│   │   ├── help.html        # Página de Ayuda
-│   │   └── components/      # Componentes reutilizables
-│   │       └── sidebar.html # Sidebar de navegación
-│   └── static/              # Archivos estáticos
-│       ├── css/             # Estilos CSS
-│       ├── js/              # JavaScript del cliente
-│       └── images/          # Imágenes y avatares
-├── main.py                  # Punto de entrada de la aplicación
-├── requirements.txt         # Dependencias de Python
-└── README.md               # Este archivo
+│   ├── funciones/          # Funciones de negocio
+│   ├── routes/             # Rutas de Flask
+│   ├── static/             # CSS, JS, imágenes
+│   ├── templates/          # Plantillas HTML
+│   ├── config.py           # Configuración de BD
+│   └── __init__.py
+├── namecheap_deploy/       # Archivos para producción
+├── .env                    # Variables de entorno (local)
+├── .env.example            # Ejemplo de variables
+├── .gitignore
+├── main.py                 # Punto de entrada
+├── requirements.txt        # Dependencias
+├── Procfile                # Para Railway/Heroku
+├── iniciar.bat             # Script de inicio Windows
+├── verificar_conexion.py   # Verificar BD
+└── README_MIGRACION.md     # Guía de migración de BD
 ```
-
-## 🎨 Tecnologías Utilizadas
-
-- **Backend**: Flask 3.0.0
-- **Frontend**: HTML5 + Jinja2 Templates
-- **Styling**: Tailwind CSS v4 (vía CDN)
-- **Icons**: Font Awesome 6.4.0
-- **JavaScript**: Vanilla JS para interactividad
-
-## 📖 Páginas Principales
-
-### Dashboard
-- Resumen de tareas completadas y activas
-- Lista de proyectos recientes con progreso
-- Recordatorios y notificaciones
-- Información del equipo
-- Estadísticas de productividad
-
-### Tareas
-- Vista de todas las tareas
-- Filtros por estado (Todas, En Progreso, Completadas, Urgentes)
-- Indicadores visuales de prioridad y estado
-- Información de proyecto y fecha de vencimiento
-
-### Calendario
-- Vista del mes actual
-- Eventos próximos
-- Fechas límite importantes
-
-### Analytics
-- Métricas de productividad
-- Tasas de finalización por semana
-- Distribución de carga por proyecto
-- Rendimiento del equipo
-
-### Equipo
-- Lista de miembros con avatares
-- Estado de conexión (Online/Offline)
-- Cargo y información de cada miembro
-
-### Configuración
-- Información de cuenta
-- Preferencias de notificaciones
-- Configuración de seguridad
-
-## 🌓 Tema Claro/Oscuro
-
-El tema se puede cambiar haciendo clic en el ícono de luna/sol en la esquina superior derecha. La preferencia se guarda automáticamente en localStorage.
-
-## 🔗 Rutas Disponibles
-
-| Ruta | Descripción |
-|------|-------------|
-| `/` | Dashboard principal |
-| `/tasks` | Gestor de tareas |
-| `/calendar` | Vista de calendario |
-| `/analytics` | Panel de analytics |
-| `/team` | Gestión del equipo |
-| `/settings` | Configuración de usuario |
-| `/help` | Centro de ayuda |
-| `/logout` | Cerrar sesión (redirige al dashboard) |
-
-## 💾 Datos de Prueba
-
-La aplicación incluye datos de prueba ficticios para demostración:
-- 42 tareas totales
-- 5 proyectos activos
-- 8 miembros del equipo
-- Métricas de productividad simuladas
-
-*Nota: En una aplicación real, estos datos vendrían de una base de datos.*
-
-## 🚀 Próximos Pasos
-
-Para expandir esta aplicación, considera:
-
-1. **Base de Datos**: Integrar SQLAlchemy + PostgreSQL/SQLite
-2. **Autenticación**: Implementar login/registro con Flask-Login
-3. **API REST**: Crear endpoints API para operaciones CRUD
-4. **Validación**: Añadir validación de formularios con WTForms
-5. **Testing**: Implementar tests unitarios y de integración
-
-## 📝 Notas de la Migración
-
-Esta aplicación fue migrada exitosamente desde:
-- **Frontend**: React 19.2 + Next.js 16 → Jinja2 Templates
-- **Styling**: Tailwind CSS (build process) → Tailwind CSS (CDN)
-- **Componentes**: React Components → HTML Templates
-- **Estado**: React Hooks → Server-side rendering
-
-El diseño visual y la funcionalidad se han mantenido prácticamente idénticos durante la migración.
-
-## 📄 Licencia
-
-Este proyecto es de código abierto. Siéntete libre de usarlo y modificarlo.
-
-## 🤝 Contribuir
-
-Las contribuciones son bienvenidas. Por favor, abre un issue o envía un pull request con tus cambios.
 
 ---
 
-¿Preguntas o problemas? Consulta la página de Ayuda en la aplicación o abre un issue en el repositorio.
+## 🔧 Scripts Útiles
+
+### Windows:
+
+```bash
+# Iniciar aplicación
+iniciar.bat
+
+# Verificar conexión a BD
+python verificar_conexion.py
+
+# Generar nueva SECRET_KEY
+python generar_secret_key.py
+```
+
+---
+
+## 📚 Documentación Adicional
+
+- **`README_MIGRACION.md`** - Guía de migración de base de datos
+- **`INSTRUCCIONES_ACTUALIZAR_BD.md`** - Instrucciones detalladas de actualización
+- **`RESUMEN_MIGRACION_BD.txt`** - Resumen visual de la migración
+
+---
+
+## 🔐 Seguridad
+
+- Las credenciales están en `.env` (no se sube a Git)
+- Passwords hasheados con SHA-256
+- SECRET_KEY único por instalación
+- Validación de sesiones
+
+---
+
+## 📞 Soporte
+
+Si encuentras problemas:
+
+1. Revisar logs: `~/kallmax_app/logs/kallmax.log`
+2. Verificar credenciales en `.env`
+3. Ejecutar `python verificar_conexion.py`
+4. Revisar documentación en `README_MIGRACION.md`
+
+---
+
+## 📝 Notas
+
+- **Base de Datos:** Migrada de servidor externo a Namecheap (localhost)
+- **Producción:** https://kallmaxcorredores.com
+- **Backup BD:** `kallmax_backup_fixed.sql` (sin DEFINER)
+
+---
+
+**Desarrollado para KallMax Corredores Inmobiliarios**
