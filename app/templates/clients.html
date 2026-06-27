@@ -459,6 +459,124 @@ Administra y da seguimiento a tus contactos y clientes
     </div>
 </div>
 
+<!-- Modal Editar Cliente -->
+<div id="modalEditarCliente" class="hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-slate-900 rounded-xl shadow-2xl w-full max-w-5xl max-h-[90vh] overflow-hidden border border-gray-200 dark:border-slate-800">
+        <!-- Header Modal -->
+        <div class="px-6 py-4 border-b border-gray-200 dark:border-slate-800 flex items-center justify-between sticky top-0 bg-white dark:bg-slate-900 z-10">
+            <h3 class="text-xl font-bold text-gray-900 dark:text-white">
+                <i class="fas fa-user-edit mr-2 text-gray-600 dark:text-gray-400"></i>
+                Editar Cliente
+            </h3>
+            <button id="btnCerrarModalEditar" class="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-lg transition-colors">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+        </div>
+
+        <!-- Body Modal - Scrollable -->
+        <div class="p-6 overflow-y-auto max-h-[calc(90vh-140px)]">
+            <form id="formEditarCliente" class="space-y-6">
+                <input type="hidden" id="editar-num-documento" name="num_documento">
+                
+                <!-- Sección: Datos Personales -->
+                <div>
+                    <h4 class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-4 flex items-center">
+                        <i class="fas fa-id-card mr-2 text-gray-500"></i>
+                        Datos Personales
+                    </h4>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Nombres <span class="text-red-500">*</span>
+                            </label>
+                            <input type="text" name="nombres" required maxlength="100" class="w-full px-4 py-2.5 bg-gray-50 dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 focus:border-gray-400 dark:focus:border-slate-600 focus:outline-none transition-colors text-sm" placeholder="Nombres">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Apellido Paterno <span class="text-red-500">*</span>
+                            </label>
+                            <input type="text" name="apellido_paterno" required maxlength="100" class="w-full px-4 py-2.5 bg-gray-50 dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 focus:border-gray-400 dark:focus:border-slate-600 focus:outline-none transition-colors text-sm" placeholder="Apellido Paterno">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Apellido Materno
+                            </label>
+                            <input type="text" name="apellido_materno" maxlength="100" class="w-full px-4 py-2.5 bg-gray-50 dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 focus:border-gray-400 dark:focus:border-slate-600 focus:outline-none transition-colors text-sm" placeholder="Apellido Materno">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sección: Contacto -->
+                <div class="border-t border-gray-200 dark:border-slate-800 pt-6">
+                    <h4 class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-4 flex items-center">
+                        <i class="fas fa-address-book mr-2 text-gray-500"></i>
+                        Información de Contacto
+                    </h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Email <span class="text-red-500">*</span>
+                            </label>
+                            <input type="email" name="email" required maxlength="150" class="w-full px-4 py-2.5 bg-gray-50 dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 focus:border-gray-400 dark:focus:border-slate-600 focus:outline-none transition-colors text-sm" placeholder="correo@ejemplo.com">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Celular <span class="text-red-500">*</span>
+                            </label>
+                            <input type="tel" name="celular" required maxlength="20" class="w-full px-4 py-2.5 bg-gray-50 dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 focus:border-gray-400 dark:focus:border-slate-600 focus:outline-none transition-colors text-sm" placeholder="+51 999 999 999">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sección: Gestión Comercial -->
+                <div class="border-t border-gray-200 dark:border-slate-800 pt-6">
+                    <h4 class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-4 flex items-center">
+                        <i class="fas fa-briefcase mr-2 text-gray-500"></i>
+                        Gestión Comercial
+                    </h4>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Estado Prospección
+                            </label>
+                            <select name="id_estado_prospeccion" class="w-full px-4 py-2.5 bg-gray-50 dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 focus:border-gray-400 dark:focus:border-slate-600 focus:outline-none transition-colors text-sm">
+                                <option value="">Seleccionar...</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Prioridad <span class="text-red-500">*</span>
+                            </label>
+                            <select name="prioridad" required class="w-full px-4 py-2.5 bg-gray-50 dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 focus:border-gray-400 dark:focus:border-slate-600 focus:outline-none transition-colors text-sm">
+                                <option value="Baja">Baja</option>
+                                <option value="Media">Media</option>
+                                <option value="Alta">Alta</option>
+                                <option value="Urgente">Urgente</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                            Observaciones
+                        </label>
+                        <textarea name="observaciones" rows="3" class="w-full px-4 py-2.5 bg-gray-50 dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 focus:border-gray-400 dark:focus:border-slate-600 focus:outline-none transition-colors text-sm resize-none" placeholder="Notas adicionales sobre el cliente..."></textarea>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- Footer Modal -->
+        <div class="px-6 py-4 border-t border-gray-200 dark:border-slate-800 flex justify-end gap-3 sticky bottom-0 bg-white dark:bg-slate-900">
+            <button id="btnCancelarModalEditar" class="px-5 py-2.5 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-slate-800 rounded-lg hover:bg-gray-200 dark:hover:bg-slate-700 transition-colors text-sm font-medium">
+                Cancelar
+            </button>
+            <button type="submit" form="formEditarCliente" class="px-5 py-2.5 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-lg hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors text-sm font-medium">
+                <i class="fas fa-save mr-2"></i>Guardar Cambios
+            </button>
+        </div>
+    </div>
+</div>
+
 <script>
 // Modal Nuevo Cliente
 const modalNuevoCliente = document.getElementById('modalNuevoCliente');
@@ -489,6 +607,80 @@ modalNuevoCliente.addEventListener('click', (e) => {
         modalNuevoCliente.classList.add('hidden');
         document.body.style.overflow = 'auto';
         formNuevoCliente.reset();
+    }
+});
+
+// =====================================================
+// EVENT LISTENERS PARA MODAL EDITAR CLIENTE
+// =====================================================
+const modalEditarCliente = document.getElementById('modalEditarCliente');
+const btnCerrarModalEditar = document.getElementById('btnCerrarModalEditar');
+const btnCancelarModalEditar = document.getElementById('btnCancelarModalEditar');
+const formEditarCliente = document.getElementById('formEditarCliente');
+
+// Cerrar modal
+[btnCerrarModalEditar, btnCancelarModalEditar].forEach(btn => {
+    btn.addEventListener('click', () => {
+        modalEditarCliente.classList.add('hidden');
+        document.body.style.overflow = 'auto';
+        formEditarCliente.reset();
+    });
+});
+
+// Cerrar modal al hacer click fuera
+modalEditarCliente.addEventListener('click', (e) => {
+    if (e.target === modalEditarCliente) {
+        modalEditarCliente.classList.add('hidden');
+        document.body.style.overflow = 'auto';
+        formEditarCliente.reset();
+    }
+});
+
+// Manejar envío del formulario de edición
+formEditarCliente.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const numDocumento = document.getElementById('editar-num-documento').value;
+    const formData = new FormData(formEditarCliente);
+    const data = Object.fromEntries(formData.entries());
+    
+    // Convertir valores vacíos a null
+    Object.keys(data).forEach(key => {
+        if (data[key] === '') {
+            data[key] = null;
+        }
+    });
+    
+    try {
+        const response = await fetch(`/api/clientes/${numDocumento}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+        
+        const result = await response.json();
+        
+        if (response.ok) {
+            // Cerrar modal
+            modalEditarCliente.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+            formEditarCliente.reset();
+            
+            // Mostrar mensaje de éxito
+            mostrarNotificacion('Cliente actualizado exitosamente', 'success');
+            
+            // Recargar la tabla de clientes
+            setTimeout(() => {
+                cargarClientes();
+            }, 1500);
+        } else {
+            mostrarNotificacion(result.error || 'Error al actualizar cliente', 'error');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        mostrarNotificacion('Error de conexión al servidor', 'error');
     }
 });
 
@@ -831,9 +1023,87 @@ async function cargarClientes() {
 
 // Funciones auxiliares
 function editarCliente(numDocumento) {
-    // TODO: Implementar modal de edición
     console.log('Editar cliente:', numDocumento);
-    mostrarNotificacion('Función de edición en desarrollo', 'error');
+    cargarClienteParaEditar(numDocumento);
+}
+
+// =====================================================
+// FUNCIONES PARA EDITAR CLIENTE
+// =====================================================
+
+async function cargarClienteParaEditar(numDocumento) {
+    try {
+        const response = await fetch(`/api/clientes/${numDocumento}`);
+        
+        if (!response.ok) {
+            throw new Error('Error al cargar cliente');
+        }
+        
+        const result = await response.json();
+        
+        if (result.success && result.data) {
+            const cliente = result.data;
+            const modal = document.getElementById('modalEditarCliente');
+            const form = document.getElementById('formEditarCliente');
+            
+            // Llenar el número de documento (hidden)
+            document.getElementById('editar-num-documento').value = cliente.num_documento;
+            
+            // Llenar campos de Datos Personales
+            form.querySelector('[name="nombres"]').value = cliente.nombres || '';
+            form.querySelector('[name="apellido_paterno"]').value = cliente.apellido_paterno || '';
+            form.querySelector('[name="apellido_materno"]').value = cliente.apellido_materno || '';
+            
+            // Llenar campos de Contacto
+            form.querySelector('[name="email"]').value = cliente.email || '';
+            form.querySelector('[name="celular"]').value = cliente.celular || '';
+            
+            // Llenar campos de Gestión Comercial
+            form.querySelector('[name="id_estado_prospeccion"]').value = cliente.id_estado_prospeccion || '';
+            form.querySelector('[name="prioridad"]').value = cliente.prioridad || 'Media';
+            form.querySelector('[name="observaciones"]').value = cliente.observaciones || '';
+            
+            // Cargar opciones de Estado Prospección
+            cargarEstadosProspeccionEditar();
+            
+            // Mostrar modal
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        } else {
+            mostrarNotificacion('Cliente no encontrado', 'error');
+        }
+    } catch (error) {
+        console.error('Error al cargar cliente:', error);
+        mostrarNotificacion('Error al cargar los datos del cliente', 'error');
+    }
+}
+
+async function cargarEstadosProspeccionEditar() {
+    try {
+        const response = await fetch('/api/estados-prospeccion');
+        if (!response.ok) throw new Error('Error al cargar estados');
+        
+        const estados = await response.json();
+        const select = document.querySelector('#formEditarCliente [name="id_estado_prospeccion"]');
+        
+        const selectedValue = select.value;
+        select.innerHTML = '<option value="">Seleccionar...</option>';
+        
+        if (Array.isArray(estados)) {
+            estados.forEach(estado => {
+                const option = document.createElement('option');
+                option.value = estado.id_estado_prospeccion;
+                option.textContent = estado.nombre;
+                select.appendChild(option);
+            });
+        }
+        
+        if (selectedValue) {
+            select.value = selectedValue;
+        }
+    } catch (error) {
+        console.error('Error al cargar estados:', error);
+    }
 }
 
 function verSeguimiento(numDocumento) {
