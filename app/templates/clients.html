@@ -385,13 +385,8 @@ Administra y da seguimiento a tus contactos y clientes
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                         Tipo de Seguimiento <span class="text-red-500">*</span>
                     </label>
-                    <select name="id_tipo_seguimiento" required class="w-full px-4 py-2.5 bg-gray-50 dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 focus:border-gray-400 dark:focus:border-slate-600 focus:outline-none transition-colors text-sm">
-                        <option value="">Seleccionar...</option>
-                        <option value="1">Llamada</option>
-                        <option value="2">Email</option>
-                        <option value="3">Reunión</option>
-                        <option value="4">Propuesta</option>
-                        <option value="5">Cotización</option>
+                    <select id="selectTipoSeguimiento" name="id_tipo_seguimiento" required class="w-full px-4 py-2.5 bg-gray-50 dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 focus:border-gray-400 dark:focus:border-slate-600 focus:outline-none transition-colors text-sm">
+                        <option value="">Cargando tipos...</option>
                     </select>
                 </div>
 
@@ -859,6 +854,9 @@ function abrirHistorialSeguimientos(numDocumento) {
     // Limpiar el formulario
     document.getElementById('formRegistrarSeguimiento').reset();
     
+    // Cargar tipos de seguimiento
+    cargarTiposSeguimiento();
+    
     // Cargar y mostrar los últimos 3 seguimientos
     mostrarUltimos3Seguimientos(numDocumento);
 }
@@ -866,6 +864,42 @@ function abrirHistorialSeguimientos(numDocumento) {
 function verHistorialSeguimiento(numDocumento) {
     console.log('Ver historial de seguimiento para:', numDocumento);
     cargarHistorialSeguimientos(numDocumento);
+}
+
+// =====================================================
+// FUNCIÓN PARA CARGAR TIPOS DE SEGUIMIENTO
+// =====================================================
+
+async function cargarTiposSeguimiento() {
+    try {
+        const selectTipo = document.getElementById('selectTipoSeguimiento');
+        selectTipo.innerHTML = '<option value="">Cargando tipos...</option>';
+        
+        const response = await fetch('/api/tipos-seguimiento');
+        
+        if (!response.ok) {
+            throw new Error('Error al cargar tipos de seguimiento');
+        }
+        
+        const result = await response.json();
+        
+        if (result.success && result.data && result.data.length > 0) {
+            selectTipo.innerHTML = '<option value="">Seleccionar tipo...</option>';
+            
+            result.data.forEach(tipo => {
+                const option = document.createElement('option');
+                option.value = tipo.id_tipo_seguimiento;
+                option.textContent = tipo.nombre;
+                selectTipo.appendChild(option);
+            });
+        } else {
+            selectTipo.innerHTML = '<option value="">No hay tipos disponibles</option>';
+        }
+    } catch (error) {
+        console.error('Error al cargar tipos de seguimiento:', error);
+        const selectTipo = document.getElementById('selectTipoSeguimiento');
+        selectTipo.innerHTML = '<option value="">Error al cargar tipos</option>';
+    }
 }
 
 async function mostrarUltimos3Seguimientos(numDocumento) {
