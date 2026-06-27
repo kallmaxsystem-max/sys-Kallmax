@@ -106,154 +106,21 @@ Administra y da seguimiento a tus contactos y clientes
             <table class="w-full">
                 <thead class="bg-gray-50 dark:bg-slate-800/50 border-b border-gray-200 dark:border-slate-800">
                     <tr>
+                        <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">Documento</th>
                         <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">Cliente</th>
                         <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">Contacto</th>
-                        <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">Estado</th>
-                        <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">Próximo Seguimiento</th>
+                        <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">Estado Prospeccion</th>
+                        <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">Tipo Seguimiento</th>
+                        <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">Ultima Fecha</th>
                         <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">Acciones</th>
                     </tr>
                 </thead>
                 <tbody id="tablaClientesBody" class="divide-y divide-gray-200 dark:divide-slate-800">
                     <!-- Los datos se cargarán dinámicamente desde la base de datos -->
                     <tr>
-                        <td colspan="5" class="px-6 py-8 text-center text-gray-500 dark:text-gray-400">
+                        <td colspan="7" class="px-6 py-8 text-center text-gray-500 dark:text-gray-400">
                             <i class="fas fa-spinner fa-spin text-2xl mb-2"></i>
                             <p>Cargando clientes...</p>
-                        </td>
-                    </tr>
-                </tbody>
-                    <tr class="hover:bg-gray-50 dark:hover:bg-slate-800/50 transition-colors">
-                        <td class="px-6 py-4">
-                            <div>
-                                <p class="font-medium text-gray-900 dark:text-white text-sm">Carlos Mendoza</p>
-                                <p class="text-xs text-gray-500 dark:text-gray-400">Busca departamento</p>
-                            </div>
-                        </td>
-                        <td class="px-6 py-4">
-                            <p class="text-sm text-gray-900 dark:text-white">carlos@email.com</p>
-                            <p class="text-xs text-gray-500 dark:text-gray-400">+34 911 234 567</p>
-                        </td>
-                        <td class="px-6 py-4">
-                            <span class="inline-flex items-center px-2.5 py-1 bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 rounded-md text-xs font-medium">
-                                <span class="w-1.5 h-1.5 bg-green-500 rounded-full mr-1.5"></span>
-                                Activo
-                            </span>
-                        </td>
-                        <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">Mañana a las 14:00</td>
-                        <td class="px-6 py-4">
-                            <div class="flex gap-1">
-                                <button class="p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-slate-700 rounded-lg transition-colors" title="Llamar">
-                                    <i class="fas fa-phone text-sm"></i>
-                                </button>
-                                <button class="p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-slate-700 rounded-lg transition-colors" title="Editar">
-                                    <i class="fas fa-edit text-sm"></i>
-                                </button>
-                                <button class="p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-slate-700 rounded-lg transition-colors" title="Más opciones">
-                                    <i class="fas fa-ellipsis-v text-sm"></i>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-
-                    <!-- Row 2 -->
-                    <tr class="hover:bg-gray-50 dark:hover:bg-slate-800/50 transition-colors">
-                        <td class="px-6 py-4">
-                            <div>
-                                <p class="font-medium text-gray-900 dark:text-white text-sm">María García</p>
-                                <p class="text-xs text-gray-500 dark:text-gray-400">Quiere alquilar</p>
-                            </div>
-                        </td>
-                        <td class="px-6 py-4">
-                            <p class="text-sm text-gray-900 dark:text-white">maria@email.com</p>
-                            <p class="text-xs text-gray-500 dark:text-gray-400">+34 922 456 789</p>
-                        </td>
-                        <td class="px-6 py-4">
-                            <span class="inline-flex items-center px-2.5 py-1 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 rounded-md text-xs font-medium">
-                                <span class="w-1.5 h-1.5 bg-blue-500 rounded-full mr-1.5"></span>
-                                En revisión
-                            </span>
-                        </td>
-                        <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">Esta semana</td>
-                        <td class="px-6 py-4">
-                            <div class="flex gap-1">
-                                <button class="p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-slate-700 rounded-lg transition-colors" title="Llamar">
-                                    <i class="fas fa-phone text-sm"></i>
-                                </button>
-                                <button class="p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-slate-700 rounded-lg transition-colors" title="Editar">
-                                    <i class="fas fa-edit text-sm"></i>
-                                </button>
-                                <button class="p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-slate-700 rounded-lg transition-colors" title="Más opciones">
-                                    <i class="fas fa-ellipsis-v text-sm"></i>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-
-                    <!-- Row 3 -->
-                    <tr class="hover:bg-gray-50 dark:hover:bg-slate-800/50 transition-colors">
-                        <td class="px-6 py-4">
-                            <div>
-                                <p class="font-medium text-gray-900 dark:text-white text-sm">Juan Rodriguez</p>
-                                <p class="text-xs text-gray-500 dark:text-gray-400">Interesado en vender</p>
-                            </div>
-                        </td>
-                        <td class="px-6 py-4">
-                            <p class="text-sm text-gray-900 dark:text-white">juan@email.com</p>
-                            <p class="text-xs text-gray-500 dark:text-gray-400">+34 933 567 890</p>
-                        </td>
-                        <td class="px-6 py-4">
-                            <span class="inline-flex items-center px-2.5 py-1 bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-400 rounded-md text-xs font-medium">
-                                <span class="w-1.5 h-1.5 bg-amber-500 rounded-full mr-1.5"></span>
-                                Pendiente
-                            </span>
-                        </td>
-                        <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">Urgente</td>
-                        <td class="px-6 py-4">
-                            <div class="flex gap-1">
-                                <button class="p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-slate-700 rounded-lg transition-colors" title="Llamar">
-                                    <i class="fas fa-phone text-sm"></i>
-                                </button>
-                                <button class="p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-slate-700 rounded-lg transition-colors" title="Editar">
-                                    <i class="fas fa-edit text-sm"></i>
-                                </button>
-                                <button class="p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-slate-700 rounded-lg transition-colors" title="Más opciones">
-                                    <i class="fas fa-ellipsis-v text-sm"></i>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-
-                    <!-- Row 4 -->
-                    <tr class="hover:bg-gray-50 dark:hover:bg-slate-800/50 transition-colors">
-                        <td class="px-6 py-4">
-                            <div>
-                                <p class="font-medium text-gray-900 dark:text-white text-sm">Ana López</p>
-                                <p class="text-xs text-gray-500 dark:text-gray-400">Cliente corporativo</p>
-                            </div>
-                        </td>
-                        <td class="px-6 py-4">
-                            <p class="text-sm text-gray-900 dark:text-white">ana@empresa.com</p>
-                            <p class="text-xs text-gray-500 dark:text-gray-400">+34 944 678 901</p>
-                        </td>
-                        <td class="px-6 py-4">
-                            <span class="inline-flex items-center px-2.5 py-1 bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 rounded-md text-xs font-medium">
-                                <span class="w-1.5 h-1.5 bg-green-500 rounded-full mr-1.5"></span>
-                                Activo
-                            </span>
-                        </td>
-                        <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">Próximo mes</td>
-                        <td class="px-6 py-4">
-                            <div class="flex gap-1">
-                                <button class="p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-slate-700 rounded-lg transition-colors" title="Llamar">
-                                    <i class="fas fa-phone text-sm"></i>
-                                </button>
-                                <button class="p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-slate-700 rounded-lg transition-colors" title="Editar">
-                                    <i class="fas fa-edit text-sm"></i>
-                                </button>
-                                <button class="p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-slate-700 rounded-lg transition-colors" title="Más opciones">
-                                    <i class="fas fa-ellipsis-v text-sm"></i>
-                                </button>
-                            </div>
                         </td>
                     </tr>
                 </tbody>
@@ -392,9 +259,27 @@ Administra y da seguimiento a tus contactos y clientes
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Departamento <span class="text-red-500">*</span>
+                            </label>
+                            <select name="id_departamento" id="modal-select-departamento" required class="w-full px-4 py-2.5 bg-gray-50 dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 focus:border-gray-400 dark:focus:border-slate-600 focus:outline-none transition-colors text-sm">
+                                <option value="">Seleccionar...</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Provincia <span class="text-red-500">*</span>
+                            </label>
+                            <select name="id_provincia" id="modal-select-provincia" required class="w-full px-4 py-2.5 bg-gray-50 dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 focus:border-gray-400 dark:focus:border-slate-600 focus:outline-none transition-colors text-sm" disabled>
+                                <option value="">Seleccionar...</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                 Distrito <span class="text-red-500">*</span>
                             </label>
-                            <input type="number" name="id_distrito" required class="w-full px-4 py-2.5 bg-gray-50 dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 focus:border-gray-400 dark:focus:border-slate-600 focus:outline-none transition-colors text-sm" placeholder="ID Distrito">
+                            <select name="id_distrito" id="modal-select-distrito" required class="w-full px-4 py-2.5 bg-gray-50 dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 focus:border-gray-400 dark:focus:border-slate-600 focus:outline-none transition-colors text-sm" disabled>
+                                <option value="">Seleccionar...</option>
+                            </select>
                         </div>
                     </div>
                 </div>
@@ -444,17 +329,6 @@ Administra y da seguimiento a tus contactos y clientes
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                Estado <span class="text-red-500">*</span>
-                            </label>
-                            <select name="estado" required class="w-full px-4 py-2.5 bg-gray-50 dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 focus:border-gray-400 dark:focus:border-slate-600 focus:outline-none transition-colors text-sm">
-                                <option value="Activo">Activo</option>
-                                <option value="En revisión">En revisión</option>
-                                <option value="Pendiente">Pendiente</option>
-                                <option value="Inactivo">Inactivo</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                 Prioridad <span class="text-red-500">*</span>
                             </label>
                             <select name="prioridad" required class="w-full px-4 py-2.5 bg-gray-50 dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 focus:border-gray-400 dark:focus:border-slate-600 focus:outline-none transition-colors text-sm">
@@ -463,12 +337,6 @@ Administra y da seguimiento a tus contactos y clientes
                                 <option value="Alta">Alta</option>
                                 <option value="Urgente">Urgente</option>
                             </select>
-                        </div>
-                        <div class="md:col-span-3">
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                Fecha Próximo Seguimiento
-                            </label>
-                            <input type="datetime-local" name="fecha_proximo_seguimiento" class="w-full px-4 py-2.5 bg-gray-50 dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 focus:border-gray-400 dark:focus:border-slate-600 focus:outline-none transition-colors text-sm">
                         </div>
                         <div class="md:col-span-3">
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -489,6 +357,108 @@ Administra y da seguimiento a tus contactos y clientes
             </button>
             <button type="submit" form="formNuevoCliente" class="px-5 py-2.5 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-lg hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors text-sm font-medium">
                 <i class="fas fa-save mr-2"></i>Guardar Cliente
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Registrar Seguimiento -->
+<div id="modalRegistrarSeguimiento" class="hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-slate-900 rounded-xl shadow-2xl w-full max-w-2xl border border-gray-200 dark:border-slate-800">
+        <!-- Header Modal -->
+        <div class="px-6 py-4 border-b border-gray-200 dark:border-slate-800 flex items-center justify-between sticky top-0 bg-white dark:bg-slate-900 z-10">
+            <h3 class="text-xl font-bold text-gray-900 dark:text-white">
+                <i class="fas fa-edit mr-2 text-gray-600 dark:text-gray-400"></i>
+                Registrar Seguimiento
+            </h3>
+            <button id="btnCerrarModalSeguimiento" class="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-lg transition-colors">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+        </div>
+
+        <!-- Body Modal -->
+        <div class="p-6 overflow-y-auto max-h-[calc(90vh-140px)]">
+            <form id="formRegistrarSeguimiento" class="space-y-4">
+                <input type="hidden" id="seguimiento-num-documento" name="num_documento">
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Tipo de Seguimiento <span class="text-red-500">*</span>
+                    </label>
+                    <select name="id_tipo_seguimiento" required class="w-full px-4 py-2.5 bg-gray-50 dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 focus:border-gray-400 dark:focus:border-slate-600 focus:outline-none transition-colors text-sm">
+                        <option value="">Seleccionar...</option>
+                        <option value="1">Llamada</option>
+                        <option value="2">Email</option>
+                        <option value="3">Reunión</option>
+                        <option value="4">Propuesta</option>
+                        <option value="5">Cotización</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Fecha de Seguimiento <span class="text-red-500">*</span>
+                    </label>
+                    <input type="datetime-local" name="fecha_seguimiento" required class="w-full px-4 py-2.5 bg-gray-50 dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 focus:border-gray-400 dark:focus:border-slate-600 focus:outline-none transition-colors text-sm">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Observación <span class="text-red-500">*</span>
+                    </label>
+                    <textarea name="observacion" rows="4" required class="w-full px-4 py-2.5 bg-gray-50 dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 focus:border-gray-400 dark:focus:border-slate-600 focus:outline-none transition-colors text-sm resize-none" placeholder="Detalles del seguimiento..."></textarea>
+                </div>
+            </form>
+
+            <!-- Sección: Últimos 3 Seguimientos -->
+            <div class="mt-8 pt-8 border-t border-gray-200 dark:border-slate-700">
+                <h4 class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-4 flex items-center">
+                    <i class="fas fa-history mr-2 text-gray-500"></i>
+                    Últimos 3 Seguimientos
+                </h4>
+                <div id="ultimos3SeguimientosContainer" class="space-y-3">
+                    <p class="text-center text-gray-500 dark:text-gray-400 text-sm">Cargando...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer Modal -->
+        <div class="px-6 py-4 border-t border-gray-200 dark:border-slate-800 flex justify-end gap-3 sticky bottom-0 bg-white dark:bg-slate-900">
+            <button id="btnCancelarModalSeguimiento" class="px-5 py-2.5 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-slate-800 rounded-lg hover:bg-gray-200 dark:hover:bg-slate-700 transition-colors text-sm font-medium">
+                Cancelar
+            </button>
+            <button type="submit" form="formRegistrarSeguimiento" class="px-5 py-2.5 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-lg hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors text-sm font-medium">
+                <i class="fas fa-save mr-2"></i>Registrar Seguimiento
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Historial Seguimiento -->
+<div id="modalHistorialSeguimiento" class="hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-slate-900 rounded-xl shadow-2xl w-full max-w-4xl max-h-[90vh] border border-gray-200 dark:border-slate-800 overflow-hidden">
+        <!-- Header Modal -->
+        <div class="px-6 py-4 border-b border-gray-200 dark:border-slate-800 flex items-center justify-between sticky top-0 bg-white dark:bg-slate-900 z-10">
+            <h3 class="text-xl font-bold text-gray-900 dark:text-white">
+                <i class="fas fa-history mr-2 text-gray-600 dark:text-gray-400"></i>
+                Historial de Seguimientos
+            </h3>
+            <button id="btnCerrarModalHistorial" class="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-lg transition-colors">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+        </div>
+
+        <!-- Body Modal -->
+        <div class="p-6 overflow-y-auto max-h-[calc(90vh-120px)]">
+            <div id="historialSeguimientoContainer" class="space-y-4">
+                <p class="text-center text-gray-500 dark:text-gray-400">Cargando historial...</p>
+            </div>
+        </div>
+
+        <!-- Footer Modal -->
+        <div class="px-6 py-4 border-t border-gray-200 dark:border-slate-800 flex justify-end gap-3 sticky bottom-0 bg-white dark:bg-slate-900">
+            <button id="btnCerrarHistorial" class="px-5 py-2.5 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-slate-800 rounded-lg hover:bg-gray-200 dark:hover:bg-slate-700 transition-colors text-sm font-medium">
+                Cerrar
             </button>
         </div>
     </div>
@@ -524,6 +494,99 @@ modalNuevoCliente.addEventListener('click', (e) => {
         modalNuevoCliente.classList.add('hidden');
         document.body.style.overflow = 'auto';
         formNuevoCliente.reset();
+    }
+});
+
+// =====================================================
+// EVENT LISTENERS PARA MODAL REGISTRAR SEGUIMIENTO
+// =====================================================
+const modalRegistrarSeguimiento = document.getElementById('modalRegistrarSeguimiento');
+const btnCerrarModalSeguimiento = document.getElementById('btnCerrarModalSeguimiento');
+const btnCancelarModalSeguimiento = document.getElementById('btnCancelarModalSeguimiento');
+const formRegistrarSeguimiento = document.getElementById('formRegistrarSeguimiento');
+
+// Cerrar modal
+[btnCerrarModalSeguimiento, btnCancelarModalSeguimiento].forEach(btn => {
+    btn.addEventListener('click', () => {
+        modalRegistrarSeguimiento.classList.add('hidden');
+        document.body.style.overflow = 'auto';
+        formRegistrarSeguimiento.reset();
+    });
+});
+
+// Cerrar modal al hacer click fuera
+modalRegistrarSeguimiento.addEventListener('click', (e) => {
+    if (e.target === modalRegistrarSeguimiento) {
+        modalRegistrarSeguimiento.classList.add('hidden');
+        document.body.style.overflow = 'auto';
+        formRegistrarSeguimiento.reset();
+    }
+});
+
+// Manejar envío del formulario de seguimiento
+formRegistrarSeguimiento.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const numDocumento = document.getElementById('seguimiento-num-documento').value;
+    const idTipo = formRegistrarSeguimiento.querySelector('[name="id_tipo_seguimiento"]').value;
+    const fechaSeguimiento = formRegistrarSeguimiento.querySelector('[name="fecha_seguimiento"]').value;
+    const observacion = formRegistrarSeguimiento.querySelector('[name="observacion"]').value;
+    
+    if (!numDocumento || !idTipo || !fechaSeguimiento || !observacion) {
+        alert('Por favor completa todos los campos');
+        return;
+    }
+    
+    try {
+        const response = await fetch('/api/registrar-seguimiento', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                num_documento: numDocumento,
+                id_tipo_seguimiento: idTipo,
+                fecha_seguimiento: fechaSeguimiento,
+                observacion: observacion
+            })
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            alert('Seguimiento registrado exitosamente');
+            modalRegistrarSeguimiento.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+            formRegistrarSeguimiento.reset();
+        } else {
+            alert('Error: ' + (result.error || 'No se pudo registrar el seguimiento'));
+        }
+    } catch (error) {
+        console.error('Error al registrar seguimiento:', error);
+        alert('Error al registrar el seguimiento');
+    }
+});
+
+// =====================================================
+// EVENT LISTENERS PARA MODAL HISTORIAL SEGUIMIENTO
+// =====================================================
+const modalHistorialSeguimiento = document.getElementById('modalHistorialSeguimiento');
+const btnCerrarModalHistorial = document.getElementById('btnCerrarModalHistorial');
+const btnCerrarHistorial = document.getElementById('btnCerrarHistorial');
+
+// Cerrar modal
+[btnCerrarModalHistorial, btnCerrarHistorial].forEach(btn => {
+    btn.addEventListener('click', () => {
+        modalHistorialSeguimiento.classList.add('hidden');
+        document.body.style.overflow = 'auto';
+    });
+});
+
+// Cerrar modal al hacer click fuera
+modalHistorialSeguimiento.addEventListener('click', (e) => {
+    if (e.target === modalHistorialSeguimiento) {
+        modalHistorialSeguimiento.classList.add('hidden');
+        document.body.style.overflow = 'auto';
     }
 });
 
@@ -663,22 +726,22 @@ async function cargarClientes() {
                 const row = document.createElement('tr');
                 row.className = 'hover:bg-gray-50 dark:hover:bg-slate-800/50 transition-colors';
                 
-                // Determinar el color del estado
+                // Determinar el color del estado de prospección
                 let estadoClass = 'bg-gray-50 dark:bg-gray-900/20 text-gray-700 dark:text-gray-400';
                 let estadoColor = 'bg-gray-500';
                 
-                if (cliente.estado === 'Activo') {
+                if (cliente.estado_prospeccion === 'Activo') {
                     estadoClass = 'bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400';
                     estadoColor = 'bg-green-500';
-                } else if (cliente.estado === 'En revisión') {
+                } else if (cliente.estado_prospeccion === 'En revisión') {
                     estadoClass = 'bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400';
                     estadoColor = 'bg-blue-500';
-                } else if (cliente.estado === 'Pendiente') {
+                } else if (cliente.estado_prospeccion === 'Pendiente') {
                     estadoClass = 'bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-400';
                     estadoColor = 'bg-amber-500';
                 }
                 
-                // Formatear fecha de seguimiento
+                // Formatear fecha de próximo seguimiento
                 let fechaSeguimiento = 'Sin fecha';
                 if (cliente.fecha_proximo_seguimiento) {
                     const fecha = new Date(cliente.fecha_proximo_seguimiento);
@@ -690,7 +753,18 @@ async function cargarClientes() {
                     });
                 }
                 
+                // Determinar color de prioridad
+                let prioridadClass = 'text-gray-600';
+                if (cliente.prioridad === 'Urgente') {
+                    prioridadClass = 'text-red-600';
+                } else if (cliente.prioridad === 'Alta') {
+                    prioridadClass = 'text-orange-600';
+                }
+                
                 row.innerHTML = `
+                    <td class="px-6 py-4">
+                        <p class="text-sm font-medium text-gray-900 dark:text-white">${cliente.num_documento || 'N/A'}</p>
+                    </td>
                     <td class="px-6 py-4">
                         <div>
                             <p class="font-medium text-gray-900 dark:text-white text-sm">${cliente.nombre_completo || 'Sin nombre'}</p>
@@ -704,23 +778,25 @@ async function cargarClientes() {
                     <td class="px-6 py-4">
                         <span class="inline-flex items-center px-2.5 py-1 ${estadoClass} rounded-md text-xs font-medium">
                             <span class="w-1.5 h-1.5 ${estadoColor} rounded-full mr-1.5"></span>
-                            ${cliente.estado || 'Sin estado'}
+                            ${cliente.estado_prospeccion || 'Sin estado'}
                         </span>
                     </td>
                     <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">
-                        ${fechaSeguimiento}
-                        ${cliente.prioridad ? `<span class="ml-2 text-xs text-${cliente.prioridad === 'Urgente' ? 'red' : cliente.prioridad === 'Alta' ? 'orange' : 'gray'}-600">(${cliente.prioridad})</span>` : ''}
+                        ${cliente.ultimo_seguimiento_tipo || 'Sin tipo'}
+                    </td>
+                    <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">
+                        ${cliente.ultimo_seguimiento_fecha ? new Date(cliente.ultimo_seguimiento_fecha).toLocaleDateString('es-PE', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }) : 'Sin fecha'}
                     </td>
                     <td class="px-6 py-4">
                         <div class="flex gap-1">
-                            <button onclick="llamarCliente('${cliente.celular}')" class="p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-slate-700 rounded-lg transition-colors" title="Llamar">
-                                <i class="fas fa-phone text-sm"></i>
+                            <button onclick="verSeguimiento('${cliente.num_documento}')" class="p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-slate-700 rounded-lg transition-colors" title="Seguimiento">
+                                <i class="fas fa-file-alt text-sm"></i>
                             </button>
                             <button onclick="editarCliente('${cliente.num_documento}')" class="p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-slate-700 rounded-lg transition-colors" title="Editar">
                                 <i class="fas fa-edit text-sm"></i>
                             </button>
-                            <button class="p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-slate-700 rounded-lg transition-colors" title="Más opciones">
-                                <i class="fas fa-ellipsis-v text-sm"></i>
+                            <button onclick="verHistorialSeguimiento('${cliente.num_documento}')" class="p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-slate-700 rounded-lg transition-colors" title="Historial">
+                                <i class="fas fa-history text-sm"></i>
                             </button>
                         </div>
                     </td>
@@ -731,7 +807,7 @@ async function cargarClientes() {
         } else {
             tbody.innerHTML = `
                 <tr>
-                    <td colspan="5" class="px-6 py-8 text-center text-gray-500 dark:text-gray-400">
+                    <td colspan="7" class="px-6 py-8 text-center text-gray-500 dark:text-gray-400">
                         <i class="fas fa-inbox text-3xl mb-2"></i>
                         <p>No hay clientes registrados</p>
                         <button onclick="document.getElementById('btnNuevoCliente').click()" class="mt-3 text-sm text-blue-600 hover:text-blue-700">
@@ -746,7 +822,7 @@ async function cargarClientes() {
         const tbody = document.getElementById('tablaClientesBody');
         tbody.innerHTML = `
             <tr>
-                <td colspan="5" class="px-6 py-8 text-center text-red-500">
+                <td colspan="7" class="px-6 py-8 text-center text-red-500">
                     <i class="fas fa-exclamation-circle text-3xl mb-2"></i>
                     <p>Error al cargar los clientes</p>
                     <button onclick="cargarClientes()" class="mt-3 text-sm text-blue-600 hover:text-blue-700">
@@ -759,20 +835,285 @@ async function cargarClientes() {
 }
 
 // Funciones auxiliares
-function llamarCliente(telefono) {
-    window.location.href = `tel:${telefono}`;
-}
-
 function editarCliente(numDocumento) {
     // TODO: Implementar modal de edición
     console.log('Editar cliente:', numDocumento);
     mostrarNotificacion('Función de edición en desarrollo', 'error');
 }
 
+function verSeguimiento(numDocumento) {
+    console.log('Ver seguimiento de cliente:', numDocumento);
+    abrirHistorialSeguimientos(numDocumento);
+}
+
+function abrirHistorialSeguimientos(numDocumento) {
+    console.log('Abriendo modal de seguimiento para:', numDocumento);
+    
+    // Llenar el número de documento en el formulario
+    document.getElementById('seguimiento-num-documento').value = numDocumento;
+    
+    // Mostrar el modal
+    const modal = document.getElementById('modalRegistrarSeguimiento');
+    modal.classList.remove('hidden');
+    
+    // Limpiar el formulario
+    document.getElementById('formRegistrarSeguimiento').reset();
+    
+    // Cargar y mostrar los últimos 3 seguimientos
+    mostrarUltimos3Seguimientos(numDocumento);
+}
+
+function verHistorialSeguimiento(numDocumento) {
+    console.log('Ver historial de seguimiento para:', numDocumento);
+    cargarHistorialSeguimientos(numDocumento);
+}
+
+async function mostrarUltimos3Seguimientos(numDocumento) {
+    try {
+        const container = document.getElementById('ultimos3SeguimientosContainer');
+        container.innerHTML = '<p class="text-center text-gray-500 dark:text-gray-400 text-sm">Cargando...</p>';
+        
+        // Llamar al nuevo endpoint que usa el SP sp_Ultimos3Seguimientos
+        const response = await fetch(`/api/ultimos-3-seguimientos/${numDocumento}`);
+        
+        if (!response.ok) {
+            throw new Error('Error al cargar seguimientos');
+        }
+        
+        const result = await response.json();
+        
+        if (result.success && result.data && result.data.length > 0) {
+            let html = '';
+            result.data.forEach(seg => {
+                const fecha = new Date(seg.fecha_seguimiento);
+                const fechaFormato = fecha.toLocaleDateString('es-PE', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+                
+                html += `
+                    <div class="bg-gray-50 dark:bg-slate-800 rounded-lg p-3 border border-gray-200 dark:border-slate-700">
+                        <div class="flex justify-between items-start mb-2">
+                            <div class="flex-1">
+                                <h5 class="font-medium text-gray-900 dark:text-white text-sm">${seg.tipo_seguimiento}</h5>
+                                <p class="text-xs text-gray-500 dark:text-gray-400">${fechaFormato}</p>
+                            </div>
+                            <span class="inline-flex items-center px-2 py-1 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 rounded text-xs font-medium">
+                                ${seg.estado}
+                            </span>
+                        </div>
+                        <p class="text-gray-700 dark:text-gray-300 text-xs mb-1">${seg.observacion}</p>
+                        <p class="text-xs text-gray-500 dark:text-gray-400">
+                            <i class="fas fa-user text-xs mr-1"></i>${seg.nombre_asesor || 'Sistema'}
+                        </p>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        } else {
+            container.innerHTML = `
+                <div class="text-center py-4">
+                    <i class="fas fa-inbox text-gray-400 text-lg mb-1"></i>
+                    <p class="text-gray-500 dark:text-gray-400 text-xs">No hay seguimientos anteriores</p>
+                </div>
+            `;
+        }
+    } catch (error) {
+        console.error('Error al mostrar últimos 3 seguimientos:', error);
+        document.getElementById('ultimos3SeguimientosContainer').innerHTML = `
+            <div class="text-center py-4 text-red-500 text-xs">
+                <i class="fas fa-exclamation-circle text-lg mb-1"></i>
+                <p>Error al cargar seguimientos</p>
+            </div>
+        `;
+    }
+}
+
+async function cargarHistorialSeguimientos(numDocumento) {
+    try {
+        const modal = document.getElementById('modalHistorialSeguimiento');
+        const container = document.getElementById('historialSeguimientoContainer');
+        
+        // Mostrar modal con estado de carga
+        modal.classList.remove('hidden');
+        container.innerHTML = '<p class="text-center text-gray-500 dark:text-gray-400">Cargando historial...</p>';
+        
+        // Cargar seguimientos desde API
+        const response = await fetch(`/api/historial-seguimientos/${numDocumento}`);
+        
+        if (!response.ok) {
+            throw new Error('Error al cargar historial');
+        }
+        
+        const result = await response.json();
+        
+        if (result.success && result.data && result.data.length > 0) {
+            // Mostrar seguimientos
+            let html = '';
+            result.data.forEach(seg => {
+                const fecha = new Date(seg.fecha_seguimiento);
+                const fechaFormato = fecha.toLocaleDateString('es-PE', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+                
+                html += `
+                    <div class="bg-gray-50 dark:bg-slate-800 rounded-lg p-4 border border-gray-200 dark:border-slate-700">
+                        <div class="flex justify-between items-start mb-3">
+                            <div>
+                                <h4 class="font-semibold text-gray-900 dark:text-white">${seg.tipo_seguimiento}</h4>
+                                <p class="text-xs text-gray-500 dark:text-gray-400">${fechaFormato}</p>
+                            </div>
+                            <span class="inline-flex items-center px-2.5 py-1 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 rounded-md text-xs font-medium">
+                                ${seg.estado}
+                            </span>
+                        </div>
+                        <p class="text-gray-700 dark:text-gray-300 mb-2">${seg.observacion}</p>
+                        <div class="text-xs text-gray-500 dark:text-gray-400">
+                            <p>Realizado por: <span class="font-medium">${seg.nombre_asesor || 'Sistema'}</span></p>
+                        </div>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        } else {
+            container.innerHTML = `
+                <div class="text-center py-8">
+                    <i class="fas fa-inbox text-3xl text-gray-400 mb-2"></i>
+                    <p class="text-gray-500 dark:text-gray-400">No hay seguimientos registrados</p>
+                </div>
+            `;
+        }
+    } catch (error) {
+        console.error('Error al cargar historial:', error);
+        document.getElementById('historialSeguimientoContainer').innerHTML = `
+            <div class="text-center py-8 text-red-500">
+                <i class="fas fa-exclamation-circle text-3xl mb-2"></i>
+                <p>Error al cargar el historial de seguimientos</p>
+            </div>
+        `;
+    }
+}
+
 // Cargar clientes al iniciar la página
 document.addEventListener('DOMContentLoaded', () => {
     cargarClientes();
+    
+    // Cargar desplegables de ubicación en el modal
+    cargarDepartamentosModal();
+    
+    // Event listeners para cascada
+    document.getElementById('modal-select-departamento').addEventListener('change', (e) => {
+        cargarProvinciasModal(e.target.value);
+    });
+    
+    document.getElementById('modal-select-provincia').addEventListener('change', (e) => {
+        cargarDistritosModal(e.target.value);
+    });
 });
+
+// =====================================================
+// FUNCIONES DE CASCADA PARA MODAL
+// =====================================================
+
+async function cargarDepartamentosModal() {
+    try {
+        const response = await fetch('/api/departamentos');
+        if (!response.ok) throw new Error('Error al cargar departamentos');
+        
+        const departamentos = await response.json();
+        const select = document.getElementById('modal-select-departamento');
+        
+        select.innerHTML = '<option value="">Seleccionar...</option>';
+        if (Array.isArray(departamentos)) {
+            departamentos.forEach(dept => {
+                const option = document.createElement('option');
+                option.value = dept.id_departamento;
+                option.textContent = dept.nombre;
+                select.appendChild(option);
+            });
+        }
+    } catch (error) {
+        console.error('Error al cargar departamentos:', error);
+    }
+}
+
+async function cargarProvinciasModal(idDepartamento) {
+    const selectProvincia = document.getElementById('modal-select-provincia');
+    const selectDistrito = document.getElementById('modal-select-distrito');
+    
+    if (!idDepartamento) {
+        selectProvincia.innerHTML = '<option value="">Seleccionar...</option>';
+        selectProvincia.disabled = true;
+        selectDistrito.innerHTML = '<option value="">Seleccionar...</option>';
+        selectDistrito.disabled = true;
+        return;
+    }
+    
+    try {
+        const response = await fetch(`/api/provincias/${idDepartamento}`);
+        if (!response.ok) throw new Error('Error al cargar provincias');
+        
+        const provincias = await response.json();
+        
+        selectProvincia.innerHTML = '<option value="">Seleccionar...</option>';
+        if (Array.isArray(provincias)) {
+            provincias.forEach(prov => {
+                const option = document.createElement('option');
+                option.value = prov.id_provincia;
+                option.textContent = prov.nombre;
+                selectProvincia.appendChild(option);
+            });
+        }
+        selectProvincia.disabled = false;
+        
+        // Limpiar distritos
+        selectDistrito.innerHTML = '<option value="">Seleccionar...</option>';
+        selectDistrito.disabled = true;
+    } catch (error) {
+        console.error('Error al cargar provincias:', error);
+        selectProvincia.innerHTML = '<option value="">Error</option>';
+    }
+}
+
+async function cargarDistritosModal(idProvincia) {
+    const selectDistrito = document.getElementById('modal-select-distrito');
+    
+    if (!idProvincia) {
+        selectDistrito.innerHTML = '<option value="">Seleccionar...</option>';
+        selectDistrito.disabled = true;
+        return;
+    }
+    
+    try {
+        const response = await fetch(`/api/distritos/${idProvincia}`);
+        if (!response.ok) throw new Error('Error al cargar distritos');
+        
+        const distritos = await response.json();
+        
+        selectDistrito.innerHTML = '<option value="">Seleccionar...</option>';
+        if (Array.isArray(distritos)) {
+            distritos.forEach(dist => {
+                const option = document.createElement('option');
+                option.value = dist.id_distrito;
+                option.textContent = dist.nombre;
+                selectDistrito.appendChild(option);
+            });
+        }
+        selectDistrito.disabled = false;
+    } catch (error) {
+        console.error('Error al cargar distritos:', error);
+        selectDistrito.innerHTML = '<option value="">Error</option>';
+    }
+}
+
 </script>
 {% endblock %}
 

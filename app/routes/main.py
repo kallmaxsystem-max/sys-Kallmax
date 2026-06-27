@@ -5,8 +5,8 @@ from mysql.connector import Error
 import hashlib
 from functools import wraps
 
-# Importar funciones del módulo funciones
-from app.funciones.register_user import (
+# Importar funciones generales
+from app.funciones.funGeneral import (
     get_db_connection,
     hash_password,
     get_departamentos as get_departamentos_func,
@@ -15,6 +15,14 @@ from app.funciones.register_user import (
     get_roles as get_roles_func,
     get_areas as get_areas_func,
     get_cargos as get_cargos_func,
+    get_fuentes_contacto_api as get_fuentes_contacto_api_func,
+    get_proyectos_api as get_proyectos_api_func,
+    get_estados_prospeccion_api as get_estados_prospeccion_api_func,
+    get_tipos_compra_api as get_tipos_compra_api_func
+)
+
+# Importar funciones de usuarios/asesores
+from app.funciones.register_user import (
     register_asesor_api as register_asesor_api_func,
     get_usuarios_asesores as get_usuarios_asesores_func,
     get_asesor_by_documento as get_asesor_by_documento_func,
@@ -22,6 +30,21 @@ from app.funciones.register_user import (
     delete_asesor_api as delete_asesor_api_func,
     cambiar_contrasena_api as cambiar_contrasena_api_func,
     buscar_usuario_por_documento as buscar_usuario_por_documento_func
+)
+
+# Importar funciones de clientes
+from app.funciones.clientes import (
+    insertar_cliente_api,
+    listar_clientes_api,
+    listar_todos_clientes_api,
+    eliminar_cliente_api,
+    obtener_cliente_por_documento_api,
+    actualizar_cliente_api,
+    registrar_seguimiento_api,
+    listar_seguimientos_cliente_api,
+    listar_tipos_seguimiento_api,
+    listar_historial_seguimientos_api,
+    listar_ultimos_3_seguimientos_api
 )
 
 # Decorador para requerir autenticación
@@ -247,39 +270,34 @@ def cambiar_contrasena_api():
 @login_required
 def get_fuentes_contacto():
     """API para obtener lista de fuentes de contacto"""
-    from app.funciones.register_user import get_fuentes_contacto_api
-    return get_fuentes_contacto_api()
+    return get_fuentes_contacto_api_func()
 
 
 @main_bp.route('/api/proyectos', methods=['GET'])
 @login_required
 def get_proyectos():
     """API para obtener lista de proyectos"""
-    from app.funciones.register_user import get_proyectos_api
-    return get_proyectos_api()
+    return get_proyectos_api_func()
 
 
 @main_bp.route('/api/estados-prospeccion', methods=['GET'])
 @login_required
 def get_estados_prospeccion():
-    """API para obtener lista de estados de prospección"""
-    from app.funciones.register_user import get_estados_prospeccion_api
-    return get_estados_prospeccion_api()
+    """API para obtener lista de estados de prospeccion"""
+    return get_estados_prospeccion_api_func()
 
 
 @main_bp.route('/api/tipos-compra', methods=['GET'])
 @login_required
 def get_tipos_compra():
     """API para obtener lista de tipos de compra"""
-    from app.funciones.register_user import get_tipos_compra_api
-    return get_tipos_compra_api()
+    return get_tipos_compra_api_func()
 
 
 @main_bp.route('/api/clientes', methods=['POST'])
 @login_required
 def insertar_cliente():
     """API para insertar un nuevo cliente"""
-    from app.funciones.register_user import insertar_cliente_api
     return insertar_cliente_api()
 
 
@@ -287,7 +305,6 @@ def insertar_cliente():
 @login_required
 def listar_clientes():
     """API para listar clientes del asesor logueado"""
-    from app.funciones.register_user import listar_clientes_api
     return listar_clientes_api()
 
 
@@ -295,5 +312,72 @@ def listar_clientes():
 @login_required
 def listar_todos_clientes():
     """API para listar todos los clientes (administradores)"""
-    from app.funciones.register_user import listar_todos_clientes_api
     return listar_todos_clientes_api()
+
+
+@main_bp.route('/api/clientes/<num_documento>', methods=['DELETE'])
+@login_required
+def eliminar_cliente(num_documento):
+    """API para eliminar un cliente por documento"""
+    return eliminar_cliente_api(num_documento)
+
+
+@main_bp.route('/api/clientes/<num_documento>', methods=['GET'])
+@login_required
+def obtener_cliente(num_documento):
+    """API para obtener un cliente por documento"""
+    return obtener_cliente_por_documento_api(num_documento)
+
+
+@main_bp.route('/api/clientes/<num_documento>', methods=['PUT'])
+@login_required
+def actualizar_cliente(num_documento):
+    """API para actualizar un cliente por documento"""
+    return actualizar_cliente_api(num_documento)
+
+
+# ============================================================================
+# RUTAS API PARA GESTIÓN DE SEGUIMIENTOS DE CLIENTES
+# ============================================================================
+
+@main_bp.route('/api/seguimientos', methods=['POST'])
+@login_required
+def registrar_seguimiento():
+    """API para registrar un nuevo seguimiento de cliente"""
+    return registrar_seguimiento_api()
+
+
+@main_bp.route('/api/registrar-seguimiento', methods=['POST'])
+@login_required
+def registrar_seguimiento_endpoint():
+    """API para registrar un nuevo seguimiento de cliente (alias)"""
+    return registrar_seguimiento_api()
+
+
+@main_bp.route('/api/seguimientos/<num_documento>', methods=['GET'])
+@login_required
+def listar_seguimientos(num_documento):
+    """API para listar seguimientos de un cliente específico"""
+    return listar_seguimientos_cliente_api(num_documento)
+
+
+@main_bp.route('/api/tipos-seguimiento', methods=['GET'])
+@login_required
+def listar_tipos_seguimiento():
+    """API para listar tipos de seguimiento disponibles"""
+    return listar_tipos_seguimiento_api()
+
+
+@main_bp.route('/api/historial-seguimientos/<num_documento>', methods=['GET'])
+@login_required
+def obtener_historial_seguimientos(num_documento):
+    """API para obtener el historial completo de seguimientos de un cliente usando SP"""
+    return listar_historial_seguimientos_api(num_documento)
+
+
+@main_bp.route('/api/ultimos-3-seguimientos/<num_documento>', methods=['GET'])
+@login_required
+def obtener_ultimos_3_seguimientos(num_documento):
+    """API para obtener los últimos 3 seguimientos de un cliente usando SP"""
+    return listar_ultimos_3_seguimientos_api(num_documento)
+
