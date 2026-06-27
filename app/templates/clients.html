@@ -1145,7 +1145,15 @@ async function cargarClienteParaEditar(numDocumento) {
             form.querySelector('[name="nombres"]').value = cliente.nombres || '';
             form.querySelector('[name="apellido_paterno"]').value = cliente.apellido_paterno || '';
             form.querySelector('[name="apellido_materno"]').value = cliente.apellido_materno || '';
-            form.querySelector('[name="fecha_nacimiento"]').value = cliente.fecha_nacimiento ? cliente.fecha_nacimiento.split(' ')[0] : '';
+            
+            // Llenar Fecha Nacimiento
+            if (cliente.fecha_nacimiento) {
+                // Convertir fecha a formato YYYY-MM-DD si viene en otro formato
+                const fecha = new Date(cliente.fecha_nacimiento);
+                const fechaFormato = fecha.toISOString().split('T')[0];
+                form.querySelector('[name="fecha_nacimiento"]').value = fechaFormato;
+            }
+            
             form.querySelector('[name="estado_civil"]').value = cliente.estado_civil || '';
             
             // Llenar campos de Contacto
@@ -1170,12 +1178,11 @@ async function cargarClienteParaEditar(numDocumento) {
             }
             
             // Llenar campos de Gestión Comercial
+            // Cargar Estados de Prospección
+            await cargarEstadosProspeccionEditar();
             form.querySelector('[name="id_estado_prospeccion"]').value = cliente.id_estado_prospeccion || '';
             form.querySelector('[name="prioridad"]').value = cliente.prioridad || 'Media';
             form.querySelector('[name="observaciones"]').value = cliente.observaciones || '';
-            
-            // Cargar opciones de Estado Prospección
-            cargarEstadosProspeccionEditar();
             
             // Mostrar modal
             modal.classList.remove('hidden');
