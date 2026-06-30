@@ -16,22 +16,22 @@ Administra y da seguimiento a tus contactos y clientes
 
 <div class="w-full px-6 space-y-6">
     
-    <!-- Estadísticas Clientes - Estilo minimalista profesional -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    <!-- ========== SECCIÓN 1: ESTADÍSTICAS ========== -->
+    <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <!-- Card 1: Total Clients -->
         <div class="bg-white dark:bg-slate-900 rounded-lg p-6 border border-gray-200 dark:border-slate-800 hover:border-gray-300 dark:hover:border-slate-700 transition-colors">
             <div class="flex justify-between items-start mb-4">
                 <div>
                     <p class="text-gray-500 dark:text-gray-400 text-xs font-medium mb-2 uppercase tracking-wide">Clientes Totales</p>
-                    <h3 class="text-3xl font-bold text-gray-900 dark:text-white">156</h3>
+                    <h3 class="text-3xl font-bold text-gray-900 dark:text-white" id="estadisticaTotalClientes">0</h3>
                 </div>
                 <div class="w-10 h-10 bg-gray-100 dark:bg-slate-800 rounded-lg flex items-center justify-center">
                     <i class="fas fa-users text-gray-600 dark:text-gray-400"></i>
                 </div>
             </div>
             <div class="flex items-center text-xs text-gray-600 dark:text-gray-400">
-                <span class="text-green-600 dark:text-green-500 font-medium">+8%</span>
-                <span class="ml-1">vs mes anterior</span>
+                <span class="text-green-600 dark:text-green-500 font-medium">dinámico</span>
+                <span class="ml-1">desde la BD</span>
             </div>
         </div>
 
@@ -40,67 +40,112 @@ Administra y da seguimiento a tus contactos y clientes
             <div class="flex justify-between items-start mb-4">
                 <div>
                     <p class="text-gray-500 dark:text-gray-400 text-xs font-medium mb-2 uppercase tracking-wide">Activos</p>
-                    <h3 class="text-3xl font-bold text-gray-900 dark:text-white">142</h3>
+                    <h3 class="text-3xl font-bold text-gray-900 dark:text-white" id="estadisticaActivosClientes">0</h3>
                 </div>
                 <div class="w-10 h-10 bg-gray-100 dark:bg-slate-800 rounded-lg flex items-center justify-center">
                     <i class="fas fa-check-circle text-gray-600 dark:text-gray-400"></i>
                 </div>
             </div>
             <div class="flex items-center text-xs text-gray-600 dark:text-gray-400">
-                <span class="font-medium">91%</span>
+                <span class="font-medium" id="porcentajeActivos">0%</span>
                 <span class="ml-1">tasa de actividad</span>
             </div>
         </div>
 
-        <!-- Card 3: Pending Follow-ups -->
+        <!-- Card 3: Discarded Clients -->
         <div class="bg-white dark:bg-slate-900 rounded-lg p-6 border border-gray-200 dark:border-slate-800 hover:border-gray-300 dark:hover:border-slate-700 transition-colors">
             <div class="flex justify-between items-start mb-4">
                 <div>
-                    <p class="text-gray-500 dark:text-gray-400 text-xs font-medium mb-2 uppercase tracking-wide">Pendientes</p>
-                    <h3 class="text-3xl font-bold text-gray-900 dark:text-white">23</h3>
+                    <p class="text-gray-500 dark:text-gray-400 text-xs font-medium mb-2 uppercase tracking-wide">Descartados</p>
+                    <h3 class="text-3xl font-bold text-gray-900 dark:text-white" id="estadisticaDescartados">0</h3>
                 </div>
                 <div class="w-10 h-10 bg-gray-100 dark:bg-slate-800 rounded-lg flex items-center justify-center">
-                    <i class="fas fa-clock text-gray-600 dark:text-gray-400"></i>
+                    <i class="fas fa-ban text-gray-600 dark:text-gray-400"></i>
                 </div>
             </div>
             <div class="flex items-center text-xs text-gray-600 dark:text-gray-400">
-                <span class="text-amber-600 dark:text-amber-500 font-medium">5 urgentes</span>
+                <span class="text-red-600 dark:text-red-500 font-medium" id="porcentajeDescartados">0%</span>
+                <span class="ml-1">excluidos</span>
             </div>
         </div>
 
-        <!-- Card 4: Conversions -->
+        <!-- Card 4: Prospection States -->
         <div class="bg-white dark:bg-slate-900 rounded-lg p-6 border border-gray-200 dark:border-slate-800 hover:border-gray-300 dark:hover:border-slate-700 transition-colors">
             <div class="flex justify-between items-start mb-4">
                 <div>
-                    <p class="text-gray-500 dark:text-gray-400 text-xs font-medium mb-2 uppercase tracking-wide">Conversiones</p>
-                    <h3 class="text-3xl font-bold text-gray-900 dark:text-white">38</h3>
+                    <p class="text-gray-500 dark:text-gray-400 text-xs font-medium mb-2 uppercase tracking-wide">En Prospección</p>
+                    <h3 class="text-3xl font-bold text-gray-900 dark:text-white" id="estadisticaProspeccion">0</h3>
                 </div>
                 <div class="w-10 h-10 bg-gray-100 dark:bg-slate-800 rounded-lg flex items-center justify-center">
-                    <i class="fas fa-handshake text-gray-600 dark:text-gray-400"></i>
+                    <i class="fas fa-target text-gray-600 dark:text-gray-400"></i>
                 </div>
             </div>
             <div class="flex items-center text-xs text-gray-600 dark:text-gray-400">
-                <span class="text-green-600 dark:text-green-500 font-medium">+15%</span>
-                <span class="ml-1">este mes</span>
+                <span class="font-medium" id="porcentajeProspeccion">0%</span>
+                <span class="ml-1">en tratamiento</span>
             </div>
         </div>
-    </div>
+    </section>
 
-    <!-- Tabla de Clientes - Diseño profesional limpio -->
-    <div class="bg-white dark:bg-slate-900 rounded-lg border border-gray-200 dark:border-slate-800 overflow-hidden">
-        <!-- Encabezado con filtros -->
-        <div class="p-6 border-b border-gray-200 dark:border-slate-800 flex flex-col md:flex-row gap-4 items-center">
-            <div class="flex-1 w-full">
-                <div class="relative">
-                    <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
-                    <input type="text" placeholder="Buscar cliente por nombre, email, teléfono..." class="w-full pl-11 pr-4 py-2.5 bg-gray-50 dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 focus:border-gray-400 dark:focus:border-slate-600 focus:outline-none transition-colors text-sm">
+    <!-- ========== SECCIÓN 2: CONTROL DE CLIENTES ========== -->
+    <section class="bg-white dark:bg-slate-900 rounded-lg border border-gray-200 dark:border-slate-800 p-6">
+        <!-- Controles y filtros -->
+        <div class="space-y-4">
+            <!-- Primera fila de filtros -->
+            <div class="flex flex-col md:flex-row gap-4 items-start md:items-center">
+                <!-- Búsqueda (izquierda) -->
+                <div class="flex-1 w-full">
+                    <div class="relative">
+                        <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                        <input type="text" id="inputBuscarCliente" placeholder="Buscar cliente por nombre, email, teléfono..." class="w-full pl-11 pr-4 py-2.5 bg-gray-50 dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 focus:border-gray-400 dark:focus:border-slate-600 focus:outline-none transition-colors text-sm">
+                    </div>
                 </div>
-            </div>
-            <button id="btnNuevoCliente" class="bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-medium px-6 py-2.5 rounded-lg hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors whitespace-nowrap text-sm">
-                <i class="fas fa-plus mr-2"></i>Nuevo Cliente
-            </button>
-        </div>
 
+                <!-- Filtro Estado (centro-izquierda) -->
+                <div class="flex items-center gap-2">
+                    <label class="text-sm font-medium text-gray-700 dark:text-gray-300 whitespace-nowrap">Filtro Estado:</label>
+                    <select id="filtroEstadoSys" class="px-4 py-2.5 bg-gray-50 dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 focus:border-gray-400 dark:focus:border-slate-600 focus:outline-none transition-colors text-sm">
+                        <option value="">Todos</option>
+                        <option value="ACTIVO">ACTIVO</option>
+                        <option value="DESCARTADO">DESCARTADO</option>
+                    </select>
+                </div>
+
+                <!-- Botón Nuevo Cliente (derecha) -->
+                <button id="btnNuevoCliente" class="bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-medium px-6 py-2.5 rounded-lg hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors whitespace-nowrap text-sm">
+                    <i class="fas fa-plus mr-2"></i>Nuevo Cliente
+                </button>
+            </div>
+
+            <!-- Segunda fila de filtros -->
+            <div class="flex flex-col md:flex-row gap-4 items-start md:items-center flex-wrap">
+                <!-- Filtro Estado Prospección (centro) -->
+                <div class="flex items-center gap-2">
+                    <label class="text-sm font-medium text-gray-700 dark:text-gray-300 whitespace-nowrap">Est. Prospección:</label>
+                    <select id="filtroEstadoProspeccion" class="px-4 py-2.5 bg-gray-50 dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 focus:border-gray-400 dark:focus:border-slate-600 focus:outline-none transition-colors text-sm">
+                        <option value="">Todos</option>
+                        <!-- Las opciones se cargarán dinámicamente -->
+                    </select>
+                </div>
+
+                <!-- Filtro Última Fecha - Rango (centro-derecha) -->
+                <div class="flex items-center gap-2">
+                    <label class="text-sm font-medium text-gray-700 dark:text-gray-300 whitespace-nowrap">Última Fecha:</label>
+                    <input type="date" id="filtroFechaDesde" class="px-4 py-2.5 bg-gray-50 dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 focus:border-gray-400 dark:focus:border-slate-600 focus:outline-none transition-colors text-sm" placeholder="Desde">
+                    <span class="text-gray-500 dark:text-gray-400 text-sm font-medium">a</span>
+                    <input type="date" id="filtroFechaHasta" class="px-4 py-2.5 bg-gray-50 dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 focus:border-gray-400 dark:focus:border-slate-600 focus:outline-none transition-colors text-sm" placeholder="Hasta">
+                </div>
+
+                <!-- Botón Buscar -->
+                <button id="btnBuscarClientes" class="bg-blue-600 dark:bg-blue-700 text-white font-medium px-6 py-2.5 rounded-lg hover:bg-blue-700 dark:hover:bg-blue-800 transition-colors whitespace-nowrap text-sm ml-auto">
+                    <i class="fas fa-search mr-2"></i>Buscar
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== SECCIÓN 3: TABLA DE CLIENTES ========== -->
+    <section class="bg-white dark:bg-slate-900 rounded-lg border border-gray-200 dark:border-slate-800 overflow-hidden">
         <!-- Tabla -->
         <div class="overflow-x-auto">
             <table class="w-full">
@@ -112,13 +157,14 @@ Administra y da seguimiento a tus contactos y clientes
                         <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">Estado Prospeccion</th>
                         <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">Tipo Seguimiento</th>
                         <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">Ultima Fecha</th>
+                        <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">Estado Sys</th>
                         <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">Acciones</th>
                     </tr>
                 </thead>
                 <tbody id="tablaClientesBody" class="divide-y divide-gray-200 dark:divide-slate-800">
                     <!-- Los datos se cargarán dinámicamente desde la base de datos -->
                     <tr>
-                        <td colspan="7" class="px-6 py-8 text-center text-gray-500 dark:text-gray-400">
+                        <td colspan="8" class="px-6 py-8 text-center text-gray-500 dark:text-gray-400">
                             <i class="fas fa-spinner fa-spin text-2xl mb-2"></i>
                             <p>Cargando clientes...</p>
                         </td>
@@ -127,15 +173,18 @@ Administra y da seguimiento a tus contactos y clientes
             </table>
         </div>
         
-        <!-- Paginación simple -->
+        <!-- Paginación y resumen -->
         <div class="px-6 py-4 border-t border-gray-200 dark:border-slate-800 flex items-center justify-between">
-            <p class="text-sm text-gray-600 dark:text-gray-400">Mostrando 1-4 de 156 clientes</p>
+            <p class="text-sm text-gray-600 dark:text-gray-400">
+                <span id="clientesVisibles" class="font-semibold">0</span> de 
+                <span id="totalClientesCount" class="font-semibold">0</span> clientes mostrados
+            </p>
             <div class="flex gap-2">
                 <button class="px-3 py-1 border border-gray-300 dark:border-slate-700 rounded text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-800 transition-colors">Anterior</button>
                 <button class="px-3 py-1 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded text-sm hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors">Siguiente</button>
             </div>
         </div>
-    </div>
+    </section>
 
 </div>
 
@@ -978,10 +1027,134 @@ function mostrarNotificacion(mensaje, tipo) {
     }, 3000);
 }
 
+// =====================================================
+// FUNCIÓN PARA ACTUALIZAR ESTADÍSTICAS PRINCIPALES
+// =====================================================
+
+async function actualizarEstadisticas() {
+    try {
+        // Cargar datos de clientes
+        const response = await fetch('/api/clientes');
+        const result = await response.json();
+        
+        if (result.success && result.data) {
+            const total = result.data.length;
+            const activos = result.data.filter(c => c.Estado_Sys === 'ACTIVO').length;
+            const descartados = result.data.filter(c => c.Estado_Sys === 'DESCARTADO').length;
+            const enProspeccion = result.data.filter(c => c.estado_prospeccion && c.estado_prospeccion !== 'DESCARTADO').length;
+            
+            // Actualizar tarjetas
+            document.getElementById('estadisticaTotalClientes').textContent = total;
+            document.getElementById('estadisticaActivosClientes').textContent = activos;
+            document.getElementById('estadisticaDescartados').textContent = descartados;
+            document.getElementById('estadisticaProspeccion').textContent = enProspeccion;
+            
+            // Calcular porcentajes
+            const porcentajeActivos = total > 0 ? Math.round((activos / total) * 100) : 0;
+            const porcentajeDescartados = total > 0 ? Math.round((descartados / total) * 100) : 0;
+            const porcentajeProspeccion = total > 0 ? Math.round((enProspeccion / total) * 100) : 0;
+            
+            document.getElementById('porcentajeActivos').textContent = porcentajeActivos + '%';
+            document.getElementById('porcentajeDescartados').textContent = porcentajeDescartados + '%';
+            document.getElementById('porcentajeProspeccion').textContent = porcentajeProspeccion + '%';
+        }
+    } catch (error) {
+        console.error('Error al actualizar estadísticas:', error);
+    }
+}
+
+// =====================================================
+// FUNCIÓN PARA CARGAR ESTADÍSTICAS DE PROSPECCIÓN
+// =====================================================
+
+async function cargarEstadisticasProspeccion() {
+    try {
+        const response = await fetch('/api/estadisticas/clientes-por-estado-prospeccion');
+        const result = await response.json();
+        
+        if (result.success && result.data && result.data.length > 0) {
+            const container = document.getElementById('estadisticasProspeccion');
+            if (container) {
+                container.innerHTML = '';
+                
+                // Colores para cada estado
+                const colores = {
+                    'CALIENTE': { bg: 'bg-red-100 dark:bg-red-900/30', text: 'text-red-800 dark:text-red-300', icon: 'fa-fire text-red-600' },
+                    'FRIO': { bg: 'bg-blue-100 dark:bg-blue-900/30', text: 'text-blue-800 dark:text-blue-300', icon: 'fa-snowflake text-blue-600' },
+                    'POTENCIAL': { bg: 'bg-purple-100 dark:bg-purple-900/30', text: 'text-purple-800 dark:text-purple-300', icon: 'fa-star text-purple-600' },
+                    'TRATAMIENTO': { bg: 'bg-amber-100 dark:bg-amber-900/30', text: 'text-amber-800 dark:text-amber-300', icon: 'fa-hourglass-half text-amber-600' }
+                };
+                
+                result.data.forEach(stat => {
+                    const color = colores[stat.estado_prospeccion] || colores['POTENCIAL'];
+                    const card = document.createElement('div');
+                    card.className = `${color.bg} ${color.text} rounded-lg p-4 border border-current/20`;
+                    card.innerHTML = `
+                        <div class="flex items-center justify-between mb-2">
+                            <h4 class="font-semibold text-sm">${stat.estado_prospeccion}</h4>
+                            <i class="fas ${color.icon}"></i>
+                        </div>
+                        <p class="text-2xl font-bold">${stat.cantidad_clientes}</p>
+                        <p class="text-xs opacity-75 mt-1">clientes</p>
+                    `;
+                    container.appendChild(card);
+                });
+            }
+        }
+    } catch (error) {
+        console.error('Error al cargar estadísticas de prospección:', error);
+    }
+}
+
 // Función para cargar clientes desde la base de datos
 async function cargarClientes() {
     try {
-        const response = await fetch('/api/clientes');
+        // Obtener valores de los filtros
+        const nombreBusqueda = document.getElementById('inputBuscarCliente').value.trim();
+        const estadoFiltro = document.getElementById('filtroEstadoSys').value.trim();
+        const estadoProspeccionFiltro = document.getElementById('filtroEstadoProspeccion').value.trim();
+        const fechaDesde = document.getElementById('filtroFechaDesde').value.trim();
+        const fechaHasta = document.getElementById('filtroFechaHasta').value.trim();
+        
+        // Log de debug
+        console.log('=== CARGAR CLIENTES ===');
+        console.log('Nombre:', nombreBusqueda);
+        console.log('Estado:', estadoFiltro);
+        console.log('Estado Prospección:', estadoProspeccionFiltro);
+        console.log('Fecha Desde:', fechaDesde);
+        console.log('Fecha Hasta:', fechaHasta);
+        
+        // Construir URL con parámetros
+        let url = '/api/clientes';
+        const params = new URLSearchParams();
+        
+        if (nombreBusqueda) {
+            params.append('nombre', nombreBusqueda);
+        }
+        
+        if (estadoFiltro) {
+            params.append('estado', estadoFiltro);
+        }
+        
+        if (estadoProspeccionFiltro) {
+            params.append('estado_prospeccion', estadoProspeccionFiltro);
+        }
+        
+        if (fechaDesde) {
+            params.append('fecha_desde', fechaDesde);
+        }
+        
+        if (fechaHasta) {
+            params.append('fecha_hasta', fechaHasta);
+        }
+        
+        if (params.toString()) {
+            url += '?' + params.toString();
+        }
+        
+        console.log('URL Final:', url);
+        
+        const response = await fetch(url);
         
         console.log('Response status:', response.status);
         console.log('Response ok:', response.ok);
@@ -1017,24 +1190,20 @@ async function cargarClientes() {
                     estadoColor = 'bg-amber-500';
                 }
                 
-                // Formatear fecha de próximo seguimiento
-                let fechaSeguimiento = 'Sin fecha';
-                if (cliente.fecha_proximo_seguimiento) {
-                    const fecha = new Date(cliente.fecha_proximo_seguimiento);
-                    fechaSeguimiento = fecha.toLocaleDateString('es-PE', { 
-                        day: '2-digit', 
-                        month: 'short', 
-                        hour: '2-digit', 
-                        minute: '2-digit' 
-                    });
-                }
-                
                 // Determinar color de prioridad
                 let prioridadClass = 'text-gray-600';
                 if (cliente.prioridad === 'Urgente') {
                     prioridadClass = 'text-red-600';
                 } else if (cliente.prioridad === 'Alta') {
                     prioridadClass = 'text-orange-600';
+                }
+                
+                // Determinar color de Estado_Sys
+                let estadoSysClass = 'bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400';
+                let estadoSysIcon = 'fas fa-check-circle text-green-500';
+                if (cliente.Estado_Sys === 'DESCARTADO') {
+                    estadoSysClass = 'bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400';
+                    estadoSysIcon = 'fas fa-ban text-red-500';
                 }
                 
                 row.innerHTML = `
@@ -1058,10 +1227,16 @@ async function cargarClientes() {
                         </span>
                     </td>
                     <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">
-                        ${cliente.ultimo_seguimiento_tipo || 'Sin tipo'}
+                        ${cliente.ultimo_seguimiento_tipo_nombre || 'Sin tipo'}
                     </td>
                     <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">
                         ${cliente.ultimo_seguimiento_fecha ? new Date(cliente.ultimo_seguimiento_fecha).toLocaleDateString('es-PE', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }) : 'Sin fecha'}
+                    </td>
+                    <td class="px-6 py-4">
+                        <span class="inline-flex items-center px-2.5 py-1 ${estadoSysClass} rounded-md text-xs font-medium">
+                            <i class="${estadoSysIcon} mr-1.5"></i>
+                            ${cliente.Estado_Sys || 'ACTIVO'}
+                        </span>
                     </td>
                     <td class="px-6 py-4">
                         <div class="flex gap-1">
@@ -1074,16 +1249,30 @@ async function cargarClientes() {
                             <button onclick="verHistorialSeguimiento('${cliente.num_documento}')" class="p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-slate-700 rounded-lg transition-colors" title="Historial">
                                 <i class="fas fa-history text-sm"></i>
                             </button>
+                            ${cliente.Estado_Sys === 'DESCARTADO' ? `
+                                <button onclick="alternarEstadoCliente('${cliente.num_documento}')" class="p-2 text-green-600 dark:text-green-400 hover:text-green-900 dark:hover:text-green-200 hover:bg-green-100 dark:hover:bg-green-900/30 rounded-lg transition-colors" title="Activar">
+                                    <i class="fas fa-check-circle text-sm"></i>
+                                </button>
+                            ` : `
+                                <button onclick="alternarEstadoCliente('${cliente.num_documento}')" class="p-2 text-red-600 dark:text-red-400 hover:text-red-900 dark:hover:text-red-200 hover:bg-red-100 dark:hover:bg-red-900/30 rounded-lg transition-colors" title="Descartar">
+                                    <i class="fas fa-ban text-sm"></i>
+                                </button>
+                            `}
                         </div>
                     </td>
                 `;
                 
                 tbody.appendChild(row);
             });
+            
+            // Actualizar contadores
+            document.getElementById('clientesVisibles').textContent = result.data.length;
+            document.getElementById('totalClientesCount').textContent = result.total;
+            
         } else {
             tbody.innerHTML = `
                 <tr>
-                    <td colspan="7" class="px-6 py-8 text-center text-gray-500 dark:text-gray-400">
+                    <td colspan="8" class="px-6 py-8 text-center text-gray-500 dark:text-gray-400">
                         <i class="fas fa-inbox text-3xl mb-2"></i>
                         <p>No hay clientes registrados</p>
                         <button onclick="document.getElementById('btnNuevoCliente').click()" class="mt-3 text-sm text-blue-600 hover:text-blue-700">
@@ -1098,7 +1287,7 @@ async function cargarClientes() {
         const tbody = document.getElementById('tablaClientesBody');
         tbody.innerHTML = `
             <tr>
-                <td colspan="7" class="px-6 py-8 text-center text-red-500">
+                <td colspan="8" class="px-6 py-8 text-center text-red-500">
                     <i class="fas fa-exclamation-circle text-3xl mb-2"></i>
                     <p>Error al cargar los clientes</p>
                     <button onclick="cargarClientes()" class="mt-3 text-sm text-blue-600 hover:text-blue-700">
@@ -1114,6 +1303,57 @@ async function cargarClientes() {
 function editarCliente(numDocumento) {
     console.log('Editar cliente:', numDocumento);
     cargarClienteParaEditar(numDocumento);
+}
+
+// =====================================================
+// FUNCIÓN PARA ALTERNAR ESTADO DEL CLIENTE (ACTIVO/DESCARTADO)
+// =====================================================
+
+async function alternarEstadoCliente(numDocumento) {
+    try {
+        const response = await fetch(`/api/clientes/${numDocumento}/descartar`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        
+        const result = await response.json();
+        
+        if (response.ok) {
+            const nuevoEstado = result.nuevo_estado || 'desconocido';
+            const mensaje = nuevoEstado === 'ACTIVO' 
+                ? 'Cliente activado exitosamente' 
+                : 'Cliente descartado exitosamente';
+            
+            mostrarNotificacion(mensaje, 'success');
+            
+            // Recargar la tabla después de 1.5 segundos
+            setTimeout(() => {
+                cargarClientes();
+                actualizarEstadisticas();
+            }, 1500);
+        } else {
+            mostrarNotificacion(result.error || 'Error al cambiar estado del cliente', 'error');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        mostrarNotificacion('Error de conexión al servidor', 'error');
+    }
+}
+
+// =====================================================
+// FUNCIONES ANTERIORES (Se mantienen por compatibilidad)
+// =====================================================
+
+function descartarCliente(numDocumento) {
+    console.log('Descartar cliente (función antigua):', numDocumento);
+    alternarEstadoCliente(numDocumento);
+}
+
+async function descartarClienteConfirmado(numDocumento) {
+    // Redirigir a la nueva función
+    alternarEstadoCliente(numDocumento);
 }
 
 // =====================================================
@@ -1145,7 +1385,15 @@ async function cargarClienteParaEditar(numDocumento) {
             form.querySelector('[name="nombres"]').value = cliente.nombres || '';
             form.querySelector('[name="apellido_paterno"]').value = cliente.apellido_paterno || '';
             form.querySelector('[name="apellido_materno"]').value = cliente.apellido_materno || '';
-            form.querySelector('[name="fecha_nacimiento"]').value = cliente.fecha_nacimiento ? cliente.fecha_nacimiento.split(' ')[0] : '';
+            
+            // Llenar Fecha Nacimiento
+            if (cliente.fecha_nacimiento) {
+                // Convertir fecha a formato YYYY-MM-DD si viene en otro formato
+                const fecha = new Date(cliente.fecha_nacimiento);
+                const fechaFormato = fecha.toISOString().split('T')[0];
+                form.querySelector('[name="fecha_nacimiento"]').value = fechaFormato;
+            }
+            
             form.querySelector('[name="estado_civil"]').value = cliente.estado_civil || '';
             
             // Llenar campos de Contacto
@@ -1170,12 +1418,11 @@ async function cargarClienteParaEditar(numDocumento) {
             }
             
             // Llenar campos de Gestión Comercial
+            // Cargar Estados de Prospección
+            await cargarEstadosProspeccionEditar();
             form.querySelector('[name="id_estado_prospeccion"]').value = cliente.id_estado_prospeccion || '';
             form.querySelector('[name="prioridad"]').value = cliente.prioridad || 'Media';
             form.querySelector('[name="observaciones"]').value = cliente.observaciones || '';
-            
-            // Cargar opciones de Estado Prospección
-            cargarEstadosProspeccionEditar();
             
             // Mostrar modal
             modal.classList.remove('hidden');
@@ -1507,11 +1754,123 @@ async function cargarHistorialSeguimientos(numDocumento) {
     }
 }
 
-// Cargar clientes al iniciar la página
+// =====================================================
+// FUNCIÓN PARA CARGAR ESTADOS DE PROSPECCIÓN EN FILTRO
+// =====================================================
+
+async function cargarEstadosProspeccionFiltro() {
+    try {
+        console.log('Cargando estados de prospección para filtro...');
+        
+        const selectEstado = document.getElementById('filtroEstadoProspeccion');
+        if (!selectEstado) {
+            console.error('Select de Estados de Prospección no encontrado');
+            return;
+        }
+        
+        // Mostrar estado de carga
+        selectEstado.innerHTML = '<option value="">Cargando...</option>';
+        
+        // Llamar al API para obtener estados
+        const response = await fetch('/api/estados-prospeccion');
+        
+        if (!response.ok) {
+            throw new Error(`Error HTTP ${response.status}: ${response.statusText}`);
+        }
+        
+        const result = await response.json();
+        console.log('Respuesta del API:', result);
+        
+        if (result.success && result.data && result.data.length > 0) {
+            console.log(`Se cargaron ${result.data.length} estados de prospección`);
+            
+            // Limpiar y agregar opciones
+            selectEstado.innerHTML = '<option value="">Todos</option>';
+            
+            result.data.forEach(estado => {
+                const option = document.createElement('option');
+                option.value = estado.id_estado_prospeccion;
+                option.textContent = estado.nombre;
+                selectEstado.appendChild(option);
+                console.log(`  ${estado.nombre} (ID: ${estado.id_estado_prospeccion})`);
+            });
+            
+            console.log('Estados de prospección cargados correctamente');
+        } else {
+            console.warn('No hay estados de prospección disponibles');
+            console.log('Datos recibidos:', result);
+            selectEstado.innerHTML = '<option value="">Sin estados disponibles</option>';
+        }
+    } catch (error) {
+        console.error('Error al cargar estados de prospección:', error);
+        const selectEstado = document.getElementById('filtroEstadoProspeccion');
+        if (selectEstado) {
+            selectEstado.innerHTML = '<option value="">Error al cargar</option>';
+        }
+    }
+}
+
+// Variable para almacenar el timeout del debounce
+let debounceTimer = null;
+
+// Cargar clientes y estadísticas al iniciar la página
 document.addEventListener('DOMContentLoaded', () => {
+    console.log('=== PÁGINA CARGADA - INICIALIZANDO ===');
+    
+    // Cargar datos iniciales
+    console.log('Cargando datos iniciales...');
     cargarClientes();
+    actualizarEstadisticas();
+    cargarEstadisticasProspeccion();
+    cargarEstadosProspeccionFiltro(); // Cargar opciones de filtro
+    
+    // Event listener para botón de búsqueda
+    console.log('Configurando event listener para botón de búsqueda...');
+    const btnBuscar = document.getElementById('btnBuscarClientes');
+    if (btnBuscar) {
+        console.log('Botón de búsqueda encontrado');
+        btnBuscar.addEventListener('click', () => {
+            console.log('=== BOTÓN BUSCAR PRESIONADO ===');
+            
+            // Obtener valores de los filtros
+            const nombreBusqueda = document.getElementById('inputBuscarCliente').value.trim();
+            const estadoFiltro = document.getElementById('filtroEstadoSys').value.trim();
+            const estadoProspeccionFiltro = document.getElementById('filtroEstadoProspeccion').value.trim();
+            const fechaDesde = document.getElementById('filtroFechaDesde').value.trim();
+            const fechaHasta = document.getElementById('filtroFechaHasta').value.trim();
+            
+            console.log('Filtros a aplicar:');
+            console.log('  Nombre:', nombreBusqueda || '(vacío)');
+            console.log('  Estado:', estadoFiltro || '(vacío)');
+            console.log('  Estado Prospección:', estadoProspeccionFiltro || '(vacío)');
+            console.log('  Fecha Desde:', fechaDesde || '(vacío)');
+            console.log('  Fecha Hasta:', fechaHasta || '(vacío)');
+            
+            console.log('Ejecutando cargarClientes()...');
+            cargarClientes();
+        });
+    } else {
+        console.error('Botón de búsqueda NO encontrado (ID: btnBuscarClientes)');
+    }
+    
+    // Event listener para campo de búsqueda - permite Enter para buscar
+    console.log('Configurando event listener para campo de búsqueda...');
+    const inputBuscar = document.getElementById('inputBuscarCliente');
+    if (inputBuscar) {
+        console.log('Campo de búsqueda encontrado');
+        inputBuscar.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                console.log('=== ENTER PRESIONADO EN CAMPO DE BÚSQUEDA ===');
+                console.log('Ejecutando cargarClientes()...');
+                cargarClientes();
+            }
+        });
+    } else {
+        console.error('Campo de búsqueda NO encontrado (ID: inputBuscarCliente)');
+    }
     
     // Cargar desplegables de ubicación en el modal
+    console.log('Configurando cascada de ubicaciones...');
     cargarDepartamentosModal();
     
     // Event listeners para cascada
@@ -1522,6 +1881,8 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('modal-select-provincia').addEventListener('change', (e) => {
         cargarDistritosModal(e.target.value);
     });
+    
+    console.log('Inicialización completada');
 });
 
 // =====================================================

@@ -135,7 +135,7 @@ def listar_clientes_api():
         rol_usuario = session.get('user_role', '').upper()  # Convertir a mayusculas
         
         # Log de inicio
-        current_app.logger.info(f"=== LISTAR CLIENTES ===")
+        current_app.logger.info(f"=== LISTAR CLIENTES (SIN FILTROS) ===")
         current_app.logger.info(f"Usuario: {num_documento_asesor}")
         current_app.logger.info(f"Rol original: {session.get('user_role', '')}")
         current_app.logger.info(f"Rol convertido: {rol_usuario}")
@@ -152,16 +152,32 @@ def listar_clientes_api():
         try:
             cursor = connection.cursor(dictionary=True)
             
-            # Si es ADMINISTRADOR, mostrar TODOS los clientes
+            # Si es ADMINISTRADOR, mostrar TODOS los clientes SIN FILTROS
             if rol_usuario == 'ADMINISTRADOR':
-                current_app.logger.info("  Usuario ADMINISTRADOR - Ejecutando sp_ListarTodosLosClientes()")
-                print(f"DEBUG: Usuario ADMINISTRADOR - Listando TODOS los clientes")
-                cursor.execute("CALL sp_ListarTodosLosClientes()")
+                current_app.logger.info("Usuario ADMINISTRADOR - Ejecutando sp_ListarTodosLosClientes() SIN FILTROS")
+                # Llamar SP con parámetros NULL para obtener todos los clientes
+                cursor.execute("""
+                    CALL sp_ListarTodosLosClientes(
+                        NULL,  -- p_nombre
+                        NULL,  -- p_estado_sys
+                        NULL,  -- p_id_estado_prospeccion
+                        NULL,  -- p_fecha_desde
+                        NULL   -- p_fecha_hasta
+                    )
+                """)
             else:
                 # Si es asesor normal, solo mostrar sus clientes
-                current_app.logger.info(f"Usuario {rol_usuario} - Ejecutando sp_ListarClientes({num_documento_asesor})")
-                print(f"DEBUG: Usuario {rol_usuario} - Listando clientes del asesor: {num_documento_asesor}")
-                cursor.execute("CALL sp_ListarClientes(%s)", (num_documento_asesor,))
+                current_app.logger.info(f"Usuario {rol_usuario} - Ejecutando sp_ListarClientes({num_documento_asesor}) SIN FILTROS")
+                cursor.execute("""
+                    CALL sp_ListarClientes(
+                        %s,    -- p_num_documento_asesor
+                        NULL,  -- p_nombre
+                        NULL,  -- p_estado_sys
+                        NULL,  -- p_id_estado_prospeccion
+                        NULL,  -- p_fecha_desde
+                        NULL   -- p_fecha_hasta
+                    )
+                """, (num_documento_asesor,))
             
             clientes = cursor.fetchall()
             
@@ -175,8 +191,10 @@ def listar_clientes_api():
                     cliente['fecha_creacion'] = cliente['fecha_creacion'].isoformat()
                 if cliente.get('fecha_actualizacion') and isinstance(cliente['fecha_actualizacion'], datetime):
                     cliente['fecha_actualizacion'] = cliente['fecha_actualizacion'].isoformat()
+                if cliente.get('ultimo_seguimiento_fecha') and isinstance(cliente['ultimo_seguimiento_fecha'], datetime):
+                    cliente['ultimo_seguimiento_fecha'] = cliente['ultimo_seguimiento_fecha'].isoformat()
             
-            current_app.logger.info(f"  Se obtuvieron {len(clientes)} clientes")
+            current_app.logger.info(f"Se obtuvieron {len(clientes)} clientes")
             
             cursor.close()
             connection.close()
@@ -189,60 +207,29 @@ def listar_clientes_api():
             }, 200
             
         except Error as e:
-            current_app.logger.error(f"  Error SQL: {e}")
-            print(f"  Error SQL: {e}")
+            current_app.logger.error(f"Error SQL: {e}")
             if connection.is_connected():
                 connection.close()
             return {'success': False, 'error': f'Error en la base de datos: {str(e)}'}, 500
     
     except Exception as e:
-        current_app.logger.error(f"  Error general: {e}", exc_info=True)
-        print(f"  Error general: {e}")
-        import traceback
-        traceback.print_exc()
+        current_app.logger.error(f"Error general: {e}", exc_info=True)
         return {'success': False, 'error': f'Error del servidor: {str(e)}'}, 500
 
 
 def listar_todos_clientes_api():
-    """API para listar TODOS los clientes (para administradores)"""
+    """API para listar TODOS los clientes (para administradores) - DEPRECATED"""
     try:
         from flask import current_app
         
-        current_app.logger.info("=== LISTAR TODOS LOS CLIENTES (ADMIN) ===")
+        current_app.logger.info("=== LISTAR TODOS LOS CLIENTES (DEPRECATED) ===")
         
-        connection = get_db_connection()
-        if not connection:
-            current_app.logger.error("Error de conexion al listar todos los clientes")
-            return {'success': False, 'error': 'Error de conexion'}, 500
-        
-        try:
-            cursor = connection.cursor(dictionary=True)
-            
-            # Llamar al SP para listar todos los clientes
-            current_app.logger.info("Ejecutando SP sp_ListarTodosLosClientes()")
-            cursor.execute("CALL sp_ListarTodosLosClientes()")
-            clientes = cursor.fetchall()
-            
-            cursor.close()
-            connection.close()
-            
-            current_app.logger.info(f"✓ Se obtuvieron {len(clientes)} clientes")
-            
-            return {
-                'success': True,
-                'data': clientes,
-                'total': len(clientes)
-            }, 200
-            
-        except Error as e:
-            current_app.logger.error(f"Error SQL al listar todos los clientes: {e}")
-            if connection.is_connected():
-                connection.close()
-            return {'success': False, 'error': f'Error en la base de datos: {str(e)}'}, 500
+        # Esta función está deprecada, usar filtrar_clientes_api en su lugar
+        return {'success': False, 'error': 'Use /api/clientes con filtros en su lugar'}, 400
     
     except Exception as e:
         from flask import current_app
-        current_app.logger.error(f"Error general al listar todos los clientes: {e}", exc_info=True)
+        current_app.logger.error(f"Error: {e}", exc_info=True)
         return {'success': False, 'error': f'Error del servidor: {str(e)}'}, 500
 
 
@@ -330,7 +317,7 @@ def obtener_cliente_por_documento_api(num_documento):
             connection.close()
             
             if cliente:
-                current_app.logger.info(f"✓ Cliente encontrado: {num_documento}")
+                current_app.logger.info(f"Cliente encontrado: {num_documento}")
                 return {
                     'success': True,
                     'data': cliente
@@ -458,6 +445,106 @@ def actualizar_cliente_api(num_documento):
         return {'success': False, 'error': f'Error del servidor: {str(e)}'}, 500
 
 
+def descartar_cliente_api(num_documento):
+    """API para alternar estado del cliente entre ACTIVO y DESCARTADO usando SP"""
+    try:
+        from flask import current_app
+        
+        current_app.logger.info("=== ALTERNAR ESTADO CLIENTE (SP) ===")
+        current_app.logger.info(f"Documento: {num_documento}")
+        
+        connection = get_db_connection()
+        if not connection:
+            current_app.logger.error("Error de conexión")
+            return {'success': False, 'error': 'Error de conexión'}, 500
+        
+        try:
+            cursor = connection.cursor(dictionary=True)
+            
+            # Ejecutar SP directamente con execute (mejor compatibilidad)
+            query = f"CALL sp_AlternarEstadoCliente('{num_documento}')"
+            current_app.logger.info(f"Query: {query}")
+            
+            cursor.execute(query)
+            
+            # Obtener resultado del SELECT del SP
+            resultado = cursor.fetchone()
+            current_app.logger.info(f"Resultado fetchone: {resultado}")
+            
+            # Si fetchone no funciona, intentar fetchall
+            if not resultado:
+                cursor.reset()
+                cursor.execute(query)
+                resultados = cursor.fetchall()
+                current_app.logger.info(f"Resultados fetchall: {resultados}")
+                
+                if resultados and len(resultados) > 0:
+                    resultado = resultados[0]
+            
+            if not resultado:
+                current_app.logger.error(f"SP retornó resultado vacío")
+                cursor.close()
+                connection.close()
+                return {'success': False, 'error': 'Error al ejecutar procedimiento'}, 500
+            
+            estado_resultado = resultado.get('resultado')
+            estado_anterior = resultado.get('estado_anterior')
+            estado_nuevo = resultado.get('estado_nuevo')
+            
+            current_app.logger.info(f"Resultado SP: {estado_resultado}")
+            current_app.logger.info(f"Estado: {estado_anterior} → {estado_nuevo}")
+            
+            # Consumir todos los result sets
+            try:
+                while cursor.nextset():
+                    pass
+            except:
+                pass
+            
+            if estado_resultado == 'OK':
+                connection.commit()
+                current_app.logger.info(f"Estado alterado a {estado_nuevo}")
+                cursor.close()
+                connection.close()
+                
+                return {
+                    'success': True,
+                    'message': f'Cliente {estado_nuevo.lower()} exitosamente',
+                    'nuevo_estado': estado_nuevo,
+                    'estado_anterior': estado_anterior
+                }, 200
+            
+            elif estado_resultado == 'CLIENTE_NO_ENCONTRADO':
+                current_app.logger.warning(f"Cliente no encontrado: {num_documento}")
+                cursor.close()
+                connection.close()
+                return {'success': False, 'error': 'Cliente no encontrado'}, 404
+            
+            else:
+                current_app.logger.error(f"Error en SP: {estado_resultado}")
+                cursor.close()
+                connection.close()
+                return {'success': False, 'error': f'Error en procedimiento: {estado_resultado}'}, 400
+                
+        except Error as e:
+            current_app.logger.error(f"Error SQL: {str(e)}")
+            if connection.is_connected():
+                connection.rollback()
+                connection.close()
+            return {'success': False, 'error': f'Error en la base de datos: {str(e)}'}, 500
+        except Exception as inner_e:
+            current_app.logger.error(f"Error: {str(inner_e)}", exc_info=True)
+            if connection.is_connected():
+                connection.rollback()
+                connection.close()
+            return {'success': False, 'error': f'Error: {str(inner_e)}'}, 500
+    
+    except Exception as e:
+        from flask import current_app
+        current_app.logger.error(f"Error general", exc_info=True)
+        return {'success': False, 'error': f'Error del servidor: {str(e)}'}, 500
+
+
 # =====================================================
 # FUNCIONES DE SEGUIMIENTO DE CLIENTES
 # =====================================================
@@ -580,7 +667,7 @@ def listar_historial_seguimientos_api(num_documento):
             cursor.close()
             connection.close()
             
-            current_app.logger.info(f"✓ Historial cargado correctamente")
+            current_app.logger.info(f"Historial cargado correctamente")
             
             return {
                 'success': True,
@@ -639,7 +726,7 @@ def listar_ultimos_3_seguimientos_api(num_documento):
             cursor.close()
             connection.close()
             
-            current_app.logger.info(f"✓ Últimos 3 seguimientos cargados correctamente")
+            current_app.logger.info(f"Últimos 3 seguimientos cargados correctamente")
             
             return {
                 'success': True,
@@ -657,6 +744,97 @@ def listar_ultimos_3_seguimientos_api(num_documento):
         from flask import current_app
         current_app.logger.error(f"Error general al obtener últimos 3 seguimientos: {str(e)}", exc_info=True)
         return {'success': True, 'data': [], 'total': 0}, 200
+
+
+def contar_clientes_por_estado_prospeccion_api():
+    """API para obtener cantidad de clientes por estado de prospección"""
+    try:
+        from flask import current_app
+        
+        connection = get_db_connection()
+        if not connection:
+            return {'success': False, 'error': 'Error de conexión'}, 500
+        
+        try:
+            cursor = connection.cursor(dictionary=True)
+            
+            # Llamar al SP
+            cursor.execute("CALL sp_ContarClientesPorEstadoProspeccion()")
+            
+            estadisticas = cursor.fetchall()
+            
+            cursor.close()
+            connection.close()
+            
+            if estadisticas:
+                return {
+                    'success': True,
+                    'data': estadisticas
+                }, 200
+            else:
+                return {
+                    'success': True,
+                    'data': []
+                }, 200
+            
+        except Error as e:
+            current_app.logger.error(f"Error SQL: {str(e)}")
+            if connection.is_connected():
+                connection.close()
+            return {'success': False, 'error': f'Error en BD: {str(e)}'}, 500
+    
+    except Exception as e:
+        from flask import current_app
+        current_app.logger.error(f"Error general: {str(e)}", exc_info=True)
+        return {'success': False, 'error': f'Error: {str(e)}'}, 500
+
+
+def contar_clientes_descartados_api():
+    """API para obtener cantidad de clientes descartados (por asesor o total si es admin)"""
+    try:
+        from flask import current_app, session
+        
+        num_documento_asesor = session.get('user_documento', '')
+        rol_usuario = session.get('user_role', '').upper()
+        
+        if not num_documento_asesor:
+            return {'success': False, 'error': 'Usuario no autenticado'}, 401
+        
+        connection = get_db_connection()
+        if not connection:
+            return {'success': False, 'error': 'Error de conexión'}, 500
+        
+        try:
+            cursor = connection.cursor(dictionary=True)
+            
+            # Si es admin, obtener todos los descartados
+            if rol_usuario == 'ADMINISTRADOR':
+                cursor.execute("CALL sp_ContarClientesDescartadosAdmin()")
+            else:
+                # Si es asesor, obtener solo sus descartados
+                cursor.execute("CALL sp_ContarClientesDescartadosAsesor(%s)", (num_documento_asesor,))
+            
+            result = cursor.fetchone()
+            cantidad = result.get('cantidad_descartados', 0) if result else 0
+            
+            cursor.close()
+            connection.close()
+            
+            return {
+                'success': True,
+                'data': cantidad
+            }, 200
+            
+        except Error as e:
+            current_app.logger.error(f"Error SQL: {str(e)}")
+            if connection.is_connected():
+                connection.close()
+            return {'success': False, 'error': f'Error en BD: {str(e)}'}, 500
+    
+    except Exception as e:
+        from flask import current_app
+        current_app.logger.error(f"Error general: {str(e)}", exc_info=True)
+        return {'success': False, 'error': f'Error: {str(e)}'}, 500
 
 
 # =====================================================
@@ -758,4 +936,155 @@ def registrar_seguimiento_api():
     except Exception as e:
         from flask import current_app
         current_app.logger.error(f"Error general al registrar seguimiento", exc_info=True)
+        return {'success': False, 'error': f'Error del servidor: {str(e)}'}, 500
+
+
+# =====================================================
+# FUNCIÓN PARA FILTRAR CLIENTES
+# =====================================================
+
+def filtrar_clientes_api():
+    """API para filtrar clientes - Usa SPs con parámetros de filtro"""
+    try:
+        from flask import session, current_app
+        from datetime import datetime
+        
+        current_app.logger.info("=== FILTRAR CLIENTES (API) ===")
+        
+        # Obtener parámetros de query
+        nombre_busqueda = request.args.get('nombre', '').strip() if request.args.get('nombre') else None
+        estado_sys = request.args.get('estado', '').strip().upper() if request.args.get('estado') else None
+        id_estado_prospeccion_str = request.args.get('estado_prospeccion', '').strip()
+        fecha_desde_str = request.args.get('fecha_desde', '').strip() if request.args.get('fecha_desde') else None
+        fecha_hasta_str = request.args.get('fecha_hasta', '').strip() if request.args.get('fecha_hasta') else None
+        
+        current_app.logger.info(f"Parámetros recibidos:")
+        current_app.logger.info(f"  nombre: '{nombre_busqueda}'")
+        current_app.logger.info(f"  estado: '{estado_sys}'")
+        current_app.logger.info(f"  estado_prospeccion: '{id_estado_prospeccion_str}'")
+        current_app.logger.info(f"  fecha_desde: '{fecha_desde_str}'")
+        current_app.logger.info(f"  fecha_hasta: '{fecha_hasta_str}'")
+        
+        # Convertir id_estado_prospeccion a int o None
+        id_estado_prospeccion = None
+        if id_estado_prospeccion_str:
+            try:
+                id_estado_prospeccion = int(id_estado_prospeccion_str)
+                current_app.logger.info(f"  id_estado_prospeccion convertido a: {id_estado_prospeccion}")
+            except ValueError:
+                current_app.logger.warning(f"  No se pudo convertir id_estado_prospeccion: {id_estado_prospeccion_str}")
+                id_estado_prospeccion = None
+        
+        # Obtener el documento y rol del asesor logueado
+        num_documento_asesor = session.get('user_documento', '')
+        rol_usuario = session.get('user_role', '').upper()
+        
+        current_app.logger.info(f"Usuario: {num_documento_asesor}, Rol: {rol_usuario}")
+        
+        if not num_documento_asesor:
+            current_app.logger.warning("Usuario no autenticado intentando filtrar clientes")
+            return {'success': False, 'error': 'Usuario no autenticado'}, 401
+        
+        # Convertir strings de fecha a objetos date si son válidos
+        fecha_desde = None
+        fecha_hasta = None
+        
+        try:
+            if fecha_desde_str:
+                fecha_desde = datetime.strptime(fecha_desde_str, '%Y-%m-%d').date()
+                current_app.logger.info(f"  fecha_desde convertida a: {fecha_desde}")
+            if fecha_hasta_str:
+                fecha_hasta = datetime.strptime(fecha_hasta_str, '%Y-%m-%d').date()
+                current_app.logger.info(f"  fecha_hasta convertida a: {fecha_hasta}")
+        except ValueError as e:
+            current_app.logger.error(f"Error al parsear fechas: {e}")
+            return {'success': False, 'error': 'Formato de fecha inválido'}, 400
+        
+        connection = get_db_connection()
+        if not connection:
+            current_app.logger.error("Error al conectar a la base de datos")
+            return {'success': False, 'error': 'Error de conexión'}, 500
+        
+        try:
+            cursor = connection.cursor(dictionary=True)
+            
+            # Si es ADMINISTRADOR, usar sp_ListarTodosLosClientes CON FILTROS
+            if rol_usuario == 'ADMINISTRADOR':
+                current_app.logger.info("Ejecutando sp_ListarTodosLosClientes() con filtros para ADMIN")
+                cursor.execute("""
+                    CALL sp_ListarTodosLosClientes(
+                        %s,  -- p_nombre
+                        %s,  -- p_estado_sys
+                        %s,  -- p_id_estado_prospeccion
+                        %s,  -- p_fecha_desde
+                        %s   -- p_fecha_hasta
+                    )
+                """, (
+                    nombre_busqueda,
+                    estado_sys,
+                    id_estado_prospeccion,
+                    fecha_desde,
+                    fecha_hasta
+                ))
+            else:
+                # Si es asesor normal, usar sp_ListarClientes CON FILTROS
+                current_app.logger.info(f"Ejecutando sp_ListarClientes() con filtros para ASESOR: {num_documento_asesor}")
+                cursor.execute("""
+                    CALL sp_ListarClientes(
+                        %s,  -- p_num_documento_asesor
+                        %s,  -- p_nombre
+                        %s,  -- p_estado_sys
+                        %s,  -- p_id_estado_prospeccion
+                        %s,  -- p_fecha_desde
+                        %s   -- p_fecha_hasta
+                    )
+                """, (
+                    num_documento_asesor,
+                    nombre_busqueda,
+                    estado_sys,
+                    id_estado_prospeccion,
+                    fecha_desde,
+                    fecha_hasta
+                ))
+            
+            clientes = cursor.fetchall()
+            current_app.logger.info(f"SP retornó {len(clientes)} clientes")
+            
+            # Convertir datetime a string para JSON
+            for cliente in clientes:
+                if cliente.get('fecha_proximo_seguimiento') and isinstance(cliente['fecha_proximo_seguimiento'], datetime):
+                    cliente['fecha_proximo_seguimiento'] = cliente['fecha_proximo_seguimiento'].isoformat()
+                if cliente.get('fecha_nacimiento') and isinstance(cliente['fecha_nacimiento'], datetime):
+                    cliente['fecha_nacimiento'] = cliente['fecha_nacimiento'].isoformat()
+                if cliente.get('fecha_creacion') and isinstance(cliente['fecha_creacion'], datetime):
+                    cliente['fecha_creacion'] = cliente['fecha_creacion'].isoformat()
+                if cliente.get('fecha_actualizacion') and isinstance(cliente['fecha_actualizacion'], datetime):
+                    cliente['fecha_actualizacion'] = cliente['fecha_actualizacion'].isoformat()
+                if cliente.get('ultimo_seguimiento_fecha') and isinstance(cliente['ultimo_seguimiento_fecha'], datetime):
+                    cliente['ultimo_seguimiento_fecha'] = cliente['ultimo_seguimiento_fecha'].isoformat()
+            
+            cursor.close()
+            connection.close()
+            
+            current_app.logger.info(f"Filtrado completado. Retornando {len(clientes)} clientes")
+            
+            return {
+                'success': True,
+                'data': clientes,
+                'total': len(clientes)
+            }, 200
+            
+        except Error as e:
+            current_app.logger.error(f"Error SQL al filtrar clientes: {e}")
+            print(f"Error SQL: {e}")
+            if connection.is_connected():
+                connection.close()
+            return {'success': False, 'error': f'Error en la base de datos: {str(e)}'}, 500
+    
+    except Exception as e:
+        from flask import current_app
+        current_app.logger.error(f"Error general al filtrar clientes: {e}", exc_info=True)
+        print(f"Error general: {e}")
+        import traceback
+        traceback.print_exc()
         return {'success': False, 'error': f'Error del servidor: {str(e)}'}, 500

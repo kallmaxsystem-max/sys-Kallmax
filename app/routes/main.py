@@ -40,11 +40,15 @@ from app.funciones.clientes import (
     eliminar_cliente_api,
     obtener_cliente_por_documento_api,
     actualizar_cliente_api,
+    descartar_cliente_api,
+    contar_clientes_por_estado_prospeccion_api,
+    contar_clientes_descartados_api,
     registrar_seguimiento_api,
     listar_seguimientos_cliente_api,
     listar_tipos_seguimiento_api,
     listar_historial_seguimientos_api,
-    listar_ultimos_3_seguimientos_api
+    listar_ultimos_3_seguimientos_api,
+    filtrar_clientes_api
 )
 
 # Decorador para requerir autenticación
@@ -294,6 +298,20 @@ def get_tipos_compra():
     return get_tipos_compra_api_func()
 
 
+@main_bp.route('/api/estadisticas/clientes-por-estado-prospeccion', methods=['GET'])
+@login_required
+def get_estadisticas_clientes_estado():
+    """API para obtener cantidad de clientes por estado de prospección"""
+    return contar_clientes_por_estado_prospeccion_api()
+
+
+@main_bp.route('/api/estadisticas/clientes-descartados', methods=['GET'])
+@login_required
+def get_estadisticas_clientes_descartados():
+    """API para obtener cantidad de clientes descartados"""
+    return contar_clientes_descartados_api()
+
+
 @main_bp.route('/api/clientes', methods=['POST'])
 @login_required
 def insertar_cliente():
@@ -304,7 +322,19 @@ def insertar_cliente():
 @main_bp.route('/api/clientes', methods=['GET'])
 @login_required
 def listar_clientes():
-    """API para listar clientes del asesor logueado"""
+    """API para listar clientes del asesor logueado con filtros opcionales"""
+    # Verificar si hay parámetros de filtro
+    nombre = request.args.get('nombre')
+    estado = request.args.get('estado')
+    estado_prospeccion = request.args.get('estado_prospeccion')
+    fecha_desde = request.args.get('fecha_desde')
+    fecha_hasta = request.args.get('fecha_hasta')
+    
+    # Si hay CUALQUIER parámetro de filtro, usar la función de filtrado
+    if nombre or estado or estado_prospeccion or fecha_desde or fecha_hasta:
+        return filtrar_clientes_api()
+    
+    # Si no hay filtros, devolver todos los clientes del asesor
     return listar_clientes_api()
 
 
@@ -334,6 +364,13 @@ def obtener_cliente(num_documento):
 def actualizar_cliente(num_documento):
     """API para actualizar un cliente por documento"""
     return actualizar_cliente_api(num_documento)
+
+
+@main_bp.route('/api/clientes/<num_documento>/descartar', methods=['PUT'])
+@login_required
+def descartar_cliente(num_documento):
+    """API para descartar un cliente"""
+    return descartar_cliente_api(num_documento)
 
 
 # ============================================================================
