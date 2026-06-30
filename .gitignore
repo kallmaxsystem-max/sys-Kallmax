@@ -46,3 +46,19 @@ Thumbs.db
 
 # Logs
 *.log
+
+# Archivos temporales SQL (excepto los importantes)
+crear_sp_*.sql
+verificar_*.py
+generar_*.py
+
+# Documentos temporales
+INSTRUCCIONES_CLIENTES.md
+TODO.md
+NOTAS.md
+
+# Backups locales
+*.bak
+*.backup
+*_backup.*
+backup_*

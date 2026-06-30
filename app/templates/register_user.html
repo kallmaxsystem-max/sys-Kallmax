@@ -218,8 +218,10 @@
                                 <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                                     <i class="fas fa-birthday-cake mr-2 text-purple-600"></i>Fecha de Nacimiento
                                 </label>
-                                <input type="date" name="fecha_nacimiento"
+                                <input type="date" name="fecha_nacimiento" id="fecha-nacimiento-nuevo"
+                                    placeholder="DD/MM/AAAA o usar calendario"
                                     class="w-full px-4 py-2 rounded-lg border-2 border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 transition-all">
+                                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Puedes escribir la fecha o usar el calendario</p>
                             </div>
                         </div>
                     </div>
@@ -787,6 +789,7 @@
         console.log('📊 Datos completos recibidos del servidor:', data);
         console.log('🗺️ Ubicación - Depto:', data.id_departamento, 'Prov:', data.id_provincia, 'Dist:', data.id_distrito);
         console.log('💼 Área y Cargo - Área:', data.id_area, 'Cargo:', data.id_cargo);
+        console.log('📅 DEBUG fecha_nacimiento:', data.fecha_nacimiento, 'Tipo:', typeof data.fecha_nacimiento);
         
         // Cargar datos iniciales primero
         await cargarDatosIniciales();
@@ -800,7 +803,19 @@
         document.querySelector('[name="nombres"]').value = data.nombres || '';
         document.querySelector('[name="apellido_paterno"]').value = data.apellido_paterno || '';
         document.querySelector('[name="apellido_materno"]').value = data.apellido_materno || '';
-        document.querySelector('[name="fecha_nacimiento"]').value = data.fecha_nacimiento || '';
+        
+        // Fecha de nacimiento - con conversión si es necesario
+        if (data.fecha_nacimiento) {
+            // Si viene como fecha "Wed Nov 04 1995" convertir a YYYY-MM-DD
+            let fechaISO = data.fecha_nacimiento;
+            if (typeof data.fecha_nacimiento !== 'string' || !data.fecha_nacimiento.match(/^\d{4}-\d{2}-\d{2}$/)) {
+                const fecha = new Date(data.fecha_nacimiento);
+                fechaISO = fecha.toISOString().split('T')[0];
+            }
+            document.querySelector('[name="fecha_nacimiento"]').value = fechaISO;
+            console.log('📅 Fecha establecida en el input:', fechaISO);
+        }
+        
         document.querySelector('[name="estado_civil"]').value = data.estado_civil || '';
         document.querySelector('[name="genero"]').value = data.genero || '';
         document.querySelector('[name="email"]').value = data.email || '';
@@ -966,20 +981,35 @@
     // Función para cargar departamentos
     async function cargarDepartamentos() {
         try {
+            console.log('🔄 Cargando departamentos...');
             const response = await fetch('/api/departamentos');
-            const result = await response.json();
+            console.log('📡 Response status:', response.status);
             
-            if (result.success) {
-                selectDepartamento.innerHTML = '<option value="">-- Selecciona Departamento --</option>';
-                result.data.forEach(dept => {
+            if (!response.ok) {
+                console.error('❌ Error en respuesta:', response.statusText);
+                selectDepartamento.innerHTML = '<option value="">Error al cargar</option>';
+                return;
+            }
+            
+            const departamentos = await response.json();
+            console.log('📦 Departamentos recibidos:', departamentos);
+            
+            selectDepartamento.innerHTML = '<option value="">-- Selecciona Departamento --</option>';
+            
+            if (Array.isArray(departamentos) && departamentos.length > 0) {
+                console.log('✅ Cargando ' + departamentos.length + ' departamentos');
+                departamentos.forEach(dept => {
                     const option = document.createElement('option');
                     option.value = dept.id_departamento;
                     option.textContent = dept.nombre;
                     selectDepartamento.appendChild(option);
                 });
+            } else {
+                console.warn('⚠️ No hay departamentos o no es array:', departamentos);
             }
         } catch (error) {
-            console.error('Error al cargar departamentos:', error);
+            console.error('❌ Error al cargar departamentos:', error);
+            selectDepartamento.innerHTML = '<option value="">Error en servidor</option>';
         }
     }
 
@@ -994,25 +1024,41 @@
         }
 
         try {
+            console.log('🔄 Cargando provincias para departamento:', idDepartamento);
             const response = await fetch(`/api/provincias/${idDepartamento}`);
-            const result = await response.json();
+            console.log('📡 Response status:', response.status);
             
-            if (result.success) {
-                selectProvincia.innerHTML = '<option value="">-- Selecciona Provincia --</option>';
-                result.data.forEach(prov => {
+            if (!response.ok) {
+                console.error('❌ Error en respuesta:', response.statusText);
+                selectProvincia.innerHTML = '<option value="">Error al cargar</option>';
+                return;
+            }
+            
+            const provincias = await response.json();
+            console.log('📦 Provincias recibidas:', provincias);
+            
+            selectProvincia.innerHTML = '<option value="">-- Selecciona Provincia --</option>';
+            
+            if (Array.isArray(provincias) && provincias.length > 0) {
+                console.log('✅ Cargando ' + provincias.length + ' provincias');
+                provincias.forEach(prov => {
                     const option = document.createElement('option');
                     option.value = prov.id_provincia;
                     option.textContent = prov.nombre;
                     selectProvincia.appendChild(option);
                 });
-                selectProvincia.disabled = false;
-                
-                // Limpiar distritos
-                selectDistrito.innerHTML = '<option value="">-- Selecciona Distrito --</option>';
-                selectDistrito.disabled = true;
+            } else {
+                console.warn('⚠️ No hay provincias o no es array:', provincias);
             }
+            
+            selectProvincia.disabled = false;
+            
+            // Limpiar distritos
+            selectDistrito.innerHTML = '<option value="">-- Selecciona Distrito --</option>';
+            selectDistrito.disabled = true;
         } catch (error) {
-            console.error('Error al cargar provincias:', error);
+            console.error('❌ Error al cargar provincias:', error);
+            selectProvincia.innerHTML = '<option value="">Error en servidor</option>';
         }
     }
 
@@ -1025,21 +1071,37 @@
         }
 
         try {
+            console.log('🔄 Cargando distritos para provincia:', idProvincia);
             const response = await fetch(`/api/distritos/${idProvincia}`);
-            const result = await response.json();
+            console.log('📡 Response status:', response.status);
             
-            if (result.success) {
-                selectDistrito.innerHTML = '<option value="">-- Selecciona Distrito --</option>';
-                result.data.forEach(dist => {
+            if (!response.ok) {
+                console.error('❌ Error en respuesta:', response.statusText);
+                selectDistrito.innerHTML = '<option value="">Error al cargar</option>';
+                return;
+            }
+            
+            const distritos = await response.json();
+            console.log('📦 Distritos recibidos:', distritos);
+            
+            selectDistrito.innerHTML = '<option value="">-- Selecciona Distrito --</option>';
+            
+            if (Array.isArray(distritos) && distritos.length > 0) {
+                console.log('✅ Cargando ' + distritos.length + ' distritos');
+                distritos.forEach(dist => {
                     const option = document.createElement('option');
                     option.value = dist.id_distrito;
                     option.textContent = dist.nombre;
                     selectDistrito.appendChild(option);
                 });
-                selectDistrito.disabled = false;
+            } else {
+                console.warn('⚠️ No hay distritos o no es array:', distritos);
             }
+            
+            selectDistrito.disabled = false;
         } catch (error) {
-            console.error('Error al cargar distritos:', error);
+            console.error('❌ Error al cargar distritos:', error);
+            selectDistrito.innerHTML = '<option value="">Error en servidor</option>';
         }
     }
 
@@ -1398,7 +1460,7 @@
                             </div>
                             <div class="border-b border-gray-200 dark:border-slate-600 pb-3 last:border-b-0">
                                 <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">Contraseña:</p>
-                                <p class="text-lg font-semibold text-gray-900 dark:text-white break-all font-mono">${result.contraseña || 'N/A'}</p>
+                                <p class="text-lg font-semibold text-gray-900 dark:text-white break-all font-mono">${result.contrasena || 'SU DNI'}</p>
                             </div>
                         </div>
                         `}
