@@ -48,7 +48,8 @@ from app.funciones.clientes import (
     listar_tipos_seguimiento_api,
     listar_historial_seguimientos_api,
     listar_ultimos_3_seguimientos_api,
-    filtrar_clientes_api
+    filtrar_clientes_api,
+    importar_clientes_api
 )
 
 # Decorador para requerir autenticación
@@ -74,17 +75,19 @@ def index():
 def dashboard():
     return render_template('dashboard.html')
 
-@main_bp.route('/properties')
-@login_required
-def properties():
-    """Página de gestión de propiedades"""
-    return render_template('properties.html')
-
 @main_bp.route('/clients')
 @login_required
 def clients():
     """Página de gestión de clientes"""
     return render_template('clients.html')
+
+@main_bp.route('/simulador')
+@login_required
+def simulador():
+    """Página de simulador de ventas de terrenos"""
+    return render_template('simulador.html')
+
+
 
 @main_bp.route('/register-user', methods=['GET', 'POST'])
 @login_required
@@ -297,124 +300,226 @@ def get_tipos_compra():
     """API para obtener lista de tipos de compra"""
     return get_tipos_compra_api_func()
 
+# ============================================================================
+# RUTAS PARA IMPORTACIÓN Y DESCARGA DE PLANTILLA DE CLIENTES
+# ============================================================================
 
-@main_bp.route('/api/estadisticas/clientes-por-estado-prospeccion', methods=['GET'])
+@main_bp.route('/api/clientes/descargar-plantilla', methods=['GET'])
 @login_required
-def get_estadisticas_clientes_estado():
-    """API para obtener cantidad de clientes por estado de prospección"""
-    return contar_clientes_por_estado_prospeccion_api()
+def descargar_plantilla_clientes():
+    """Descargar plantilla Excel para importar clientes"""
+    from openpyxl import Workbook
+    from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
+    from flask import send_file
+    import io
+    from datetime import datetime
+    
+    # Crear nuevo workbook
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Clientes"
+    
+    # Definir estilos
+    header_fill = PatternFill(start_color="4D148C", end_color="4D148C", fill_type="solid")
+    header_font = Font(bold=True, color="FFFFFF", size=11)
+    border = Border(
+        left=Side(style='thin'),
+        right=Side(style='thin'),
+        top=Side(style='thin'),
+        bottom=Side(style='thin')
+    )
+    center_alignment = Alignment(horizontal="center", vertical="center")
+    
+    # Definir encabezados
+    headers = [
+        "Tipo Documento*",
+        "Nro. Documento*",
+        "Género*",
+        "Nombres*",
+        "Apellido Paterno*",
+        "Apellido Materno",
+        "Fecha Nacimiento*",
+        "Estado Civil*",
+        "Email*",
+        "Celular*",
+        "Dirección*",
+        "Departamento*",
+        "Provincia*",
+        "Distrito*",
+        "Fuente Contacto",
+        "Proyecto Interés",
+        "Estado Prospección",
+        "Tipo Compra",
+        "Prioridad"
+    ]
+    
+    # Escribir encabezados
+    for col, header in enumerate(headers, 1):
+        cell = ws.cell(row=1, column=col)
+        cell.value = header
+        cell.fill = header_fill
+        cell.font = header_font
+        cell.alignment = center_alignment
+        cell.border = border
+    
+    # Ajustar ancho de columnas
+    column_widths = [18, 18, 12, 18, 20, 20, 18, 15, 25, 18, 30, 18, 18, 18, 18, 20, 20, 18, 12]
+    for i, width in enumerate(column_widths, 1):
+        ws.column_dimensions[chr(64 + i)].width = width
+    
+    # Agregar fila de ejemplo
+    example_data = [
+        "DNI",
+        "12345678",
+        "M",
+        "Juan",
+        "Pérez",
+        "García",
+        "1990-01-15",
+        "Casado",
+        "juan@ejemplo.com",
+        "+51 999 999 999",
+        "Av. Principal 123, Lima",
+        "Lima",
+        "Lima",
+        "Lima",
+        "",  # Dejar vacío - Fuente Contacto es opcional
+        "Villa de los Nísperos",
+        "POTENCIAL",  # Estado Prospección válido
+        "Contado",
+        "Media"  # Prioridad
+    ]
+    
+    for col, value in enumerate(example_data, 1):
+        cell = ws.cell(row=2, column=col)
+        cell.value = value
+        cell.border = border
+        if col in [2]:  # Centro para documento
+            cell.alignment = center_alignment
+    
+    # Crear archivo en memoria
+    excel_file = io.BytesIO()
+    wb.save(excel_file)
+    excel_file.seek(0)
+    
+    # Enviar archivo
+    return send_file(
+        excel_file,
+        mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        as_attachment=True,
+        download_name=f'Plantilla_Clientes_{datetime.now().strftime("%d_%m_%Y")}.xlsx'
+    )
 
 
-@main_bp.route('/api/estadisticas/clientes-descartados', methods=['GET'])
+@main_bp.route('/api/clientes/importar', methods=['POST'])
 @login_required
-def get_estadisticas_clientes_descartados():
-    """API para obtener cantidad de clientes descartados"""
-    return contar_clientes_descartados_api()
+def importar_clientes():
+    """Importar clientes desde archivo Excel"""
+    from app.funciones.clientes import importar_clientes_api
+    from flask import jsonify
+    
+    resultado, status_code = importar_clientes_api()
+    return jsonify(resultado), status_code
+
+
+# ============================================================================
+# RUTAS CRUD PARA GESTIÓN DE CLIENTES
+# ============================================================================
+
+@main_bp.route('/api/clientes', methods=['GET'])
+@login_required
+def get_clientes():
+    """Obtener lista de clientes con filtros"""
+    return filtrar_clientes_api()
 
 
 @main_bp.route('/api/clientes', methods=['POST'])
 @login_required
-def insertar_cliente():
-    """API para insertar un nuevo cliente"""
+def crear_cliente_api():
+    """Crear un nuevo cliente"""
     return insertar_cliente_api()
-
-
-@main_bp.route('/api/clientes', methods=['GET'])
-@login_required
-def listar_clientes():
-    """API para listar clientes del asesor logueado con filtros opcionales"""
-    # Verificar si hay parámetros de filtro
-    nombre = request.args.get('nombre')
-    estado = request.args.get('estado')
-    estado_prospeccion = request.args.get('estado_prospeccion')
-    fecha_desde = request.args.get('fecha_desde')
-    fecha_hasta = request.args.get('fecha_hasta')
-    
-    # Si hay CUALQUIER parámetro de filtro, usar la función de filtrado
-    if nombre or estado or estado_prospeccion or fecha_desde or fecha_hasta:
-        return filtrar_clientes_api()
-    
-    # Si no hay filtros, devolver todos los clientes del asesor
-    return listar_clientes_api()
-
-
-@main_bp.route('/api/clientes/todos', methods=['GET'])
-@login_required
-def listar_todos_clientes():
-    """API para listar todos los clientes (administradores)"""
-    return listar_todos_clientes_api()
-
-
-@main_bp.route('/api/clientes/<num_documento>', methods=['DELETE'])
-@login_required
-def eliminar_cliente(num_documento):
-    """API para eliminar un cliente por documento"""
-    return eliminar_cliente_api(num_documento)
 
 
 @main_bp.route('/api/clientes/<num_documento>', methods=['GET'])
 @login_required
 def obtener_cliente(num_documento):
-    """API para obtener un cliente por documento"""
+    """Obtener datos de un cliente específico"""
     return obtener_cliente_por_documento_api(num_documento)
 
 
 @main_bp.route('/api/clientes/<num_documento>', methods=['PUT'])
 @login_required
-def actualizar_cliente(num_documento):
-    """API para actualizar un cliente por documento"""
+def actualizar_cliente_route(num_documento):
+    """Actualizar datos de un cliente"""
     return actualizar_cliente_api(num_documento)
+
+
+@main_bp.route('/api/clientes/<num_documento>', methods=['DELETE'])
+@login_required
+def eliminar_cliente_route(num_documento):
+    """Eliminar un cliente"""
+    return eliminar_cliente_api(num_documento)
 
 
 @main_bp.route('/api/clientes/<num_documento>/descartar', methods=['PUT'])
 @login_required
-def descartar_cliente(num_documento):
-    """API para descartar un cliente"""
+def descartar_cliente_route(num_documento):
+    """Cambiar estado de cliente a descartado"""
     return descartar_cliente_api(num_documento)
 
 
 # ============================================================================
-# RUTAS API PARA GESTIÓN DE SEGUIMIENTOS DE CLIENTES
+# RUTAS PARA SEGUIMIENTOS DE CLIENTES
 # ============================================================================
 
-@main_bp.route('/api/seguimientos', methods=['POST'])
+@main_bp.route('/api/clientes/<num_documento>/seguimientos', methods=['GET'])
 @login_required
-def registrar_seguimiento():
-    """API para registrar un nuevo seguimiento de cliente"""
-    return registrar_seguimiento_api()
-
-
-@main_bp.route('/api/registrar-seguimiento', methods=['POST'])
-@login_required
-def registrar_seguimiento_endpoint():
-    """API para registrar un nuevo seguimiento de cliente (alias)"""
-    return registrar_seguimiento_api()
-
-
-@main_bp.route('/api/seguimientos/<num_documento>', methods=['GET'])
-@login_required
-def listar_seguimientos(num_documento):
-    """API para listar seguimientos de un cliente específico"""
+def obtener_seguimientos(num_documento):
+    """Obtener lista de seguimientos de un cliente"""
     return listar_seguimientos_cliente_api(num_documento)
+
+
+@main_bp.route('/api/clientes/<num_documento>/seguimientos', methods=['POST'])
+@login_required
+def crear_seguimiento(num_documento):
+    """Registrar un nuevo seguimiento para un cliente"""
+    return registrar_seguimiento_api()
+
+
+@main_bp.route('/api/clientes/<num_documento>/seguimientos/historial', methods=['GET'])
+@login_required
+def obtener_historial_seguimientos(num_documento):
+    """Obtener historial completo de seguimientos de un cliente"""
+    return listar_historial_seguimientos_api(num_documento)
+
+
+@main_bp.route('/api/clientes/<num_documento>/seguimientos/ultimos-3', methods=['GET'])
+@login_required
+def obtener_ultimos_3_seguimientos(num_documento):
+    """Obtener los últimos 3 seguimientos de un cliente"""
+    return listar_ultimos_3_seguimientos_api(num_documento)
 
 
 @main_bp.route('/api/tipos-seguimiento', methods=['GET'])
 @login_required
-def listar_tipos_seguimiento():
-    """API para listar tipos de seguimiento disponibles"""
+def obtener_tipos_seguimiento():
+    """Obtener lista de tipos de seguimiento disponibles"""
     return listar_tipos_seguimiento_api()
 
 
-@main_bp.route('/api/historial-seguimientos/<num_documento>', methods=['GET'])
+# ============================================================================
+# RUTAS PARA ESTADÍSTICAS DE CLIENTES
+# ============================================================================
+
+@main_bp.route('/api/estadisticas/clientes-por-estado-prospeccion', methods=['GET'])
 @login_required
-def obtener_historial_seguimientos(num_documento):
-    """API para obtener el historial completo de seguimientos de un cliente usando SP"""
-    return listar_historial_seguimientos_api(num_documento)
+def obtener_estadisticas_prospeccion():
+    """Obtener estadísticas de clientes por estado de prospección"""
+    return contar_clientes_por_estado_prospeccion_api()
 
 
-@main_bp.route('/api/ultimos-3-seguimientos/<num_documento>', methods=['GET'])
+@main_bp.route('/api/estadisticas/clientes-descartados', methods=['GET'])
 @login_required
-def obtener_ultimos_3_seguimientos(num_documento):
-    """API para obtener los últimos 3 seguimientos de un cliente usando SP"""
-    return listar_ultimos_3_seguimientos_api(num_documento)
-
+def obtener_estadisticas_descartados():
+    """Obtener cantidad de clientes descartados"""
+    return contar_clientes_descartados_api()
