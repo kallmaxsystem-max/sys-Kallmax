@@ -654,3 +654,21 @@ def obtener_estadisticas_prospeccion():
 def obtener_estadisticas_descartados():
     """Obtener cantidad de clientes descartados"""
     return contar_clientes_descartados_api()
+
+
+# ============================================================================
+# RUTAS PARA CONFIGURACIÓN Y ADMINISTRACIÓN
+# ============================================================================
+
+@main_bp.route('/settings')
+@login_required
+def settings():
+    """Página de configuración"""
+    return render_template('settings.html')
+
+
+@main_bp.route('/permisos-roles')
+@login_required
+def permisos_roles():
+    """Página de administración de permisos y roles de usuarios"""
+    return render_template('permissions.html')

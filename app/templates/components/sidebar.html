@@ -52,17 +52,15 @@
                             <i class="fas fa-check ml-1 text-xs"></i>
                             {% endif %}
                         </a>
+                        <a href="{{ url_for('main.simulador') }}" class="flex items-center w-full px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 group {% if request.endpoint == 'main.simulador' %}bg-[#4D148C]/20 text-[#4D148C] dark:bg-[#4D148C]/30 dark:text-[#4D148C]{% else %}text-gray-600 dark:text-gray-400 hover:bg-[#4D148C]/10 dark:hover:bg-[#4D148C]/30 hover:text-[#4D148C] dark:hover:text-[#4D148C]{% endif %}">
+                            <i class="fas fa-calculator w-4 text-center {% if request.endpoint == 'main.simulador' %}text-[#4D148C]{% else %}text-gray-400 group-hover:text-[#4D148C]{% endif %} transition-colors"></i>
+                            <span class="ml-3">Simulador</span>
+                            {% if request.endpoint == 'main.simulador' %}
+                            <i class="fas fa-check ml-1 text-xs"></i>
+                            {% endif %}
+                        </a>
                     </div>
                 </div>
-                
-                <a href="{{ url_for('main.properties') }}" class="flex items-center w-full px-4 py-3 rounded-xl font-medium transition-all duration-200 group {% if request.endpoint == 'main.properties' %}bg-[#4D148C] text-white shadow-lg shadow-[#4D148C]/30{% else %}text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-800{% endif %}">
-                    <i class="fas fa-home w-5 text-center {% if request.endpoint == 'main.properties' %}text-white{% else %}text-gray-400 group-hover:text-[#4D148C]{% endif %} transition-colors"></i>
-                    <span class="ml-3">Propiedades</span>
-                    <span class="ml-auto px-2 py-1 text-xs font-semibold rounded-full {% if request.endpoint == 'main.properties' %}bg-white/20{% else %}bg-gray-200 dark:bg-slate-800 text-gray-600 dark:text-gray-400{% endif %}">124</span>
-                    {% if request.endpoint == 'main.properties' %}
-                    <i class="fas fa-check ml-2"></i>
-                    {% endif %}
-                </a>
                 
                 <a href="/analytics" class="flex items-center w-full px-4 py-3 rounded-xl font-medium transition-all duration-200 group {% if request.endpoint == 'analytics.analytics_page' %}bg-[#4D148C] text-white shadow-lg shadow-[#4D148C]/30{% else %}text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-800{% endif %}">
                     <i class="fas fa-chart-bar w-5 text-center {% if request.endpoint == 'analytics.analytics_page' %}text-white{% else %}text-gray-400 group-hover:text-[#4D148C]{% endif %} transition-colors"></i>
@@ -104,6 +102,10 @@
                         <a href="/settings" class="flex items-center w-full px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 group text-gray-600 dark:text-gray-400 hover:bg-[#4D148C]/10 dark:hover:bg-[#4D148C]/30 hover:text-[#4D148C] dark:hover:text-[#4D148C]">
                             <i class="fas fa-sliders-h w-4 text-center text-gray-400 group-hover:text-[#4D148C] transition-colors"></i>
                             <span class="ml-3">Parámetros</span>
+                        </a>
+                        <a href="/permisos-roles" class="flex items-center w-full px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 group text-gray-600 dark:text-gray-400 hover:bg-[#4D148C]/10 dark:hover:bg-[#4D148C]/30 hover:text-[#4D148C] dark:hover:text-[#4D148C]">
+                            <i class="fas fa-shield-alt w-4 text-center text-gray-400 group-hover:text-[#4D148C] transition-colors"></i>
+                            <span class="ml-3">Permisos y Roles</span>
                         </a>
                         <a href="/security" class="flex items-center w-full px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 group text-gray-600 dark:text-gray-400 hover:bg-[#4D148C]/10 dark:hover:bg-[#4D148C]/30 hover:text-[#4D148C] dark:hover:text-[#4D148C]">
                             <i class="fas fa-lock w-4 text-center text-gray-400 group-hover:text-[#4D148C] transition-colors"></i>

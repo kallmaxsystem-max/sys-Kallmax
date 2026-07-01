@@ -1,0 +1,346 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-4 sm:p-6 lg:p-8">
+    <!-- Header -->
+    <div class="mb-8">
+        <div class="flex items-center gap-4 mb-2">
+            <div class="p-3 bg-purple-500/20 rounded-lg">
+                <i class="fas fa-shield-alt text-2xl text-purple-400"></i>
+            </div>
+            <div>
+                <h1 class="text-3xl sm:text-4xl font-bold text-white">Permisos y Roles</h1>
+                <p class="text-gray-400 mt-1">Administra los accesos y roles de los usuarios del sistema</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        <!-- Panel Izquierdo: Lista de Usuarios -->
+        <div class="lg:col-span-1">
+            <div class="bg-slate-800/50 backdrop-blur-xl border border-slate-700/50 rounded-2xl p-6 shadow-xl">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-xl font-bold text-white flex items-center gap-2">
+                        <i class="fas fa-users text-purple-400"></i>
+                        Usuarios
+                    </h2>
+                    <button onclick="abrirModalNuevoUsuario()" class="p-2 bg-purple-600 hover:bg-purple-700 rounded-lg text-white transition-colors" title="Nuevo usuario">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                </div>
+
+                <!-- Campo de búsqueda -->
+                <div class="mb-4">
+                    <input type="text" id="buscarUsuario" placeholder="Buscar usuario..." class="w-full px-4 py-2.5 bg-slate-900 border border-slate-700 rounded-lg text-white placeholder-gray-500 focus:border-purple-500 transition-colors">
+                </div>
+
+                <!-- Lista de usuarios -->
+                <div id="listaUsuarios" class="space-y-2 max-h-96 overflow-y-auto">
+                    <div class="animate-pulse space-y-2">
+                        <div class="h-12 bg-slate-700/50 rounded-lg"></div>
+                        <div class="h-12 bg-slate-700/50 rounded-lg"></div>
+                        <div class="h-12 bg-slate-700/50 rounded-lg"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Panel Derecho: Detalles del Usuario y Asignación de Roles -->
+        <div class="lg:col-span-2">
+            <div class="bg-slate-800/50 backdrop-blur-xl border border-slate-700/50 rounded-2xl p-6 shadow-xl">
+                <h2 class="text-xl font-bold text-white flex items-center gap-2 mb-6">
+                    <i class="fas fa-user-gear text-purple-400"></i>
+                    Detalles del Usuario
+                </h2>
+
+                <!-- Estado sin usuario seleccionado -->
+                <div id="sinUsuarioSeleccionado" class="text-center py-12">
+                    <i class="fas fa-user-slash text-6xl text-gray-500 mb-4"></i>
+                    <p class="text-gray-400 text-lg">Selecciona un usuario para ver y editar sus permisos</p>
+                </div>
+
+                <!-- Formulario de usuario (oculto inicialmente) -->
+                <div id="detallesUsuario" class="hidden space-y-6">
+                    
+                    <!-- Información del usuario -->
+                    <div class="bg-slate-900/50 rounded-xl p-4 border border-slate-700/30">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="text-xs font-semibold text-gray-400 uppercase">Documento</label>
+                                <p id="usuarioDocumento" class="text-white text-lg font-semibold mt-1">-</p>
+                            </div>
+                            <div>
+                                <label class="text-xs font-semibold text-gray-400 uppercase">Usuario</label>
+                                <p id="usuarioNombre" class="text-white text-lg font-semibold mt-1">-</p>
+                            </div>
+                            <div>
+                                <label class="text-xs font-semibold text-gray-400 uppercase">Email</label>
+                                <p id="usuarioEmail" class="text-white text-lg font-semibold mt-1">-</p>
+                            </div>
+                            <div>
+                                <label class="text-xs font-semibold text-gray-400 uppercase">Estado</label>
+                                <p id="usuarioEstado" class="text-lg font-semibold mt-1">-</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Asignación de Rol -->
+                    <div class="bg-slate-900/50 rounded-xl p-4 border border-slate-700/30">
+                        <label class="text-sm font-semibold text-gray-300 block mb-3">
+                            <i class="fas fa-crown text-yellow-400 mr-2"></i>
+                            Rol Principal
+                        </label>
+                        <div class="flex gap-2">
+                            <select id="seleccionarRol" class="flex-1 px-4 py-2.5 bg-slate-800 border border-slate-600 rounded-lg text-white focus:border-purple-500 transition-colors">
+                                <option value="">-- Selecciona un rol --</option>
+                            </select>
+                            <button onclick="asignarRolUsuario()" class="px-6 py-2.5 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-lg transition-colors">
+                                <i class="fas fa-check mr-2"></i>
+                                Asignar
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Permisos del Usuario -->
+                    <div class="bg-slate-900/50 rounded-xl p-4 border border-slate-700/30">
+                        <label class="text-sm font-semibold text-gray-300 block mb-4">
+                            <i class="fas fa-key text-green-400 mr-2"></i>
+                            Permisos por Menú
+                        </label>
+                        <div id="permisosUsuario" class="space-y-3 max-h-64 overflow-y-auto">
+                            <p class="text-gray-400 text-sm">Cargando permisos...</p>
+                        </div>
+                    </div>
+
+                    <!-- Acciones -->
+                    <div class="flex gap-2 pt-4 border-t border-slate-700">
+                        <button onclick="editarUsuario()" class="flex-1 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors flex items-center justify-center gap-2">
+                            <i class="fas fa-edit"></i>
+                            Editar
+                        </button>
+                        <button onclick="desactivarUsuario()" class="flex-1 px-4 py-2.5 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg transition-colors flex items-center justify-center gap-2">
+                            <i class="fas fa-ban"></i>
+                            Desactivar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para nuevo usuario -->
+<div id="modalNuevoUsuario" class="hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-slate-800 rounded-2xl shadow-2xl w-full max-w-md border border-slate-700">
+        <div class="flex items-center justify-between p-6 border-b border-slate-700">
+            <h3 class="text-xl font-bold text-white">Nuevo Usuario</h3>
+            <button onclick="cerrarModalNuevoUsuario()" class="text-gray-400 hover:text-white text-2xl">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="p-6 space-y-4">
+            <div>
+                <label class="text-sm font-semibold text-gray-300 block mb-2">Documento</label>
+                <input type="text" id="nuevoUsuarioDocumento" placeholder="DNI/RUC" class="w-full px-4 py-2.5 bg-slate-900 border border-slate-700 rounded-lg text-white focus:border-purple-500 transition-colors">
+            </div>
+            <div>
+                <label class="text-sm font-semibold text-gray-300 block mb-2">Email</label>
+                <input type="email" id="nuevoUsuarioEmail" placeholder="usuario@ejemplo.com" class="w-full px-4 py-2.5 bg-slate-900 border border-slate-700 rounded-lg text-white focus:border-purple-500 transition-colors">
+            </div>
+            <div>
+                <label class="text-sm font-semibold text-gray-300 block mb-2">Usuario</label>
+                <input type="text" id="nuevoUsuarioUser" placeholder="nombre_usuario" class="w-full px-4 py-2.5 bg-slate-900 border border-slate-700 rounded-lg text-white focus:border-purple-500 transition-colors">
+            </div>
+            <div>
+                <label class="text-sm font-semibold text-gray-300 block mb-2">Rol</label>
+                <select id="nuevoUsuarioRol" class="w-full px-4 py-2.5 bg-slate-900 border border-slate-700 rounded-lg text-white focus:border-purple-500 transition-colors">
+                    <option value="">-- Selecciona un rol --</option>
+                </select>
+            </div>
+        </div>
+        <div class="flex gap-2 p-6 border-t border-slate-700">
+            <button onclick="cerrarModalNuevoUsuario()" class="flex-1 px-4 py-2.5 bg-slate-700 hover:bg-slate-600 text-white font-semibold rounded-lg transition-colors">
+                Cancelar
+            </button>
+            <button onclick="crearNuevoUsuario()" class="flex-1 px-4 py-2.5 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-lg transition-colors">
+                Crear
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+let usuarioActual = null;
+
+// Cargar usuarios al iniciar
+document.addEventListener('DOMContentLoaded', () => {
+    cargarUsuarios();
+    cargarRoles();
+    document.getElementById('buscarUsuario').addEventListener('input', filtrarUsuarios);
+});
+
+// Cargar lista de usuarios
+async function cargarUsuarios() {
+    try {
+        const response = await fetch('/api/usuarios-asesores');
+        const resultado = await response.json();
+        
+        if (resultado.success) {
+            mostrarListaUsuarios(resultado.data);
+        }
+    } catch (error) {
+        console.error('Error cargando usuarios:', error);
+    }
+}
+
+// Mostrar lista de usuarios
+function mostrarListaUsuarios(usuarios) {
+    const lista = document.getElementById('listaUsuarios');
+    
+    if (usuarios.length === 0) {
+        lista.innerHTML = '<p class="text-gray-400 text-center py-4">No hay usuarios registrados</p>';
+        return;
+    }
+    
+    lista.innerHTML = usuarios.map(user => `
+        <button onclick="seleccionarUsuario('${user.num_documento}')" class="w-full text-left px-4 py-3 bg-slate-900/50 hover:bg-slate-700/50 border border-slate-700/30 rounded-lg transition-colors group">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white font-bold">
+                    ${user.nombres.charAt(0)}
+                </div>
+                <div class="flex-1 min-w-0">
+                    <p class="text-white font-semibold truncate">${user.usuario}</p>
+                    <p class="text-gray-400 text-xs truncate">${user.num_documento}</p>
+                </div>
+            </div>
+        </button>
+    `).join('');
+}
+
+// Filtrar usuarios
+function filtrarUsuarios() {
+    const busqueda = document.getElementById('buscarUsuario').value.toLowerCase();
+    const botones = document.querySelectorAll('#listaUsuarios button');
+    
+    botones.forEach(boton => {
+        const texto = boton.textContent.toLowerCase();
+        boton.style.display = texto.includes(busqueda) ? 'block' : 'none';
+    });
+}
+
+// Seleccionar usuario
+async function seleccionarUsuario(numDocumento) {
+    usuarioActual = numDocumento;
+    
+    try {
+        const response = await fetch(`/api/asesor/${numDocumento}`);
+        const resultado = await response.json();
+        
+        if (resultado.success) {
+            mostrarDetallesUsuario(resultado.data);
+        }
+    } catch (error) {
+        console.error('Error cargando detalles:', error);
+    }
+}
+
+// Mostrar detalles del usuario
+function mostrarDetallesUsuario(usuario) {
+    document.getElementById('sinUsuarioSeleccionado').classList.add('hidden');
+    document.getElementById('detallesUsuario').classList.remove('hidden');
+    
+    document.getElementById('usuarioDocumento').textContent = usuario.num_documento;
+    document.getElementById('usuarioNombre').textContent = usuario.usuario || usuario.nombres;
+    document.getElementById('usuarioEmail').textContent = usuario.email;
+    document.getElementById('usuarioEstado').textContent = usuario.estado;
+    document.getElementById('usuarioEstado').className = usuario.estado === 'Activo' 
+        ? 'text-lg font-semibold mt-1 text-green-400' 
+        : 'text-lg font-semibold mt-1 text-red-400';
+    
+    cargarPermisosUsuario(usuario.num_documento);
+}
+
+// Cargar permisos del usuario
+async function cargarPermisosUsuario(numDocumento) {
+    // Por ahora, mostrar un placeholder
+    const permisosDiv = document.getElementById('permisosUsuario');
+    permisosDiv.innerHTML = `
+        <div class="text-center py-4 text-gray-400">
+            <p class="text-sm">Sistema de permisos en desarrollo</p>
+        </div>
+    `;
+}
+
+// Cargar roles disponibles
+async function cargarRoles() {
+    try {
+        const response = await fetch('/api/roles');
+        const resultado = await response.json();
+        
+        if (resultado.success) {
+            const select = document.getElementById('seleccionarRol');
+            const selectNuevo = document.getElementById('nuevoUsuarioRol');
+            
+            resultado.data.forEach(rol => {
+                const option1 = document.createElement('option');
+                option1.value = rol.id_rol;
+                option1.textContent = rol.nombre_rol;
+                select.appendChild(option1);
+                
+                const option2 = document.createElement('option');
+                option2.value = rol.id_rol;
+                option2.textContent = rol.nombre_rol;
+                selectNuevo.appendChild(option2);
+            });
+        }
+    } catch (error) {
+        console.error('Error cargando roles:', error);
+    }
+}
+
+// Asignar rol a usuario
+async function asignarRolUsuario() {
+    if (!usuarioActual) {
+        alert('Selecciona un usuario primero');
+        return;
+    }
+    
+    const idRol = document.getElementById('seleccionarRol').value;
+    if (!idRol) {
+        alert('Selecciona un rol');
+        return;
+    }
+    
+    alert(`Rol asignado a ${usuarioActual} - Funcionalidad en desarrollo`);
+}
+
+// Editar usuario
+function editarUsuario() {
+    alert(`Edición del usuario ${usuarioActual} - Funcionalidad en desarrollo`);
+}
+
+// Desactivar usuario
+function desactivarUsuario() {
+    if (confirm(`¿Desactivar al usuario ${usuarioActual}?`)) {
+        alert(`Usuario desactivado - Funcionalidad en desarrollo`);
+    }
+}
+
+// Modal nuevo usuario
+function abrirModalNuevoUsuario() {
+    document.getElementById('modalNuevoUsuario').classList.remove('hidden');
+}
+
+function cerrarModalNuevoUsuario() {
+    document.getElementById('modalNuevoUsuario').classList.add('hidden');
+}
+
+function crearNuevoUsuario() {
+    alert('Crear nuevo usuario - Funcionalidad en desarrollo');
+    cerrarModalNuevoUsuario();
+}
+</script>
+
+{% endblock %}
