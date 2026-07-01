@@ -43,7 +43,8 @@
     <div class="fixed top-20 right-10 w-72 h-72 bg-purple-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse -z-5"></div>
     <div class="fixed top-1/2 left-1/2 w-72 h-72 bg-purple-400 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse -z-5 animation-delay-4000"></div>
 
-    <div class="min-h-screen flex flex-col items-center justify-center px-4 py-8 sm:py-12">
+    <!-- ========== SECCIÓN INICIAL ========== -->
+    <div id="seccionInicial" class="min-h-screen flex flex-col items-center justify-center px-4 py-8 sm:py-12 transition-all duration-500" style="opacity: 1; pointer-events: auto;">
         <div class="max-w-4xl w-full">
             <!-- Logo y Título -->
             <div class="text-center mb-6 sm:mb-10 md:mb-12 float-animation">
@@ -104,7 +105,7 @@
                 </div>
             </div>
 
-            <!-- Botones de acción - RESPONSIVE MEJORADO -->
+            <!-- Botones de acción -->
             <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-stretch sm:items-center px-4 sm:px-0">
                 <a href="{{ url_for('auth.login') }}" class="group relative inline-flex items-center justify-center px-6 sm:px-8 md:px-10 py-3 sm:py-3.5 text-sm sm:text-base md:text-lg font-bold text-white bg-gradient-to-r from-purple-600 to-purple-600 rounded-xl sm:rounded-2xl shadow-xl shadow-purple-500/40 hover:shadow-2xl hover:shadow-purple-500/60 transition-all duration-500 hover:scale-105 overflow-hidden">
                     <span class="absolute inset-0 bg-gradient-to-r from-emerald-600 to-teal-600 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></span>
@@ -113,10 +114,10 @@
                         <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
                     </span>
                 </a>
-                <button onclick="mostrarProyectos()" class="inline-flex items-center justify-center px-6 sm:px-8 md:px-10 py-3 sm:py-3.5 text-sm sm:text-base md:text-lg font-bold text-purple-400 bg-slate-800/50 border-2 border-purple-900/50 rounded-xl sm:rounded-2xl backdrop-blur-xl hover:bg-purple-900/20 transition-all duration-500 hover:scale-105">
+                <a href="{{ url_for('auth.proyectos') }}" class="inline-flex items-center justify-center px-6 sm:px-8 md:px-10 py-3 sm:py-3.5 text-sm sm:text-base md:text-lg font-bold text-purple-400 bg-slate-800/50 border-2 border-purple-900/50 rounded-xl sm:rounded-2xl backdrop-blur-xl hover:bg-purple-900/20 transition-all duration-500 hover:scale-105">
                     Conoce más
-                    <i class="fas fa-chevron-down ml-2"></i>
-                </button>
+                    <i class="fas fa-chevron-right ml-2"></i>
+                </a>
             </div>
 
             <!-- Footer -->
@@ -130,288 +131,12 @@
         </div>
     </div>
 
-    <!-- ========== SECCIÓN DE PROYECTOS ========== -->
-    <div id="seccionProyectos" class="min-h-screen hidden flex items-center justify-center px-4 py-8 sm:py-12">
-        <div class="max-w-7xl w-full">
-            <!-- Header de proyectos -->
-            <div class="text-center mb-8 sm:mb-12 md:mb-16">
-                <button onclick="ocultarProyectos()" class="inline-flex items-center justify-center px-4 py-2 text-sm text-purple-400 hover:text-purple-300 mb-6 transition-colors">
-                    <i class="fas fa-arrow-left mr-2"></i>
-                    Volver
-                </button>
-                <h2 class="text-3xl sm:text-4xl md:text-5xl font-black gradient-text mb-3 px-4">Nuestros Proyectos</h2>
-                <p class="text-sm sm:text-base md:text-lg text-gray-300 px-4">Explora nuestro portafolio de proyectos inmobiliarios de lujo</p>
-            </div>
-
-            <!-- Grid de proyectos (3 columnas) -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-                
-                <!-- Proyecto 1 -->
-                <a href="https://panoraven.com/es/embed/zCkoiKek4u" target="_blank" class="group relative overflow-hidden rounded-2xl bg-slate-800/50 backdrop-blur-xl border border-slate-700/50 hover:shadow-2xl hover:shadow-purple-500/20 transition-all duration-500 hover:-translate-y-2 cursor-pointer">
-                    <div class="aspect-video bg-gradient-to-br from-purple-600/20 to-slate-800 relative overflow-hidden">
-                        <div class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-slate-900/80"></div>
-                        <div class="absolute inset-0 flex items-center justify-center">
-                            <i class="fas fa-building text-purple-400/30 text-6xl"></i>
-                        </div>
-                        <div class="absolute top-4 right-4 bg-gradient-to-r from-purple-600 to-purple-700 px-3 py-1 rounded-full text-white text-xs font-bold">Premium</div>
-                    </div>
-                    <div class="p-5 sm:p-6">
-                        <h3 class="text-lg sm:text-xl font-bold text-white mb-2 group-hover:text-purple-400 transition-colors">Villa de los Nísperos</h3>
-                        <p class="text-xs sm:text-sm text-gray-400 mb-4">Comunidad cerrada con amenidades premium y diseño arquitectónico exclusivo</p>
-                        <div class="flex items-center text-purple-400 group-hover:text-purple-300 transition-colors text-sm">
-                            <span>Ver proyecto</span>
-                            <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
-                        </div>
-                    </div>
-                </a>
-
-                <!-- Proyecto 2 -->
-                <a href="https://panoraven.com/es/embed/Axr9JHK4Wf" target="_blank" class="group relative overflow-hidden rounded-2xl bg-slate-800/50 backdrop-blur-xl border border-slate-700/50 hover:shadow-2xl hover:shadow-emerald-500/20 transition-all duration-500 hover:-translate-y-2 cursor-pointer">
-                    <div class="aspect-video bg-gradient-to-br from-emerald-600/20 to-slate-800 relative overflow-hidden">
-                        <div class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-slate-900/80"></div>
-                        <div class="absolute inset-0 flex items-center justify-center">
-                            <i class="fas fa-tree text-emerald-400/30 text-6xl"></i>
-                        </div>
-                        <div class="absolute top-4 right-4 bg-gradient-to-r from-emerald-600 to-teal-600 px-3 py-1 rounded-full text-white text-xs font-bold">Premium</div>
-                    </div>
-                    <div class="p-5 sm:p-6">
-                        <h3 class="text-lg sm:text-xl font-bold text-white mb-2 group-hover:text-emerald-400 transition-colors">Las Palmeras</h3>
-                        <p class="text-xs sm:text-sm text-gray-400 mb-4">Proyecto residencial con vista a naturaleza y espacios verdes amplios</p>
-                        <div class="flex items-center text-emerald-400 group-hover:text-emerald-300 transition-colors text-sm">
-                            <span>Ver proyecto</span>
-                            <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
-                        </div>
-                    </div>
-                </a>
-
-                <!-- Proyecto 3 -->
-                <a href="https://panoraven.com/es/embed/TB7jbt5X80" target="_blank" class="group relative overflow-hidden rounded-2xl bg-slate-800/50 backdrop-blur-xl border border-slate-700/50 hover:shadow-2xl hover:shadow-cyan-500/20 transition-all duration-500 hover:-translate-y-2 cursor-pointer">
-                    <div class="aspect-video bg-gradient-to-br from-cyan-600/20 to-slate-800 relative overflow-hidden">
-                        <div class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-slate-900/80"></div>
-                        <div class="absolute inset-0 flex items-center justify-center">
-                            <i class="fas fa-home text-cyan-400/30 text-6xl"></i>
-                        </div>
-                        <div class="absolute top-4 right-4 bg-gradient-to-r from-cyan-600 to-blue-600 px-3 py-1 rounded-full text-white text-xs font-bold">Nuevo</div>
-                    </div>
-                    <div class="p-5 sm:p-6">
-                        <h3 class="text-lg sm:text-xl font-bold text-white mb-2 group-hover:text-cyan-400 transition-colors">Nuevo Tambo</h3>
-                        <p class="text-xs sm:text-sm text-gray-400 mb-4">Proyecto moderno con infraestructura de última generación y tecnología inteligente</p>
-                        <div class="flex items-center text-cyan-400 group-hover:text-cyan-300 transition-colors text-sm">
-                            <span>Ver proyecto</span>
-                            <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
-                        </div>
-                    </div>
-                </a>
-
-                <!-- Proyecto 4 -->
-                <a href="https://panoraven.com/es/embed/CwY3ETKQW1" target="_blank" class="group relative overflow-hidden rounded-2xl bg-slate-800/50 backdrop-blur-xl border border-slate-700/50 hover:shadow-2xl hover:shadow-purple-500/20 transition-all duration-500 hover:-translate-y-2 cursor-pointer">
-                    <div class="aspect-video bg-gradient-to-br from-purple-600/20 to-slate-800 relative overflow-hidden">
-                        <div class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-slate-900/80"></div>
-                        <div class="absolute inset-0 flex items-center justify-center">
-                            <i class="fas fa-gopuram text-purple-400/30 text-6xl"></i>
-                        </div>
-                        <div class="absolute top-4 right-4 bg-gradient-to-r from-purple-600 to-pink-600 px-3 py-1 rounded-full text-white text-xs font-bold">Exclusivo</div>
-                    </div>
-                    <div class="p-5 sm:p-6">
-                        <h3 class="text-lg sm:text-xl font-bold text-white mb-2 group-hover:text-purple-400 transition-colors">La Villa</h3>
-                        <p class="text-xs sm:text-sm text-gray-400 mb-4">Conjunto residencial de lujo con seguridad 24/7 y servicios integrados</p>
-                        <div class="flex items-center text-purple-400 group-hover:text-purple-300 transition-colors text-sm">
-                            <span>Ver proyecto</span>
-                            <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
-                        </div>
-                    </div>
-                </a>
-
-                <!-- Proyecto 5 -->
-                <a href="https://panoraven.com/es/embed/dF1SgX6qXJ" target="_blank" class="group relative overflow-hidden rounded-2xl bg-slate-800/50 backdrop-blur-xl border border-slate-700/50 hover:shadow-2xl hover:shadow-amber-500/20 transition-all duration-500 hover:-translate-y-2 cursor-pointer">
-                    <div class="aspect-video bg-gradient-to-br from-amber-600/20 to-slate-800 relative overflow-hidden">
-                        <div class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-slate-900/80"></div>
-                        <div class="absolute inset-0 flex items-center justify-center">
-                            <i class="fas fa-leaf text-amber-400/30 text-6xl"></i>
-                        </div>
-                        <div class="absolute top-4 right-4 bg-gradient-to-r from-amber-600 to-orange-600 px-3 py-1 rounded-full text-white text-xs font-bold">Premium</div>
-                    </div>
-                    <div class="p-5 sm:p-6">
-                        <h3 class="text-lg sm:text-xl font-bold text-white mb-2 group-hover:text-amber-400 transition-colors">La Finca</h3>
-                        <p class="text-xs sm:text-sm text-gray-400 mb-4">Propiedad campestre con amplios terrenos y arquitectura contemporánea</p>
-                        <div class="flex items-center text-amber-400 group-hover:text-amber-300 transition-colors text-sm">
-                            <span>Ver proyecto</span>
-                            <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
-                        </div>
-                    </div>
-                </a>
-
-                <!-- Proyecto 6 -->
-                <a href="https://panoraven.com/es/embed/B3T5SURfCJ" target="_blank" class="group relative overflow-hidden rounded-2xl bg-slate-800/50 backdrop-blur-xl border border-slate-700/50 hover:shadow-2xl hover:shadow-green-500/20 transition-all duration-500 hover:-translate-y-2 cursor-pointer">
-                    <div class="aspect-video bg-gradient-to-br from-green-600/20 to-slate-800 relative overflow-hidden">
-                        <div class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-slate-900/80"></div>
-                        <div class="absolute inset-0 flex items-center justify-center">
-                            <i class="fas fa-clover text-green-400/30 text-6xl"></i>
-                        </div>
-                        <div class="absolute top-4 right-4 bg-gradient-to-r from-green-600 to-lime-600 px-3 py-1 rounded-full text-white text-xs font-bold">Premium</div>
-                    </div>
-                    <div class="p-5 sm:p-6">
-                        <h3 class="text-lg sm:text-xl font-bold text-white mb-2 group-hover:text-green-400 transition-colors">La Arboleda</h3>
-                        <p class="text-xs sm:text-sm text-gray-400 mb-4">Desarrollo residencial rodeado de naturaleza con conectividad moderna</p>
-                        <div class="flex items-center text-green-400 group-hover:text-green-300 transition-colors text-sm">
-                            <span>Ver proyecto</span>
-                            <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
-                        </div>
-                    </div>
-                </a>
-
-                <!-- Proyecto 7 -->
-                <a href="https://panoraven.com/es/embed/VvmHeB8h0u" target="_blank" class="group relative overflow-hidden rounded-2xl bg-slate-800/50 backdrop-blur-xl border border-slate-700/50 hover:shadow-2xl hover:shadow-violet-500/20 transition-all duration-500 hover:-translate-y-2 cursor-pointer">
-                    <div class="aspect-video bg-gradient-to-br from-violet-600/20 to-slate-800 relative overflow-hidden">
-                        <div class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-slate-900/80"></div>
-                        <div class="absolute inset-0 flex items-center justify-center">
-                            <i class="fas fa-crown text-violet-400/30 text-6xl"></i>
-                        </div>
-                        <div class="absolute top-4 right-4 bg-gradient-to-r from-violet-600 to-purple-600 px-3 py-1 rounded-full text-white text-xs font-bold">Lúmite</div>
-                    </div>
-                    <div class="p-5 sm:p-6">
-                        <h3 class="text-lg sm:text-xl font-bold text-white mb-2 group-hover:text-violet-400 transition-colors">Prado Verde 1, 2 y 3</h3>
-                        <p class="text-xs sm:text-sm text-gray-400 mb-4">Tres fases de desarrollo residencial de elegancia y confort inigualables</p>
-                        <div class="flex items-center text-violet-400 group-hover:text-violet-300 transition-colors text-sm">
-                            <span>Ver proyecto</span>
-                            <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
-                        </div>
-                    </div>
-                </a>
-
-                <!-- Proyecto 8 -->
-                <a href="https://panoraven.com/es/embed/p3JcImQnSw" target="_blank" class="group relative overflow-hidden rounded-2xl bg-slate-800/50 backdrop-blur-xl border border-slate-700/50 hover:shadow-2xl hover:shadow-indigo-500/20 transition-all duration-500 hover:-translate-y-2 cursor-pointer">
-                    <div class="aspect-video bg-gradient-to-br from-indigo-600/20 to-slate-800 relative overflow-hidden">
-                        <div class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-slate-900/80"></div>
-                        <div class="absolute inset-0 flex items-center justify-center">
-                            <i class="fas fa-flower text-indigo-400/30 text-6xl"></i>
-                        </div>
-                        <div class="absolute top-4 right-4 bg-gradient-to-r from-indigo-600 to-blue-600 px-3 py-1 rounded-full text-white text-xs font-bold">Floresta</div>
-                    </div>
-                    <div class="p-5 sm:p-6">
-                        <h3 class="text-lg sm:text-xl font-bold text-white mb-2 group-hover:text-indigo-400 transition-colors">La Floresta 1</h3>
-                        <p class="text-xs sm:text-sm text-gray-400 mb-4">Primera fase de proyecto residencial con diseño biofílico innovador</p>
-                        <div class="flex items-center text-indigo-400 group-hover:text-indigo-300 transition-colors text-sm">
-                            <span>Ver proyecto</span>
-                            <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
-                        </div>
-                    </div>
-                </a>
-
-                <!-- Proyecto 9 -->
-                <a href="https://panoraven.com/es/embed/nD0Yxw9Wf7" target="_blank" class="group relative overflow-hidden rounded-2xl bg-slate-800/50 backdrop-blur-xl border border-slate-700/50 hover:shadow-2xl hover:shadow-pink-500/20 transition-all duration-500 hover:-translate-y-2 cursor-pointer">
-                    <div class="aspect-video bg-gradient-to-br from-pink-600/20 to-slate-800 relative overflow-hidden">
-                        <div class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-slate-900/80"></div>
-                        <div class="absolute inset-0 flex items-center justify-center">
-                            <i class="fas fa-heart text-pink-400/30 text-6xl"></i>
-                        </div>
-                        <div class="absolute top-4 right-4 bg-gradient-to-r from-pink-600 to-rose-600 px-3 py-1 rounded-full text-white text-xs font-bold">Floresta</div>
-                    </div>
-                    <div class="p-5 sm:p-6">
-                        <h3 class="text-lg sm:text-xl font-bold text-white mb-2 group-hover:text-pink-400 transition-colors">La Floresta 2</h3>
-                        <p class="text-xs sm:text-sm text-gray-400 mb-4">Segunda fase complementaria con servicios y amenidades adicionales</p>
-                        <div class="flex items-center text-pink-400 group-hover:text-pink-300 transition-colors text-sm">
-                            <span>Ver proyecto</span>
-                            <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
-                        </div>
-                    </div>
-                </a>
-
-                <!-- Proyecto 10 -->
-                <a href="https://panoraven.com/es/embed/R4DjFn1MM9" target="_blank" class="group relative overflow-hidden rounded-2xl bg-slate-800/50 backdrop-blur-xl border border-slate-700/50 hover:shadow-2xl hover:shadow-lime-500/20 transition-all duration-500 hover:-translate-y-2 cursor-pointer">
-                    <div class="aspect-video bg-gradient-to-br from-lime-600/20 to-slate-800 relative overflow-hidden">
-                        <div class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-slate-900/80"></div>
-                        <div class="absolute inset-0 flex items-center justify-center">
-                            <i class="fas fa-sun text-lime-400/30 text-6xl"></i>
-                        </div>
-                        <div class="absolute top-4 right-4 bg-gradient-to-r from-lime-600 to-green-600 px-3 py-1 rounded-full text-white text-xs font-bold">Pradera</div>
-                    </div>
-                    <div class="p-5 sm:p-6">
-                        <h3 class="text-lg sm:text-xl font-bold text-white mb-2 group-hover:text-lime-400 transition-colors">La Pradera</h3>
-                        <p class="text-xs sm:text-sm text-gray-400 mb-4">Proyecto expansivo con vistas panorámicas y espacios al aire libre</p>
-                        <div class="flex items-center text-lime-400 group-hover:text-lime-300 transition-colors text-sm">
-                            <span>Ver proyecto</span>
-                            <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
-                        </div>
-                    </div>
-                </a>
-
-                <!-- Proyecto 11 -->
-                <a href="https://panoraven.com/es/embed/WvZ6NuG34t" target="_blank" class="group relative overflow-hidden rounded-2xl bg-slate-800/50 backdrop-blur-xl border border-slate-700/50 hover:shadow-2xl hover:shadow-teal-500/20 transition-all duration-500 hover:-translate-y-2 cursor-pointer">
-                    <div class="aspect-video bg-gradient-to-br from-teal-600/20 to-slate-800 relative overflow-hidden">
-                        <div class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-slate-900/80"></div>
-                        <div class="absolute inset-0 flex items-center justify-center">
-                            <i class="fas fa-ring text-teal-400/30 text-6xl"></i>
-                        </div>
-                        <div class="absolute top-4 right-4 bg-gradient-to-r from-teal-600 to-cyan-600 px-3 py-1 rounded-full text-white text-xs font-bold">Exclusivo</div>
-                    </div>
-                    <div class="p-5 sm:p-6">
-                        <h3 class="text-lg sm:text-xl font-bold text-white mb-2 group-hover:text-teal-400 transition-colors">Villa Verde</h3>
-                        <p class="text-xs sm:text-sm text-gray-400 mb-4">Residencias de lujo con jardines privados y acceso a campos de golf</p>
-                        <div class="flex items-center text-teal-400 group-hover:text-teal-300 transition-colors text-sm">
-                            <span>Ver proyecto</span>
-                            <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
-                        </div>
-                    </div>
-                </a>
-
-            </div>
-
-            <!-- Footer -->
-            <div class="text-center mt-12 sm:mt-16 md:mt-20 pt-8 sm:pt-10 border-t border-slate-700">
-                <button onclick="ocultarProyectos()" class="inline-flex items-center justify-center px-6 sm:px-8 py-2.5 sm:py-3 text-sm sm:text-base text-purple-400 hover:text-purple-300 transition-colors mb-4">
-                    <i class="fas fa-arrow-left mr-2"></i>
-                    Volver a Inicio
-                </button>
-                <p class="text-xs sm:text-sm text-gray-400 mt-6">
-                    © 2026. Todos los derechos reservados.
-                </p>
-            </div>
-        </div>
-    </div>
-
-    <!-- Script para mostrar/ocultar sección de proyectos -->
+    <!-- Script para funciones -->
     <script>
-        function mostrarProyectos() {
-            console.log('Mostrando proyectos...');
-            const inicial = document.querySelector('div.min-h-screen:not(#seccionProyectos)').parentElement;
-            const proyectos = document.getElementById('seccionProyectos');
-            
-            // Ocultar sección inicial
-            if (inicial) {
-                inicial.style.display = 'none';
-            }
-            
-            // Mostrar sección de proyectos con transición
-            proyectos.classList.remove('hidden');
-            proyectos.style.opacity = '0';
-            proyectos.style.transform = 'translateY(20px)';
-            
-            setTimeout(() => {
-                proyectos.style.transition = 'all 0.6s ease-out';
-                proyectos.style.opacity = '1';
-                proyectos.style.transform = 'translateY(0)';
-            }, 10);
-            
-            // Scroll hacia arriba
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-        
-        function ocultarProyectos() {
-            console.log('Ocultando proyectos...');
-            const proyectos = document.getElementById('seccionProyectos');
-            const container = document.querySelector('div.min-h-screen');
-            
-            // Transición de salida
-            proyectos.style.transition = 'all 0.6s ease-out';
-            proyectos.style.opacity = '0';
-            proyectos.style.transform = 'translateY(20px)';
-            
-            setTimeout(() => {
-                proyectos.classList.add('hidden');
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            }, 600);
-        }
+        // Mejorar scroll en móviles
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('Página de bienvenida cargada');
+        });
     </script>
-
-
+</body>
+</html>

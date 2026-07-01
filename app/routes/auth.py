@@ -111,6 +111,11 @@ def welcome():
     """Página de bienvenida"""
     return render_template('welcome.html')
 
+@auth_bp.route('/proyectos')
+def proyectos():
+    """Página de proyectos"""
+    return render_template('proyectos.html')
+
 @auth_bp.route('/login', methods=['GET', 'POST'])
 def login():
     """Página de login"""
