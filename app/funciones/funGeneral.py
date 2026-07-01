@@ -18,11 +18,27 @@ from app.config import DatabaseConfig
 def get_db_connection():
     """Crear conexion a la base de datos usando configuracion desde .env"""
     try:
-        connection = mysql.connector.connect(**DatabaseConfig.get_connection_params())
+        connection = mysql.connector.connect(
+            **DatabaseConfig.get_connection_params(),
+            connection_timeout=30,
+            auth_plugin='mysql_native_password'
+        )
+        # Clean up any pending result sets or commands
+        connection.reset_session()
         return connection
     except Error as e:
         print(f"Error de conexion: {e}")
-        return None
+        # Intentar una segunda vez con parámetros simplificados
+        try:
+            params = DatabaseConfig.get_connection_params()
+            # Remover parámetros problemáticos en caso de error
+            params.pop('use_pure', None)
+            connection = mysql.connector.connect(**params, connection_timeout=30)
+            connection.reset_session()
+            return connection
+        except Error as e2:
+            print(f"Error de conexion (intento 2): {e2}")
+            return None
 
 
 def hash_password(password):

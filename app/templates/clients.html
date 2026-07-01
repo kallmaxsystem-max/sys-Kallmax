@@ -897,13 +897,12 @@ formRegistrarSeguimiento.addEventListener('submit', async (e) => {
     }
     
     try {
-        const response = await fetch('/api/registrar-seguimiento', {
+        const response = await fetch(`/api/clientes/${numDocumento}/seguimientos`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                num_documento: numDocumento,
                 id_tipo_seguimiento: idTipo,
                 fecha_seguimiento: fechaSeguimiento,
                 observacion: observacion
@@ -1659,8 +1658,8 @@ async function mostrarUltimos3Seguimientos(numDocumento) {
         const container = document.getElementById('ultimos3SeguimientosContainer');
         container.innerHTML = '<p class="text-center text-gray-500 dark:text-gray-400 text-sm">Cargando...</p>';
         
-        // Llamar al nuevo endpoint que usa el SP sp_Ultimos3Seguimientos
-        const response = await fetch(`/api/ultimos-3-seguimientos/${numDocumento}`);
+        // Llamar al endpoint correcto
+        const response = await fetch(`/api/clientes/${numDocumento}/seguimientos/ultimos-3`);
         
         if (!response.ok) {
             throw new Error('Error al cargar seguimientos');
@@ -1729,7 +1728,7 @@ async function cargarHistorialSeguimientos(numDocumento) {
         container.innerHTML = '<p class="text-center text-gray-500 dark:text-gray-400">Cargando historial...</p>';
         
         // Cargar seguimientos desde API
-        const response = await fetch(`/api/historial-seguimientos/${numDocumento}`);
+        const response = await fetch(`/api/clientes/${numDocumento}/seguimientos/historial`);
         
         if (!response.ok) {
             throw new Error('Error al cargar historial');

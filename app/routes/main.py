@@ -52,6 +52,14 @@ from app.funciones.clientes import (
     importar_clientes_api
 )
 
+# Importar funciones de permisos
+from app.funciones.permissions import (
+    crear_menu_api,
+    listar_menus_api,
+    crear_submenu_api,
+    listar_permisos_rol_api
+)
+
 # Decorador para requerir autenticación
 def login_required(f):
     """Decorador para proteger rutas que requieren autenticación"""
@@ -603,6 +611,100 @@ def descartar_cliente_route(num_documento):
 # RUTAS PARA SEGUIMIENTOS DE CLIENTES
 # ============================================================================
 
+def registrar_seguimiento_api_wrapper(data):
+    """Wrapper para registrar seguimiento con datos inyectados"""
+    from flask import session, current_app, jsonify
+    
+    try:
+        current_app.logger.info("=== REGISTRAR SEGUIMIENTO (WRAPPER) ===")
+        
+        # Obtener datos del formulario
+        num_documento_cliente = data.get('num_documento', '').strip()
+        id_tipo_seguimiento = data.get('id_tipo_seguimiento')
+        fecha_seguimiento = data.get('fecha_seguimiento', '')
+        observacion = data.get('observacion', '').strip()
+        
+        # Obtener el documento del asesor logueado
+        realizado_por = session.get('user_documento', '')
+        
+        current_app.logger.info(f"Cliente: {num_documento_cliente}, Tipo: {id_tipo_seguimiento}, Asesor: {realizado_por}")
+        
+        # Validar campos requeridos
+        if not all([num_documento_cliente, id_tipo_seguimiento, fecha_seguimiento, observacion, realizado_por]):
+            current_app.logger.warning("Campos requeridos faltantes al registrar seguimiento")
+            return jsonify({'success': False, 'error': 'Por favor completa todos los campos'}), 400
+        
+        # Convertir id_tipo_seguimiento a int
+        try:
+            id_tipo_seguimiento = int(id_tipo_seguimiento)
+        except (ValueError, TypeError):
+            current_app.logger.error(f"id_tipo_seguimiento inválido: {id_tipo_seguimiento}")
+            return jsonify({'success': False, 'error': 'Tipo de seguimiento inválido'}), 400
+        
+        connection = get_db_connection()
+        if not connection:
+            current_app.logger.error("Error de conexión a BD al registrar seguimiento")
+            return jsonify({'success': False, 'error': 'Error de conexión'}), 500
+        
+        try:
+            cursor = connection.cursor(dictionary=True)
+            
+            current_app.logger.info(f"Ejecutando SP sp_RegistrarSeguimiento")
+            
+            # El SP espera parámetros IN y OUT
+            # Inicializar variables OUT
+            cursor.execute("SET @p_id_seguimiento = 0")
+            cursor.execute("SET @p_mensaje = ''")
+            
+            # Llamar al SP con los parámetros correctos
+            cursor.execute("""
+                CALL sp_RegistrarSeguimiento(
+                    %s, %s, %s, %s, %s, @p_id_seguimiento, @p_mensaje
+                )
+            """, (
+                num_documento_cliente,
+                id_tipo_seguimiento,
+                fecha_seguimiento,
+                observacion,
+                realizado_por
+            ))
+            
+            # Obtener los valores de salida
+            cursor.execute("SELECT @p_id_seguimiento AS id_seguimiento, @p_mensaje AS mensaje")
+            result = cursor.fetchone()
+            
+            cursor.close()
+            connection.close()
+            
+            if result:
+                id_seguimiento = result.get('id_seguimiento')
+                mensaje = result.get('mensaje', 'Error desconocido')
+                
+                # El SP retorna un id > 0 si fue exitoso
+                if id_seguimiento and id_seguimiento > 0:
+                    current_app.logger.info(f"Seguimiento registrado exitosamente: ID {id_seguimiento}")
+                    return jsonify({
+                        'success': True,
+                        'message': 'Seguimiento registrado exitosamente',
+                        'id_seguimiento': id_seguimiento
+                    }), 201
+                else:
+                    current_app.logger.warning(f"Error al registrar seguimiento: {mensaje}")
+                    return jsonify({'success': False, 'error': mensaje}), 400
+            else:
+                current_app.logger.error("No se recibieron datos de salida del SP")
+                return jsonify({'success': False, 'error': 'Error al registrar el seguimiento'}), 500
+                
+        except Error as e:
+            current_app.logger.error(f"Error SQL al registrar seguimiento: {str(e)}")
+            if connection.is_connected():
+                connection.close()
+            return jsonify({'success': False, 'error': f'Error en la base de datos: {str(e)}'}), 500
+    
+    except Exception as e:
+        current_app.logger.error(f"Error general al registrar seguimiento: {str(e)}", exc_info=True)
+        return jsonify({'success': False, 'error': f'Error del servidor: {str(e)}'}), 500
+
 @main_bp.route('/api/clientes/<num_documento>/seguimientos', methods=['GET'])
 @login_required
 def obtener_seguimientos(num_documento):
@@ -614,7 +716,17 @@ def obtener_seguimientos(num_documento):
 @login_required
 def crear_seguimiento(num_documento):
     """Registrar un nuevo seguimiento para un cliente"""
-    return registrar_seguimiento_api()
+    from flask import request as flask_request
+    import json
+    
+    # Obtener el JSON del request
+    data = flask_request.get_json() or {}
+    
+    # Inyectar el documento del cliente
+    data['num_documento'] = num_documento
+    
+    # Llamar a la función wrapper que maneja toda la lógica
+    return registrar_seguimiento_api_wrapper(data)
 
 
 @main_bp.route('/api/clientes/<num_documento>/seguimientos/historial', methods=['GET'])
@@ -672,3 +784,35 @@ def settings():
 def permisos_roles():
     """Página de administración de permisos y roles de usuarios"""
     return render_template('permissions.html')
+
+
+# ============================================================================
+# RUTAS PARA GESTIÓN DE MENÚS Y PERMISOS
+# ============================================================================
+
+@main_bp.route('/api/menus/crear', methods=['POST'])
+@login_required
+def api_crear_menu():
+    """API para crear un nuevo menú"""
+    return crear_menu_api()
+
+
+@main_bp.route('/api/menus', methods=['GET'])
+@login_required
+def api_listar_menus():
+    """API para obtener lista de menús"""
+    return listar_menus_api()
+
+
+@main_bp.route('/api/submenus/crear', methods=['POST'])
+@login_required
+def api_crear_submenu():
+    """API para crear un nuevo submenú"""
+    return crear_submenu_api()
+
+
+@main_bp.route('/api/permisos/rol/<int:id_rol>', methods=['GET'])
+@login_required
+def api_listar_permisos_rol(id_rol):
+    """API para obtener permisos de un rol"""
+    return listar_permisos_rol_api(id_rol)

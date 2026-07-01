@@ -1,346 +1,556 @@
 {% extends 'base.html' %}
 
+{% block title %}Permisos y Roles - KallMax{% endblock %}
+
+{% block header_title %}
+<span class="text-gray-900 dark:text-white">Permisos y Roles</span>
+{% endblock %}
+
+{% block header_subtitle %}
+Administra los accesos y roles de los usuarios del sistema
+{% endblock %}
+
 {% block content %}
-<div class="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-4 sm:p-6 lg:p-8">
-    <!-- Header -->
-    <div class="mb-8">
-        <div class="flex items-center gap-4 mb-2">
-            <div class="p-3 bg-purple-500/20 rounded-lg">
-                <i class="fas fa-shield-alt text-2xl text-purple-400"></i>
+<!-- Background minimalista -->
+<div class="fixed inset-0 -z-10 bg-gray-50 dark:bg-slate-950"></div>
+
+<div class="w-full px-6 space-y-6">
+    
+    <!-- ========== SECCIÓN 1: ESTADÍSTICAS ========== -->
+    <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <!-- Card 1: Total Users -->
+        <div class="bg-white dark:bg-slate-900 rounded-lg p-6 border border-gray-200 dark:border-slate-800 hover:border-gray-300 dark:hover:border-slate-700 transition-colors">
+            <div class="flex justify-between items-start mb-4">
+                <div>
+                    <p class="text-gray-500 dark:text-gray-400 text-xs font-medium mb-2 uppercase tracking-wide">Usuarios Totales</p>
+                    <h3 class="text-3xl font-bold text-gray-900 dark:text-white" id="estadisticaTotalUsuarios">0</h3>
+                </div>
+                <div class="w-10 h-10 bg-gray-100 dark:bg-slate-800 rounded-lg flex items-center justify-center">
+                    <i class="fas fa-users text-gray-600 dark:text-gray-400"></i>
+                </div>
             </div>
-            <div>
-                <h1 class="text-3xl sm:text-4xl font-bold text-white">Permisos y Roles</h1>
-                <p class="text-gray-400 mt-1">Administra los accesos y roles de los usuarios del sistema</p>
+            <div class="flex items-center text-xs text-gray-600 dark:text-gray-400">
+                <span class="text-green-600 dark:text-green-500 font-medium">dinámico</span>
+                <span class="ml-1">desde la BD</span>
             </div>
         </div>
-    </div>
 
-    <!-- Main Content -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Card 2: Active Users -->
+        <div class="bg-white dark:bg-slate-900 rounded-lg p-6 border border-gray-200 dark:border-slate-800 hover:border-gray-300 dark:hover:border-slate-700 transition-colors">
+            <div class="flex justify-between items-start mb-4">
+                <div>
+                    <p class="text-gray-500 dark:text-gray-400 text-xs font-medium mb-2 uppercase tracking-wide">Activos</p>
+                    <h3 class="text-3xl font-bold text-gray-900 dark:text-white" id="estadisticaActivosUsuarios">0</h3>
+                </div>
+                <div class="w-10 h-10 bg-gray-100 dark:bg-slate-800 rounded-lg flex items-center justify-center">
+                    <i class="fas fa-check-circle text-gray-600 dark:text-gray-400"></i>
+                </div>
+            </div>
+            <div class="flex items-center text-xs text-gray-600 dark:text-gray-400">
+                <span class="font-medium" id="porcentajeActivosUsuarios">0%</span>
+                <span class="ml-1">activos</span>
+            </div>
+        </div>
+
+        <!-- Card 3: By Role -->
+        <div class="bg-white dark:bg-slate-900 rounded-lg p-6 border border-gray-200 dark:border-slate-800 hover:border-gray-300 dark:hover:border-slate-700 transition-colors">
+            <div class="flex justify-between items-start mb-4">
+                <div>
+                    <p class="text-gray-500 dark:text-gray-400 text-xs font-medium mb-2 uppercase tracking-wide">Roles Asignados</p>
+                    <h3 class="text-3xl font-bold text-gray-900 dark:text-white" id="estadisticaRoles">0</h3>
+                </div>
+                <div class="w-10 h-10 bg-gray-100 dark:bg-slate-800 rounded-lg flex items-center justify-center">
+                    <i class="fas fa-crown text-gray-600 dark:text-gray-400"></i>
+                </div>
+            </div>
+            <div class="flex items-center text-xs text-gray-600 dark:text-gray-400">
+                <span class="font-medium" id="porcentajeRoles">0%</span>
+                <span class="ml-1">distribuidos</span>
+            </div>
+        </div>
+
+        <!-- Card 4: Inactive Users -->
+        <div class="bg-white dark:bg-slate-900 rounded-lg p-6 border border-gray-200 dark:border-slate-800 hover:border-gray-300 dark:hover:border-slate-700 transition-colors">
+            <div class="flex justify-between items-start mb-4">
+                <div>
+                    <p class="text-gray-500 dark:text-gray-400 text-xs font-medium mb-2 uppercase tracking-wide">Inactivos</p>
+                    <h3 class="text-3xl font-bold text-gray-900 dark:text-white" id="estadisticaInactivos">0</h3>
+                </div>
+                <div class="w-10 h-10 bg-gray-100 dark:bg-slate-800 rounded-lg flex items-center justify-center">
+                    <i class="fas fa-ban text-gray-600 dark:text-gray-400"></i>
+                </div>
+            </div>
+            <div class="flex items-center text-xs text-gray-600 dark:text-gray-400">
+                <span class="text-red-600 dark:text-red-500 font-medium" id="porcentajeInactivos">0%</span>
+                <span class="ml-1">desactivados</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== SECCIÓN 2: ACCIONES DE MENÚ Y PERMISOS ========== -->
+    <section class="bg-white dark:bg-slate-900 rounded-lg border border-gray-200 dark:border-slate-800 p-6">
+        <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-4">Gestión de Menús y Permisos</h2>
+        <div class="flex flex-wrap gap-3">
+            <button id="btnCrearMenu" class="flex items-center gap-2 px-6 py-2.5 bg-purple-600 dark:bg-purple-700 text-white rounded-lg hover:bg-purple-700 dark:hover:bg-purple-800 transition-colors text-sm font-medium" title="Crear nuevo menú del sistema">
+                <i class="fas fa-bars"></i>
+                <span>Crear Menú</span>
+            </button>
+            <button id="btnAsignarSubMenu" class="flex items-center gap-2 px-6 py-2.5 bg-blue-600 dark:bg-blue-700 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-800 transition-colors text-sm font-medium" title="Asignar y crear submenús">
+                <i class="fas fa-plus-circle"></i>
+                <span>Asignar/Crear SubMenus</span>
+            </button>
+        </div>
+    </section>
+
+    <!-- ========== SECCIÓN 3: CONTROL DE USUARIOS ========== -->
+    <section class="bg-white dark:bg-slate-900 rounded-lg border border-gray-200 dark:border-slate-800 p-6">
+        <!-- Encabezado con título y acciones rápidas -->
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 pb-4 border-b border-gray-200 dark:border-slate-800">
+            <div>
+                <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-1">Gestión de Usuarios</h2>
+                <p class="text-xs text-gray-500 dark:text-gray-400">Busca, filtra y gestiona usuarios y sus roles</p>
+            </div>
+            <div class="flex gap-2 mt-4 md:mt-0 flex-wrap justify-end">
+                <button id="btnNuevoUsuario" class="flex items-center gap-2 px-6 py-2.5 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-lg hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors text-sm font-medium">
+                    <i class="fas fa-plus"></i>
+                    <span>Nuevo Usuario</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Barra de búsqueda principal -->
+        <div class="mb-4">
+            <div class="relative">
+                <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                <input type="text" id="inputBuscarUsuario" placeholder="Buscar por nombre, email, documento, usuario..." class="w-full pl-11 pr-4 py-3 bg-gray-50 dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 focus:border-blue-500 dark:focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500/10 transition-all text-sm">
+            </div>
+        </div>
+
+        <!-- Filtros avanzados (colapsables) -->
+        <div class="mb-4">
+            <button id="btnMostrarFiltrosAvanzados" class="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors mb-3">
+                <i class="fas fa-sliders-h"></i>
+                <span>Filtros Avanzados</span>
+                <i class="fas fa-chevron-down transition-transform" id="iconoFiltros"></i>
+            </button>
+
+            <!-- Panel de filtros avanzados -->
+            <div id="panelFiltrosAvanzados" class="hidden grid grid-cols-1 md:grid-cols-3 gap-3 p-4 bg-gray-50 dark:bg-slate-800/50 rounded-lg border border-gray-200 dark:border-slate-800">
+                
+                <!-- Filtro Estado -->
+                <div>
+                    <label class="text-xs font-medium text-gray-700 dark:text-gray-300 block mb-2">Estado</label>
+                    <select id="filtroEstado" class="w-full px-3 py-2.5 bg-white dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 focus:border-blue-500 dark:focus:border-blue-600 focus:outline-none text-sm transition-colors">
+                        <option value="">Todos</option>
+                        <option value="Activo">Activos</option>
+                        <option value="Inactivo">Inactivos</option>
+                    </select>
+                </div>
+
+                <!-- Filtro Rol -->
+                <div>
+                    <label class="text-xs font-medium text-gray-700 dark:text-gray-300 block mb-2">Rol</label>
+                    <select id="filtroRol" class="w-full px-3 py-2.5 bg-white dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 focus:border-blue-500 dark:focus:border-blue-600 focus:outline-none text-sm transition-colors">
+                        <option value="">Todos</option>
+                    </select>
+                </div>
+
+                <!-- Filtro Area -->
+                <div>
+                    <label class="text-xs font-medium text-gray-700 dark:text-gray-300 block mb-2">Área</label>
+                    <select id="filtroArea" class="w-full px-3 py-2.5 bg-white dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 focus:border-blue-500 dark:focus:border-blue-600 focus:outline-none text-sm transition-colors">
+                        <option value="">Todos</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Botones de acción (Buscar y Limpiar) -->
+        <div class="flex gap-3 justify-end">
+            <button id="btnLimpiarFiltros" class="px-5 py-2.5 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-slate-800 rounded-lg hover:bg-gray-200 dark:hover:bg-slate-700 transition-colors text-sm font-medium">
+                <i class="fas fa-times mr-2"></i>Limpiar
+            </button>
+            <button id="btnBuscarUsuarios" class="flex items-center gap-2 px-6 py-2.5 bg-blue-600 dark:bg-blue-700 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-800 transition-colors text-sm font-medium">
+                <i class="fas fa-search"></i>
+                <span>Buscar</span>
+            </button>
+        </div>
+    </section>
+
+    <!-- ========== SECCIÓN 4: TABLA DE USUARIOS ========== -->
+    <section class="bg-white dark:bg-slate-900 rounded-lg border border-gray-200 dark:border-slate-800 overflow-hidden">
+        <!-- Tabla -->
+        <div class="overflow-x-auto">
+            <table class="w-full">
+                <thead class="bg-gray-50 dark:bg-slate-800/50 border-b border-gray-200 dark:border-slate-800">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">Documento</th>
+                        <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">Usuario</th>
+                        <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">Email</th>
+                        <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">Rol</th>
+                        <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">Área</th>
+                        <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">Estado</th>
+                        <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="tablaUsuariosBody" class="divide-y divide-gray-200 dark:divide-slate-800">
+                    <!-- Los datos se cargarán dinámicamente desde la base de datos -->
+                    <tr>
+                        <td colspan="7" class="px-6 py-8 text-center text-gray-500 dark:text-gray-400">
+                            <i class="fas fa-spinner fa-spin text-2xl mb-2"></i>
+                            <p>Cargando usuarios...</p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
         
-        <!-- Panel Izquierdo: Lista de Usuarios -->
-        <div class="lg:col-span-1">
-            <div class="bg-slate-800/50 backdrop-blur-xl border border-slate-700/50 rounded-2xl p-6 shadow-xl">
-                <div class="flex items-center justify-between mb-4">
-                    <h2 class="text-xl font-bold text-white flex items-center gap-2">
-                        <i class="fas fa-users text-purple-400"></i>
-                        Usuarios
-                    </h2>
-                    <button onclick="abrirModalNuevoUsuario()" class="p-2 bg-purple-600 hover:bg-purple-700 rounded-lg text-white transition-colors" title="Nuevo usuario">
-                        <i class="fas fa-plus"></i>
+        <!-- Paginación y resumen -->
+        <div class="px-6 py-4 border-t border-gray-200 dark:border-slate-800 flex items-center justify-between">
+            <p class="text-sm text-gray-600 dark:text-gray-400">
+                <span id="usuariosVisibles" class="font-semibold">0</span> de 
+                <span id="totalUsuariosCount" class="font-semibold">0</span> usuarios mostrados
+            </p>
+            <div class="flex gap-2">
+                <button class="px-3 py-1 border border-gray-300 dark:border-slate-700 rounded text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-800 transition-colors">Anterior</button>
+                <button class="px-3 py-1 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded text-sm hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors">Siguiente</button>
+            </div>
+        </div>
+    </section>
+
+</div>
+
+<!-- Modal Crear Menú -->
+<div id="modalCrearMenu" class="hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-slate-900 rounded-xl shadow-2xl w-full max-w-2xl border border-gray-200 dark:border-slate-800">
+        <!-- Header Modal -->
+        <div class="px-6 py-4 border-b border-gray-200 dark:border-slate-800 flex items-center justify-between sticky top-0 bg-white dark:bg-slate-900 z-10">
+            <h3 class="text-xl font-bold text-gray-900 dark:text-white">
+                <i class="fas fa-bars mr-2 text-gray-600 dark:text-gray-400"></i>
+                Crear Nuevo Menú
+            </h3>
+            <button id="btnCerrarModalMenu" class="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-lg transition-colors">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+        </div>
+
+        <!-- Body Modal -->
+        <div class="p-6">
+            <form id="formCrearMenu" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Nombre del Menú <span class="text-red-500">*</span>
+                    </label>
+                    <input type="text" name="nombre_menu" required maxlength="100" class="w-full px-4 py-2.5 bg-gray-50 dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 focus:border-gray-400 dark:focus:border-slate-600 focus:outline-none transition-colors text-sm" placeholder="Ej: Ventas, Reportes, Administración">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Ruta/URL <span class="text-red-500">*</span>
+                    </label>
+                    <input type="text" name="ruta" required maxlength="255" class="w-full px-4 py-2.5 bg-gray-50 dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 focus:border-gray-400 dark:focus:border-slate-600 focus:outline-none transition-colors text-sm" placeholder="Ej: /ventas, /reportes, /admin">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Descripción
+                    </label>
+                    <textarea name="descripcion" maxlength="255" rows="3" class="w-full px-4 py-2.5 bg-gray-50 dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 focus:border-gray-400 dark:focus:border-slate-600 focus:outline-none transition-colors text-sm" placeholder="Descripción del menú (opcional)"></textarea>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Estado <span class="text-red-500">*</span>
+                    </label>
+                    <select name="estado" required class="w-full px-4 py-2.5 bg-gray-50 dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 focus:border-gray-400 dark:focus:border-slate-600 focus:outline-none transition-colors text-sm">
+                        <option value="">Seleccionar...</option>
+                        <option value="Activo">Activo</option>
+                        <option value="Inactivo">Inactivo</option>
+                    </select>
+                </div>
+                <div class="flex gap-3 justify-end pt-4 border-t border-gray-200 dark:border-slate-800">
+                    <button type="button" id="btnCancelarModalMenu" class="px-6 py-2.5 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-slate-800 rounded-lg hover:bg-gray-200 dark:hover:bg-slate-700 transition-colors text-sm font-medium">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="px-6 py-2.5 bg-purple-600 dark:bg-purple-700 text-white rounded-lg hover:bg-purple-700 dark:hover:bg-purple-800 transition-colors text-sm font-medium">
+                        <i class="fas fa-save mr-2"></i>Crear Menú
                     </button>
                 </div>
-
-                <!-- Campo de búsqueda -->
-                <div class="mb-4">
-                    <input type="text" id="buscarUsuario" placeholder="Buscar usuario..." class="w-full px-4 py-2.5 bg-slate-900 border border-slate-700 rounded-lg text-white placeholder-gray-500 focus:border-purple-500 transition-colors">
-                </div>
-
-                <!-- Lista de usuarios -->
-                <div id="listaUsuarios" class="space-y-2 max-h-96 overflow-y-auto">
-                    <div class="animate-pulse space-y-2">
-                        <div class="h-12 bg-slate-700/50 rounded-lg"></div>
-                        <div class="h-12 bg-slate-700/50 rounded-lg"></div>
-                        <div class="h-12 bg-slate-700/50 rounded-lg"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Panel Derecho: Detalles del Usuario y Asignación de Roles -->
-        <div class="lg:col-span-2">
-            <div class="bg-slate-800/50 backdrop-blur-xl border border-slate-700/50 rounded-2xl p-6 shadow-xl">
-                <h2 class="text-xl font-bold text-white flex items-center gap-2 mb-6">
-                    <i class="fas fa-user-gear text-purple-400"></i>
-                    Detalles del Usuario
-                </h2>
-
-                <!-- Estado sin usuario seleccionado -->
-                <div id="sinUsuarioSeleccionado" class="text-center py-12">
-                    <i class="fas fa-user-slash text-6xl text-gray-500 mb-4"></i>
-                    <p class="text-gray-400 text-lg">Selecciona un usuario para ver y editar sus permisos</p>
-                </div>
-
-                <!-- Formulario de usuario (oculto inicialmente) -->
-                <div id="detallesUsuario" class="hidden space-y-6">
-                    
-                    <!-- Información del usuario -->
-                    <div class="bg-slate-900/50 rounded-xl p-4 border border-slate-700/30">
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <div>
-                                <label class="text-xs font-semibold text-gray-400 uppercase">Documento</label>
-                                <p id="usuarioDocumento" class="text-white text-lg font-semibold mt-1">-</p>
-                            </div>
-                            <div>
-                                <label class="text-xs font-semibold text-gray-400 uppercase">Usuario</label>
-                                <p id="usuarioNombre" class="text-white text-lg font-semibold mt-1">-</p>
-                            </div>
-                            <div>
-                                <label class="text-xs font-semibold text-gray-400 uppercase">Email</label>
-                                <p id="usuarioEmail" class="text-white text-lg font-semibold mt-1">-</p>
-                            </div>
-                            <div>
-                                <label class="text-xs font-semibold text-gray-400 uppercase">Estado</label>
-                                <p id="usuarioEstado" class="text-lg font-semibold mt-1">-</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Asignación de Rol -->
-                    <div class="bg-slate-900/50 rounded-xl p-4 border border-slate-700/30">
-                        <label class="text-sm font-semibold text-gray-300 block mb-3">
-                            <i class="fas fa-crown text-yellow-400 mr-2"></i>
-                            Rol Principal
-                        </label>
-                        <div class="flex gap-2">
-                            <select id="seleccionarRol" class="flex-1 px-4 py-2.5 bg-slate-800 border border-slate-600 rounded-lg text-white focus:border-purple-500 transition-colors">
-                                <option value="">-- Selecciona un rol --</option>
-                            </select>
-                            <button onclick="asignarRolUsuario()" class="px-6 py-2.5 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-lg transition-colors">
-                                <i class="fas fa-check mr-2"></i>
-                                Asignar
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Permisos del Usuario -->
-                    <div class="bg-slate-900/50 rounded-xl p-4 border border-slate-700/30">
-                        <label class="text-sm font-semibold text-gray-300 block mb-4">
-                            <i class="fas fa-key text-green-400 mr-2"></i>
-                            Permisos por Menú
-                        </label>
-                        <div id="permisosUsuario" class="space-y-3 max-h-64 overflow-y-auto">
-                            <p class="text-gray-400 text-sm">Cargando permisos...</p>
-                        </div>
-                    </div>
-
-                    <!-- Acciones -->
-                    <div class="flex gap-2 pt-4 border-t border-slate-700">
-                        <button onclick="editarUsuario()" class="flex-1 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors flex items-center justify-center gap-2">
-                            <i class="fas fa-edit"></i>
-                            Editar
-                        </button>
-                        <button onclick="desactivarUsuario()" class="flex-1 px-4 py-2.5 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg transition-colors flex items-center justify-center gap-2">
-                            <i class="fas fa-ban"></i>
-                            Desactivar
-                        </button>
-                    </div>
-                </div>
-            </div>
+            </form>
         </div>
     </div>
 </div>
 
-<!-- Modal para nuevo usuario -->
+<!-- Modal Asignar SubMenus -->
+<div id="modalAsignarSubMenu" class="hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-slate-900 rounded-xl shadow-2xl w-full max-w-2xl border border-gray-200 dark:border-slate-800">
+        <!-- Header Modal -->
+        <div class="px-6 py-4 border-b border-gray-200 dark:border-slate-800 flex items-center justify-between sticky top-0 bg-white dark:bg-slate-900 z-10">
+            <h3 class="text-xl font-bold text-gray-900 dark:text-white">
+                <i class="fas fa-plus-circle mr-2 text-gray-600 dark:text-gray-400"></i>
+                Crear SubMenú
+            </h3>
+            <button id="btnCerrarModalSubMenu" class="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-lg transition-colors">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+        </div>
+
+        <!-- Body Modal -->
+        <div class="p-6">
+            <form id="formAsignarSubMenu" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Menú Principal <span class="text-red-500">*</span>
+                    </label>
+                    <select name="id_menu" required id="selectMenuPrincipal" class="w-full px-4 py-2.5 bg-gray-50 dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 focus:border-gray-400 dark:focus:border-slate-600 focus:outline-none transition-colors text-sm">
+                        <option value="">Seleccionar menú...</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Nombre del SubMenú <span class="text-red-500">*</span>
+                    </label>
+                    <input type="text" name="nombre_submenu" required maxlength="100" class="w-full px-4 py-2.5 bg-gray-50 dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 focus:border-gray-400 dark:focus:border-slate-600 focus:outline-none transition-colors text-sm" placeholder="Ej: Listar, Crear, Editar, Eliminar">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Descripción
+                    </label>
+                    <textarea name="descripcion" maxlength="255" rows="2" class="w-full px-4 py-2.5 bg-gray-50 dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 focus:border-gray-400 dark:focus:border-slate-600 focus:outline-none transition-colors text-sm" placeholder="Descripción del submenú (opcional)"></textarea>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Estado <span class="text-red-500">*</span>
+                    </label>
+                    <select name="estado" required class="w-full px-4 py-2.5 bg-gray-50 dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 focus:border-gray-400 dark:focus:border-slate-600 focus:outline-none transition-colors text-sm">
+                        <option value="">Seleccionar...</option>
+                        <option value="Activo">Activo</option>
+                        <option value="Inactivo">Inactivo</option>
+                    </select>
+                </div>
+                <div class="flex gap-3 justify-end pt-4 border-t border-gray-200 dark:border-slate-800">
+                    <button type="button" id="btnCancelarModalSubMenu" class="px-6 py-2.5 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-slate-800 rounded-lg hover:bg-gray-200 dark:hover:bg-slate-700 transition-colors text-sm font-medium">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="px-6 py-2.5 bg-blue-600 dark:bg-blue-700 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-800 transition-colors text-sm font-medium">
+                        <i class="fas fa-save mr-2"></i>Crear SubMenú
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
 <div id="modalNuevoUsuario" class="hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-    <div class="bg-slate-800 rounded-2xl shadow-2xl w-full max-w-md border border-slate-700">
-        <div class="flex items-center justify-between p-6 border-b border-slate-700">
-            <h3 class="text-xl font-bold text-white">Nuevo Usuario</h3>
-            <button onclick="cerrarModalNuevoUsuario()" class="text-gray-400 hover:text-white text-2xl">
-                <i class="fas fa-times"></i>
+    <div class="bg-white dark:bg-slate-900 rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden border border-gray-200 dark:border-slate-800">
+        <!-- Header Modal -->
+        <div class="px-6 py-4 border-b border-gray-200 dark:border-slate-800 flex items-center justify-between sticky top-0 bg-white dark:bg-slate-900 z-10">
+            <h3 class="text-xl font-bold text-gray-900 dark:text-white">
+                <i class="fas fa-user-plus mr-2 text-gray-600 dark:text-gray-400"></i>
+                Nuevo Usuario
+            </h3>
+            <button id="btnCerrarModal" class="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-lg transition-colors">
+                <i class="fas fa-times text-xl"></i>
             </button>
         </div>
-        <div class="p-6 space-y-4">
-            <div>
-                <label class="text-sm font-semibold text-gray-300 block mb-2">Documento</label>
-                <input type="text" id="nuevoUsuarioDocumento" placeholder="DNI/RUC" class="w-full px-4 py-2.5 bg-slate-900 border border-slate-700 rounded-lg text-white focus:border-purple-500 transition-colors">
-            </div>
-            <div>
-                <label class="text-sm font-semibold text-gray-300 block mb-2">Email</label>
-                <input type="email" id="nuevoUsuarioEmail" placeholder="usuario@ejemplo.com" class="w-full px-4 py-2.5 bg-slate-900 border border-slate-700 rounded-lg text-white focus:border-purple-500 transition-colors">
-            </div>
-            <div>
-                <label class="text-sm font-semibold text-gray-300 block mb-2">Usuario</label>
-                <input type="text" id="nuevoUsuarioUser" placeholder="nombre_usuario" class="w-full px-4 py-2.5 bg-slate-900 border border-slate-700 rounded-lg text-white focus:border-purple-500 transition-colors">
-            </div>
-            <div>
-                <label class="text-sm font-semibold text-gray-300 block mb-2">Rol</label>
-                <select id="nuevoUsuarioRol" class="w-full px-4 py-2.5 bg-slate-900 border border-slate-700 rounded-lg text-white focus:border-purple-500 transition-colors">
-                    <option value="">-- Selecciona un rol --</option>
-                </select>
-            </div>
-        </div>
-        <div class="flex gap-2 p-6 border-t border-slate-700">
-            <button onclick="cerrarModalNuevoUsuario()" class="flex-1 px-4 py-2.5 bg-slate-700 hover:bg-slate-600 text-white font-semibold rounded-lg transition-colors">
-                Cancelar
-            </button>
-            <button onclick="crearNuevoUsuario()" class="flex-1 px-4 py-2.5 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-lg transition-colors">
-                Crear
-            </button>
+
+        <!-- Body Modal - Scrollable -->
+        <div class="p-6 overflow-y-auto max-h-[calc(90vh-140px)]">
+            <form id="formNuevoUsuario" class="space-y-6">
+                
+                <!-- Sección: Datos Personales -->
+                <div>
+                    <h4 class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-4 flex items-center">
+                        <i class="fas fa-id-card mr-2 text-gray-500"></i>
+                        Datos Personales
+                    </h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Nombres <span class="text-red-500">*</span>
+                            </label>
+                            <input type="text" name="nombres" required maxlength="100" class="w-full px-4 py-2.5 bg-gray-50 dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 focus:border-gray-400 dark:focus:border-slate-600 focus:outline-none transition-colors text-sm" placeholder="Nombres">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Email <span class="text-red-500">*</span>
+                            </label>
+                            <input type="email" name="email" required maxlength="150" class="w-full px-4 py-2.5 bg-gray-50 dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 focus:border-gray-400 dark:focus:border-slate-600 focus:outline-none transition-colors text-sm" placeholder="correo@ejemplo.com">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Usuario <span class="text-red-500">*</span>
+                            </label>
+                            <input type="text" name="usuario" required maxlength="50" class="w-full px-4 py-2.5 bg-gray-50 dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 focus:border-gray-400 dark:focus:border-slate-600 focus:outline-none transition-colors text-sm" placeholder="usuario">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Rol <span class="text-red-500">*</span>
+                            </label>
+                            <select name="id_rol" required class="w-full px-4 py-2.5 bg-gray-50 dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 focus:border-gray-400 dark:focus:border-slate-600 focus:outline-none transition-colors text-sm">
+                                <option value="">Seleccionar...</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Botones -->
+                <div class="flex gap-3 justify-end border-t border-gray-200 dark:border-slate-800 pt-6">
+                    <button type="button" id="btnCancelarModal" class="px-6 py-2.5 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-slate-800 rounded-lg hover:bg-gray-200 dark:hover:bg-slate-700 transition-colors text-sm font-medium">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="px-6 py-2.5 bg-blue-600 dark:bg-blue-700 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-800 transition-colors text-sm font-medium">
+                        <i class="fas fa-save mr-2"></i>Guardar Usuario
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
 
+<!-- Script básico -->
 <script>
-let usuarioActual = null;
-
-// Cargar usuarios al iniciar
-document.addEventListener('DOMContentLoaded', () => {
-    cargarUsuarios();
-    cargarRoles();
-    document.getElementById('buscarUsuario').addEventListener('input', filtrarUsuarios);
-});
-
-// Cargar lista de usuarios
-async function cargarUsuarios() {
-    try {
-        const response = await fetch('/api/usuarios-asesores');
-        const resultado = await response.json();
-        
-        if (resultado.success) {
-            mostrarListaUsuarios(resultado.data);
-        }
-    } catch (error) {
-        console.error('Error cargando usuarios:', error);
-    }
-}
-
-// Mostrar lista de usuarios
-function mostrarListaUsuarios(usuarios) {
-    const lista = document.getElementById('listaUsuarios');
-    
-    if (usuarios.length === 0) {
-        lista.innerHTML = '<p class="text-gray-400 text-center py-4">No hay usuarios registrados</p>';
-        return;
-    }
-    
-    lista.innerHTML = usuarios.map(user => `
-        <button onclick="seleccionarUsuario('${user.num_documento}')" class="w-full text-left px-4 py-3 bg-slate-900/50 hover:bg-slate-700/50 border border-slate-700/30 rounded-lg transition-colors group">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white font-bold">
-                    ${user.nombres.charAt(0)}
-                </div>
-                <div class="flex-1 min-w-0">
-                    <p class="text-white font-semibold truncate">${user.usuario}</p>
-                    <p class="text-gray-400 text-xs truncate">${user.num_documento}</p>
-                </div>
-            </div>
-        </button>
-    `).join('');
-}
-
-// Filtrar usuarios
-function filtrarUsuarios() {
-    const busqueda = document.getElementById('buscarUsuario').value.toLowerCase();
-    const botones = document.querySelectorAll('#listaUsuarios button');
-    
-    botones.forEach(boton => {
-        const texto = boton.textContent.toLowerCase();
-        boton.style.display = texto.includes(busqueda) ? 'block' : 'none';
+    // ============================================================
+    // MODAL NUEVO USUARIO
+    // ============================================================
+    document.getElementById('btnNuevoUsuario').addEventListener('click', () => {
+        document.getElementById('modalNuevoUsuario').classList.remove('hidden');
     });
-}
 
-// Seleccionar usuario
-async function seleccionarUsuario(numDocumento) {
-    usuarioActual = numDocumento;
-    
-    try {
-        const response = await fetch(`/api/asesor/${numDocumento}`);
-        const resultado = await response.json();
+    document.getElementById('btnCerrarModal').addEventListener('click', () => {
+        document.getElementById('modalNuevoUsuario').classList.add('hidden');
+    });
+
+    document.getElementById('btnCancelarModal').addEventListener('click', () => {
+        document.getElementById('modalNuevoUsuario').classList.add('hidden');
+    });
+
+    // ============================================================
+    // MODAL CREAR MENÚ
+    // ============================================================
+    document.getElementById('btnCrearMenu').addEventListener('click', () => {
+        document.getElementById('modalCrearMenu').classList.remove('hidden');
+    });
+
+    document.getElementById('btnCerrarModalMenu').addEventListener('click', () => {
+        document.getElementById('modalCrearMenu').classList.add('hidden');
+    });
+
+    document.getElementById('btnCancelarModalMenu').addEventListener('click', () => {
+        document.getElementById('modalCrearMenu').classList.add('hidden');
+    });
+
+    document.getElementById('formCrearMenu').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
         
-        if (resultado.success) {
-            mostrarDetallesUsuario(resultado.data);
-        }
-    } catch (error) {
-        console.error('Error cargando detalles:', error);
-    }
-}
-
-// Mostrar detalles del usuario
-function mostrarDetallesUsuario(usuario) {
-    document.getElementById('sinUsuarioSeleccionado').classList.add('hidden');
-    document.getElementById('detallesUsuario').classList.remove('hidden');
-    
-    document.getElementById('usuarioDocumento').textContent = usuario.num_documento;
-    document.getElementById('usuarioNombre').textContent = usuario.usuario || usuario.nombres;
-    document.getElementById('usuarioEmail').textContent = usuario.email;
-    document.getElementById('usuarioEstado').textContent = usuario.estado;
-    document.getElementById('usuarioEstado').className = usuario.estado === 'Activo' 
-        ? 'text-lg font-semibold mt-1 text-green-400' 
-        : 'text-lg font-semibold mt-1 text-red-400';
-    
-    cargarPermisosUsuario(usuario.num_documento);
-}
-
-// Cargar permisos del usuario
-async function cargarPermisosUsuario(numDocumento) {
-    // Por ahora, mostrar un placeholder
-    const permisosDiv = document.getElementById('permisosUsuario');
-    permisosDiv.innerHTML = `
-        <div class="text-center py-4 text-gray-400">
-            <p class="text-sm">Sistema de permisos en desarrollo</p>
-        </div>
-    `;
-}
-
-// Cargar roles disponibles
-async function cargarRoles() {
-    try {
-        const response = await fetch('/api/roles');
-        const resultado = await response.json();
+        // Convertir FormData a JSON
+        const data = {
+            nombre_menu: formData.get('nombre_menu'),
+            descripcion: formData.get('descripcion'),
+            ruta: formData.get('ruta'),
+            estado: formData.get('estado')
+        };
         
-        if (resultado.success) {
-            const select = document.getElementById('seleccionarRol');
-            const selectNuevo = document.getElementById('nuevoUsuarioRol');
-            
-            resultado.data.forEach(rol => {
-                const option1 = document.createElement('option');
-                option1.value = rol.id_rol;
-                option1.textContent = rol.nombre_rol;
-                select.appendChild(option1);
-                
-                const option2 = document.createElement('option');
-                option2.value = rol.id_rol;
-                option2.textContent = rol.nombre_rol;
-                selectNuevo.appendChild(option2);
-            });
-        }
-    } catch (error) {
-        console.error('Error cargando roles:', error);
-    }
-}
+        // Enviar a API
+        fetch('/api/menus/crear', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        })
+        .then(res => res.json())
+        .then(result => {
+            if (result.success) {
+                alert('Menú creado exitosamente');
+                document.getElementById('modalCrearMenu').classList.add('hidden');
+                document.getElementById('formCrearMenu').reset();
+                // Recargar lista de menús
+                cargarMenus();
+            } else {
+                alert('Error: ' + result.message);
+            }
+        })
+        .catch(err => alert('Error: ' + err));
+    });
 
-// Asignar rol a usuario
-async function asignarRolUsuario() {
-    if (!usuarioActual) {
-        alert('Selecciona un usuario primero');
-        return;
+    // ============================================================
+    // MODAL ASIGNAR SUBMENÚS
+    // ============================================================
+    document.getElementById('btnAsignarSubMenu').addEventListener('click', () => {
+        document.getElementById('modalAsignarSubMenu').classList.remove('hidden');
+    });
+
+    document.getElementById('btnCerrarModalSubMenu').addEventListener('click', () => {
+        document.getElementById('modalAsignarSubMenu').classList.add('hidden');
+    });
+
+    document.getElementById('btnCancelarModalSubMenu').addEventListener('click', () => {
+        document.getElementById('modalAsignarSubMenu').classList.add('hidden');
+    });
+
+    document.getElementById('formAsignarSubMenu').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        
+        // Convertir FormData a JSON
+        const data = {
+            id_menu: formData.get('id_menu'),
+            nombre_submenu: formData.get('nombre_submenu'),
+            descripcion: formData.get('descripcion'),
+            estado: formData.get('estado')
+        };
+        
+        // Enviar a API
+        fetch('/api/submenus/crear', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        })
+        .then(res => res.json())
+        .then(result => {
+            if (result.success) {
+                alert('SubMenú creado exitosamente');
+                document.getElementById('modalAsignarSubMenu').classList.add('hidden');
+                document.getElementById('formAsignarSubMenu').reset();
+            } else {
+                alert('Error: ' + result.message);
+            }
+        })
+        .catch(err => alert('Error: ' + err));
+    });
+    
+    // Función para cargar menús en el selector
+    function cargarMenus() {
+        fetch('/api/menus')
+            .then(res => res.json())
+            .then(result => {
+                if (result.success && result.data) {
+                    const select = document.getElementById('selectMenuPrincipal');
+                    select.innerHTML = '<option value="">Seleccionar menú...</option>';
+                    result.data.forEach(menu => {
+                        const option = document.createElement('option');
+                        option.value = menu.id_menu || menu.id;
+                        option.textContent = menu.nombre_menu;
+                        select.appendChild(option);
+                    });
+                }
+            })
+            .catch(err => console.error('Error al cargar menús:', err));
     }
     
-    const idRol = document.getElementById('seleccionarRol').value;
-    if (!idRol) {
-        alert('Selecciona un rol');
-        return;
-    }
-    
-    alert(`Rol asignado a ${usuarioActual} - Funcionalidad en desarrollo`);
-}
+    // Cargar menús al abrir el modal
+    document.getElementById('btnAsignarSubMenu').addEventListener('click', () => {
+        cargarMenus();
+    });
 
-// Editar usuario
-function editarUsuario() {
-    alert(`Edición del usuario ${usuarioActual} - Funcionalidad en desarrollo`);
-}
+    // Toggle filtros avanzados
+    document.getElementById('btnMostrarFiltrosAvanzados').addEventListener('click', function() {
+        const panel = document.getElementById('panelFiltrosAvanzados');
+        const icon = document.getElementById('iconoFiltros');
+        panel.classList.toggle('hidden');
+        icon.style.transform = panel.classList.contains('hidden') ? 'rotate(0deg)' : 'rotate(180deg)';
+    });
 
-// Desactivar usuario
-function desactivarUsuario() {
-    if (confirm(`¿Desactivar al usuario ${usuarioActual}?`)) {
-        alert(`Usuario desactivado - Funcionalidad en desarrollo`);
-    }
-}
-
-// Modal nuevo usuario
-function abrirModalNuevoUsuario() {
-    document.getElementById('modalNuevoUsuario').classList.remove('hidden');
-}
-
-function cerrarModalNuevoUsuario() {
-    document.getElementById('modalNuevoUsuario').classList.add('hidden');
-}
-
-function crearNuevoUsuario() {
-    alert('Crear nuevo usuario - Funcionalidad en desarrollo');
-    cerrarModalNuevoUsuario();
-}
+    // Inicializar página (placeholder)
+    console.log('Página de Permisos y Roles cargada');
 </script>
 
 {% endblock %}

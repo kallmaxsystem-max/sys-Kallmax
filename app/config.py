@@ -15,14 +15,26 @@ class DatabaseConfig:
     USER = os.getenv('DB_USER', 'root')
     PASSWORD = os.getenv('DB_PASSWORD', '')
     DATABASE = os.getenv('DB_NAME', 'kallgwkn_kallmax_bd')
+    USE_SSL = os.getenv('DB_USE_SSL', 'false').lower() == 'true'
     
     @classmethod
     def get_connection_params(cls):
         """Retorna diccionario con parámetros de conexión"""
-        return {
+        params = {
             'host': cls.HOST,
             'port': cls.PORT,
             'user': cls.USER,
             'password': cls.PASSWORD,
-            'database': cls.DATABASE
+            'database': cls.DATABASE,
+            'autocommit': False,
+            'use_pure': True,
         }
+        
+        # Configurar SSL solo si está habilitado
+        if cls.USE_SSL:
+            params['ssl_disabled'] = False
+        else:
+            # Deshabilitar SSL si hay problemas de conexión
+            params['ssl_disabled'] = True
+        
+        return params
