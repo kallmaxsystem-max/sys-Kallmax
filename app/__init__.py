@@ -16,6 +16,16 @@ def create_app():
     # Configure session - usar variable de entorno en producción
     app.secret_key = os.environ.get('SECRET_KEY', 'your-secret-key-change-in-production')
     
+    # Configurar cookies para evitar problemas de compresión
+    app.config['SESSION_COOKIE_HTTPONLY'] = True
+    app.config['SESSION_COOKIE_SECURE'] = True
+    app.config['SESSION_COOKIE_SAMESITE'] = 'Strict'
+    app.config['COMPRESS_RESPONSE'] = False
+    app.config['ENV'] = 'production'
+    app.config['FLASK_ENV'] = 'production'
+    app.config['PRESERVE_CONTEXT_ON_EXCEPTION'] = False
+    app.config['JSON_SORT_KEYS'] = False
+    
     # Configurar logging
     if not app.debug:
         # Crear directorio de logs si no existe

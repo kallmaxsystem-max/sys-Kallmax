@@ -96,6 +96,10 @@ Administra y da seguimiento a tus contactos y clientes
                 <p class="text-xs text-gray-500 dark:text-gray-400">Busca, filtra y gestiona todos tus clientes</p>
             </div>
             <div class="flex gap-2 mt-4 md:mt-0 flex-wrap justify-end">
+                <button id="btnPlantillaExcel" class="flex items-center gap-2 px-4 py-2.5 bg-yellow-50 dark:bg-yellow-900/20 text-yellow-700 dark:text-yellow-400 border border-yellow-200 dark:border-yellow-800 rounded-lg hover:bg-yellow-100 dark:hover:bg-yellow-900/30 transition-colors text-sm font-medium" title="Descargar plantilla Excel para importar clientes">
+                    <i class="fas fa-file-excel"></i>
+                    <span>Plantilla Excel</span>
+                </button>
                 <button id="btnImportarClientes" class="flex items-center gap-2 px-4 py-2.5 bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 border border-green-200 dark:border-green-800 rounded-lg hover:bg-green-100 dark:hover:bg-green-900/30 transition-colors text-sm font-medium" title="Importar clientes desde archivo">
                     <i class="fas fa-file-import"></i>
                     <span>Importar</span>
@@ -2069,6 +2073,207 @@ async function cargarDistritosModal(idProvincia) {
         selectDistrito.innerHTML = '<option value="">Error</option>';
     }
 }
+
+// Event listener para descargar plantilla Excel
+document.getElementById('btnPlantillaExcel').addEventListener('click', () => {
+    const enlace = document.createElement('a');
+    enlace.href = '/api/clientes/descargar-plantilla';
+    enlace.click();
+});
+
+// Modal de resultados de importación
+function mostrarModalResultados(resultado) {
+    // Guardar resultado en variable global para acceso desde otros scripts
+    window.resultadoImportacion = resultado;
+    
+    // Crear el modal
+    const modal = document.createElement('div');
+    modal.className = 'fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4';
+    modal.id = 'modalResultadosImportacion';
+    
+    const totalErrores = resultado.errores ? resultado.errores.length : 0;
+    const clientes_importados = resultado.clientes_importados || 0;
+    const porcentajeExito = Math.round((clientes_importados / (resultado.total_filas_procesadas || 1)) * 100);
+    
+    let contenidoErrores = '';
+    if (resultado.errores && resultado.errores.length > 0) {
+        contenidoErrores = `
+            <div class="mt-4 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg max-h-64 overflow-y-auto">
+                <h4 class="font-semibold text-red-800 dark:text-red-400 mb-2">Errores encontrados (${totalErrores}):</h4>
+                <ul class="text-sm text-red-700 dark:text-red-300 space-y-1">
+                    ${resultado.errores.slice(0, 20).map(error => `<li class="flex items-start"><span class="mr-2">•</span><span>${error}</span></li>`).join('')}
+                    ${resultado.errores.length > 20 ? `<li class="font-semibold text-red-800 dark:text-red-400">... y ${resultado.errores.length - 20} errores más</li>` : ''}
+                </ul>
+            </div>
+        `;
+    }
+    
+    modal.innerHTML = `
+        <div class="bg-white dark:bg-slate-900 rounded-xl shadow-2xl w-full max-w-md p-6 border border-gray-200 dark:border-slate-800">
+            <!-- Header -->
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                    <i class="fas fa-file-import text-blue-600"></i>
+                    Resultados de Importación
+                </h3>
+                <button onclick="document.getElementById('modalResultadosImportacion').remove()" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+
+            <!-- Estadísticas -->
+            <div class="space-y-3 mb-6">
+                <!-- Éxito -->
+                <div class="p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-xs font-medium text-green-600 dark:text-green-400 uppercase">Importados Exitosamente</p>
+                            <p class="text-2xl font-bold text-green-700 dark:text-green-300">${clientes_importados}</p>
+                        </div>
+                        <i class="fas fa-check-circle text-green-600 dark:text-green-400 text-3xl opacity-50"></i>
+                    </div>
+                </div>
+
+                <!-- Errores -->
+                <div class="p-4 ${totalErrores > 0 ? 'bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800' : 'bg-gray-50 dark:bg-slate-800/50 border border-gray-200 dark:border-slate-800'} rounded-lg">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-xs font-medium ${totalErrores > 0 ? 'text-red-600 dark:text-red-400' : 'text-gray-600 dark:text-gray-400'} uppercase">Con Errores</p>
+                            <p class="text-2xl font-bold ${totalErrores > 0 ? 'text-red-700 dark:text-red-300' : 'text-gray-700 dark:text-gray-300'}">${totalErrores}</p>
+                        </div>
+                        <i class="fas ${totalErrores > 0 ? 'fa-exclamation-circle' : 'fa-check-circle'} ${totalErrores > 0 ? 'text-red-600 dark:text-red-400' : 'text-gray-600 dark:text-gray-400'} text-3xl opacity-50"></i>
+                    </div>
+                </div>
+
+                <!-- Porcentaje -->
+                <div class="p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
+                    <div class="flex items-center justify-between mb-2">
+                        <p class="text-xs font-medium text-blue-600 dark:text-blue-400 uppercase">Tasa de Éxito</p>
+                        <span class="text-lg font-bold text-blue-700 dark:text-blue-300">${porcentajeExito}%</span>
+                    </div>
+                    <div class="w-full bg-gray-200 dark:bg-slate-700 rounded-full h-2">
+                        <div class="bg-blue-600 h-2 rounded-full" style="width: ${porcentajeExito}%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Errores detallados -->
+            ${contenidoErrores}
+
+            <!-- Botones -->
+            <div class="flex gap-2 mt-6">
+                <button id="btnDescargarErrores" class="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-yellow-50 dark:bg-yellow-900/20 text-yellow-700 dark:text-yellow-400 border border-yellow-200 dark:border-yellow-800 rounded-lg hover:bg-yellow-100 dark:hover:bg-yellow-900/30 transition-colors font-medium">
+                    <i class="fas fa-download"></i>
+                    <span>Descargar Errores</span>
+                </button>
+                <button onclick="document.getElementById('modalResultadosImportacion').remove()" class="flex-1 px-4 py-2.5 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-lg hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors font-medium">
+                    Cerrar
+                </button>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    
+    // Cerrar al hacer clic fuera del modal
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.remove();
+        }
+    });
+}
+
+// Descargar reporte de errores
+function descargarReporteErrores(errores) {
+    try {
+        let contenido = 'REPORTE DE ERRORES - IMPORTACIÓN DE CLIENTES\n';
+        contenido += '==========================================\n';
+        contenido += `Fecha: ${new Date().toLocaleString()}\n`;
+        contenido += `Total de errores: ${errores.length}\n\n`;
+        contenido += 'DETALLE DE ERRORES:\n';
+        contenido += '-------------------------------------------\n\n';
+        
+        errores.forEach((error, index) => {
+            contenido += `${index + 1}. ${error}\n`;
+        });
+        
+        contenido += '\n-------------------------------------------\n';
+        contenido += 'Fin del reporte\n';
+        
+        // Crear blob y descargar
+        const blob = new Blob([contenido], { type: 'text/plain;charset=utf-8' });
+        const enlace = document.createElement('a');
+        enlace.href = URL.createObjectURL(blob);
+        enlace.download = `Reporte_Errores_Importacion_${new Date().getTime()}.txt`;
+        enlace.click();
+        
+    } catch (error) {
+        console.error('Error descargando reporte:', error);
+        alert('Error al descargar el reporte de errores');
+    }
+}
+
+// Configurar botón de descarga de errores
+document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('click', (e) => {
+        if (e.target.closest('#btnDescargarErrores')) {
+            // Obtener errores del resultado global (si existe)
+            if (window.resultadoImportacion && window.resultadoImportacion.errores) {
+                descargarReporteErrores(window.resultadoImportacion.errores);
+            } else {
+                alert('No hay errores para descargar');
+            }
+        }
+    });
+});
+
+// Event listener para importar clientes desde Excel
+document.getElementById('btnImportarClientes').addEventListener('click', () => {
+    // Crear input file dinámico
+    const inputFile = document.createElement('input');
+    inputFile.type = 'file';
+    inputFile.accept = '.xlsx';
+    
+    inputFile.addEventListener('change', async (event) => {
+        const archivo = event.target.files[0];
+        if (!archivo) return;
+        
+        // Mostrar indicador de carga
+        const btnImportar = document.getElementById('btnImportarClientes');
+        const textoOriginal = btnImportar.innerHTML;
+        btnImportar.innerHTML = '<i class="fas fa-spinner fa-spin"></i><span>Importando...</span>';
+        btnImportar.disabled = true;
+        
+        try {
+            const formData = new FormData();
+            formData.append('file', archivo);
+            
+            const response = await fetch('/api/clientes/importar', {
+                method: 'POST',
+                body: formData
+            });
+            
+            const resultado = await response.json();
+            
+            // Restaurar botón
+            btnImportar.innerHTML = textoOriginal;
+            btnImportar.disabled = false;
+            
+            // Mostrar modal de resultados
+            mostrarModalResultados(resultado);
+            
+            // NO recargar página automáticamente - dejar que el usuario cierre el modal
+            // El usuario debe cerrar el modal manualmente
+        } catch (error) {
+            console.error('Error en importación:', error);
+            btnImportar.innerHTML = textoOriginal;
+            btnImportar.disabled = false;
+            alert(`❌ Error al importar: ${error.message}`);
+        }
+    });
+    
+    inputFile.click();
+});
 
 </script>
 {% endblock %}

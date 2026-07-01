@@ -1088,3 +1088,258 @@ def filtrar_clientes_api():
         import traceback
         traceback.print_exc()
         return {'success': False, 'error': f'Error del servidor: {str(e)}'}, 500
+
+
+# =====================================================
+# IMPORTACION MASIVA DE CLIENTES
+# =====================================================
+
+def importar_clientes_api():
+    """Importar clientes desde archivo Excel - Usando SP"""
+    try:
+        from flask import session, request, jsonify, current_app
+        from openpyxl import load_workbook
+        import logging
+        
+        logger = logging.getLogger(__name__)
+        
+        if 'file' not in request.files:
+            return jsonify({'success': False, 'message': 'No se envió archivo'}), 400
+        
+        archivo = request.files['file']
+        if archivo.filename == '':
+            return jsonify({'success': False, 'message': 'No se seleccionó archivo'}), 400
+        
+        if not archivo.filename.endswith('.xlsx'):
+            return jsonify({'success': False, 'message': 'El archivo debe ser Excel (.xlsx)'}), 400
+        
+        wb = load_workbook(archivo)
+        ws = wb.active
+        
+        clientes_importados = 0
+        errores = []
+        num_documento_asesor = session.get('user_documento', '999999999')
+        
+        for row_idx, row in enumerate(ws.iter_rows(min_row=2, values_only=True), start=2):
+            try:
+                tipo_documento = row[0]
+                num_documento = str(row[1]) if row[1] else None
+                genero = row[2]
+                nombres = row[3]
+                apellido_paterno = row[4]
+                apellido_materno = row[5] if row[5] else None
+                fecha_nacimiento = row[6]
+                estado_civil = row[7]
+                email = row[8]
+                celular = row[9]
+                direccion = row[10]
+                departamento_nombre = row[11]
+                provincia_nombre = row[12]
+                distrito_nombre = row[13]
+                fuente_contacto = row[14] if row[14] else None
+                proyecto_interes = row[15] if row[15] else None
+                estado_prospeccion = row[16] if row[16] else None
+                tipo_compra = row[17] if row[17] else None
+                prioridad = row[18] if row[18] else 'Media'  # Default a 'Media' si no se proporciona
+                
+                if not all([tipo_documento, num_documento, genero, nombres, apellido_paterno, 
+                           fecha_nacimiento, estado_civil, email, celular, direccion, 
+                           distrito_nombre]):
+                    errores.append(f"Fila {row_idx}: Faltan campos requeridos")
+                    continue
+                
+                # Obtener ID del departamento
+                id_departamento = None
+                lookup_conn = None
+                try:
+                    lookup_conn = get_db_connection()
+                    if lookup_conn:
+                        lookup_cur = lookup_conn.cursor(dictionary=True)
+                        lookup_cur.execute("SELECT id_departamento FROM TblDepartamentos WHERE nombre = %s", (departamento_nombre,))
+                        dept_result = lookup_cur.fetchone()
+                        lookup_cur.close()
+                        
+                        if not dept_result:
+                            errores.append(f"Fila {row_idx}: Departamento '{departamento_nombre}' no encontrado")
+                            continue
+                        id_departamento = dept_result['id_departamento']
+                    else:
+                        errores.append(f"Fila {row_idx}: Error de conexión buscando departamento")
+                        continue
+                except Exception as e:
+                    logger.error(f"Error buscando departamento (fila {row_idx}): {e}")
+                    errores.append(f"Fila {row_idx}: Error buscando departamento - {str(e)}")
+                    continue
+                finally:
+                    if lookup_conn:
+                        try:
+                            lookup_conn.close()
+                        except:
+                            pass
+                
+                # Obtener ID de la provincia
+                id_provincia = None
+                lookup_conn = None
+                try:
+                    lookup_conn = get_db_connection()
+                    if lookup_conn:
+                        lookup_cur = lookup_conn.cursor(dictionary=True)
+                        lookup_cur.execute(
+                            "SELECT id_provincia FROM TblProvincias WHERE nombre = %s AND id_departamento = %s", 
+                            (provincia_nombre, id_departamento)
+                        )
+                        prov_result = lookup_cur.fetchone()
+                        lookup_cur.close()
+                        
+                        if not prov_result:
+                            errores.append(f"Fila {row_idx}: Provincia '{provincia_nombre}' no encontrada en {departamento_nombre}")
+                            continue
+                        id_provincia = prov_result['id_provincia']
+                    else:
+                        errores.append(f"Fila {row_idx}: Error de conexión buscando provincia")
+                        continue
+                except Exception as e:
+                    logger.error(f"Error buscando provincia (fila {row_idx}): {e}")
+                    errores.append(f"Fila {row_idx}: Error buscando provincia - {str(e)}")
+                    continue
+                finally:
+                    if lookup_conn:
+                        try:
+                            lookup_conn.close()
+                        except:
+                            pass
+                
+                # Obtener ID del distrito - ahora con el id_provincia
+                id_distrito = None
+                lookup_conn = None
+                try:
+                    lookup_conn = get_db_connection()
+                    if lookup_conn:
+                        lookup_cur = lookup_conn.cursor(dictionary=True)
+                        lookup_cur.execute(
+                            "SELECT id_distrito FROM TblDistritos WHERE nombre = %s AND id_provincia = %s", 
+                            (distrito_nombre, id_provincia)
+                        )
+                        dist_result = lookup_cur.fetchone()
+                        lookup_cur.close()
+                        
+                        if not dist_result:
+                            errores.append(f"Fila {row_idx}: Distrito '{distrito_nombre}' no encontrado en {provincia_nombre}, {departamento_nombre}")
+                            continue
+                        id_distrito = dist_result['id_distrito']
+                    else:
+                        errores.append(f"Fila {row_idx}: Error de conexión buscando distrito")
+                        continue
+                except Exception as e:
+                    logger.error(f"Error buscando distrito (fila {row_idx}): {e}")
+                    errores.append(f"Fila {row_idx}: Error buscando distrito - {str(e)}")
+                    continue
+                finally:
+                    if lookup_conn:
+                        try:
+                            lookup_conn.close()
+                        except:
+                            pass
+                
+                # Obtener IDs opcionales - cada uno en su CONEXIÓN SEPARADA
+                # CAMBIO: Ahora pasamos los NOMBRES directamente al SP, no los IDs
+                nombre_fuente_contacto = fuente_contacto  # Pasar el nombre tal cual
+                nombre_estado_prospeccion = estado_prospeccion  # Pasar el nombre tal cual
+                nombre_tipo_compra = tipo_compra  # Pasar el nombre tal cual
+                
+                # EJECUTAR SP - CONEXIÓN SEPARADA
+                sp_conn = None
+                sp_cur = None
+                try:
+                    sp_conn = get_db_connection()
+                    if not sp_conn:
+                        errores.append(f"Fila {row_idx}: Error de conexión para SP")
+                        logger.error(f"No se pudo conectar a BD para SP en fila {row_idx}")
+                        continue
+                    
+                    sp_cur = sp_conn.cursor()
+                    
+                    # Ejecutar SP
+                    sp_cur.callproc('sp_InsertarClienteMasivo', [
+                        num_documento,
+                        tipo_documento,
+                        nombres,
+                        apellido_paterno,
+                        apellido_materno,
+                        fecha_nacimiento,
+                        genero,
+                        estado_civil,
+                        email,
+                        celular,
+                        direccion,
+                        id_distrito,
+                        num_documento_asesor,
+                        nombre_fuente_contacto,  # Pasar NOMBRE, no ID
+                        proyecto_interes,  # Pasar NOMBRE, no ID
+                        nombre_estado_prospeccion,  # Pasar NOMBRE, no ID
+                        nombre_tipo_compra,  # Pasar NOMBRE, no ID
+                        prioridad  # Agregar prioridad
+                    ])
+                    
+                    # Consumir TODOS los resultados - ESTO ES CRÍTICO
+                    mensaje_error = None
+                    for result_set in sp_cur.stored_results():
+                        row_result = result_set.fetchone()
+                        if row_result:
+                            exito = row_result[1] if len(row_result) > 1 else 0
+                            if exito == 1:
+                                clientes_importados += 1
+                                logger.info(f"Fila {row_idx}: Cliente importado exitosamente")
+                            else:
+                                mensaje_error = row_result[0] if len(row_result) > 0 else 'Error desconocido'
+                                errores.append(f"Fila {row_idx}: {mensaje_error}")
+                                logger.warning(f"Fila {row_idx}: {mensaje_error}")
+                    
+                except Exception as sp_error:
+                    errores.append(f"Fila {row_idx}: Error ejecutando SP - {str(sp_error)}")
+                    logger.error(f"Error SP en fila {row_idx}: {sp_error}", exc_info=True)
+                
+                finally:
+                    # Limpiar cursor y conexión del SP - DEBE ser en finally
+                    if sp_cur:
+                        try:
+                            while sp_cur.nextset():
+                                pass
+                        except Exception as cleanup_error:
+                            logger.debug(f"Cleanup error (ignorado): {cleanup_error}")
+                        
+                        try:
+                            sp_cur.close()
+                        except Exception as close_error:
+                            logger.debug(f"Close error (ignorado): {close_error}")
+                    
+                    if sp_conn:
+                        try:
+                            sp_conn.close()
+                        except Exception as conn_close_error:
+                            logger.debug(f"Connection close error (ignorado): {conn_close_error}")
+                
+            except Exception as row_error:
+                errores.append(f"Fila {row_idx}: Error procesando fila - {str(row_error)}")
+                logger.error(f"Error en fila {row_idx}: {row_error}", exc_info=True)
+        
+        respuesta = {
+            'success': True,
+            'clientes_importados': clientes_importados,
+            'total_filas_procesadas': ws.max_row - 1,
+            'errores': errores
+        }
+        
+        if errores:
+            respuesta['message'] = f"Se importaron {clientes_importados} clientes con {len(errores)} error(es)"
+            respuesta['success'] = clientes_importados > 0
+        else:
+            respuesta['message'] = f"Se importaron exitosamente {clientes_importados} clientes"
+        
+        logger.info(f"Importación completada: {clientes_importados} exitosos, {len(errores)} errores")
+        return respuesta, 200 if respuesta['success'] else 400
+        
+    except Exception as e:
+        from flask import current_app
+        current_app.logger.error(f"Error general en importar_clientes_api: {e}", exc_info=True)
+        return {'success': False, 'message': f'Error: {str(e)}'}, 500

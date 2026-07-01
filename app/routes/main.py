@@ -305,14 +305,32 @@ def get_tipos_compra():
 # ============================================================================
 
 @main_bp.route('/api/clientes/descargar-plantilla', methods=['GET'])
-@login_required
 def descargar_plantilla_clientes():
     """Descargar plantilla Excel para importar clientes"""
+    import os
+    from flask import send_file
+    from datetime import datetime
+    
+    # Generar nombre de archivo
+    filename = f'Plantilla_Clientes_{datetime.now().strftime("%d_%m_%Y")}.xlsx'
+    filepath = os.path.join(os.path.dirname(__file__), '..', 'static', 'templates', filename)
+    
+    # Si el archivo ya existe y es del mismo día, usarlo
+    if os.path.exists(filepath):
+        return send_file(
+            filepath,
+            mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            as_attachment=True,
+            download_name=filename
+        )
+    
+    # Si no existe, generar uno nuevo
     from openpyxl import Workbook
     from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
-    from flask import send_file
     import io
-    from datetime import datetime
+    
+    # Crear directorio si no existe
+    os.makedirs(os.path.dirname(filepath), exist_ok=True)
     
     # Crear nuevo workbook
     wb = Workbook()
@@ -383,31 +401,144 @@ def descargar_plantilla_clientes():
         "Lima",
         "Lima",
         "Lima",
-        "",  # Dejar vacío - Fuente Contacto es opcional
+        "",
         "Villa de los Nísperos",
-        "POTENCIAL",  # Estado Prospección válido
+        "POTENCIAL",
         "Contado",
-        "Media"  # Prioridad
+        "Media"
     ]
     
     for col, value in enumerate(example_data, 1):
         cell = ws.cell(row=2, column=col)
         cell.value = value
         cell.border = border
-        if col in [2]:  # Centro para documento
+        if col in [2]:
             cell.alignment = center_alignment
     
-    # Crear archivo en memoria
-    excel_file = io.BytesIO()
-    wb.save(excel_file)
-    excel_file.seek(0)
+    # ============================================================================
+    # CREAR SEGUNDA HOJA CON INSTRUCCIONES Y OPCIONES
+    # ============================================================================
+    ws_instrucciones = wb.create_sheet("Instrucciones")
+    
+    # Título
+    title_cell = ws_instrucciones['A1']
+    title_cell.value = "GUÍA DE IMPORTACIÓN DE CLIENTES"
+    title_cell.font = Font(bold=True, size=14, color="FFFFFF")
+    title_cell.fill = PatternFill(start_color="4D148C", end_color="4D148C", fill_type="solid")
+    title_cell.alignment = Alignment(horizontal="center", vertical="center")
+    ws_instrucciones.merge_cells('A1:D1')
+    ws_instrucciones.row_dimensions[1].height = 25
+    
+    # Sección: Instrucciones Generales
+    row = 3
+    header_fill_light = PatternFill(start_color="E6D5F0", end_color="E6D5F0", fill_type="solid")
+    header_font_dark = Font(bold=True, color="4D148C", size=11)
+    
+    # Instrucciones
+    ws_instrucciones[f'A{row}'] = "INSTRUCCIONES GENERALES"
+    ws_instrucciones[f'A{row}'].font = header_font_dark
+    ws_instrucciones[f'A{row}'].fill = header_fill_light
+    row += 1
+    
+    instrucciones = [
+        "1. Los campos marcados con (*) son OBLIGATORIOS",
+        "2. No agregues más columnas de las que aparecen en la plantilla",
+        "3. Verifica que todos los valores coincidan con las opciones válidas",
+        "4. Las fechas deben estar en formato: YYYY-MM-DD (ej: 2026-01-15)",
+        "5. Los teléfonos pueden incluir código de país (ej: +51 999 999 999)",
+        "6. No dejes filas en blanco en el medio del documento",
+        "7. Verifica que NO haya espacios en blanco al inicio/final de los campos"
+    ]
+    
+    for instr in instrucciones:
+        ws_instrucciones[f'A{row}'] = instr
+        ws_instrucciones.row_dimensions[row].height = 18
+        row += 1
+    
+    # Sección: Opciones por Campo
+    row += 2
+    ws_instrucciones[f'A{row}'] = "OPCIONES VÁLIDAS POR CAMPO"
+    ws_instrucciones[f'A{row}'].font = header_font_dark
+    ws_instrucciones[f'A{row}'].fill = header_fill_light
+    row += 1
+    
+    # Tabla de opciones
+    ws_instrucciones.column_dimensions['A'].width = 25
+    ws_instrucciones.column_dimensions['B'].width = 50
+    
+    opciones = [
+        ("TIPO DOCUMENTO", "DNI, RUC, PASAPORTE, CARNET EXTRANJERIA"),
+        ("GÉNERO", "M (Masculino), F (Femenino)"),
+        ("ESTADO CIVIL", "Soltero, Casado, Divorciado, Viudo, Conviviente"),
+        ("DEPARTAMENTO", "Lima, Arequipa, Cajamarca, La Libertad, Piura, Etc."),
+        ("ESTADO PROSPECCIÓN", "POTENCIAL, CALIENTE, FRIO, TRATAMIENTO"),
+        ("TIPO COMPRA", "Contado, Financiado, Crédito, Otro"),
+        ("PRIORIDAD", "Baja, Media, Alta"),
+        ("FUENTE CONTACTO", "Referencia, Derivado, Internet, Publicidad, Otro"),
+        ("PROYECTO INTERÉS", "Villa de los Nísperos, Las Arenas, Otro Proyecto"),
+    ]
+    
+    for campo, valores in opciones:
+        cell_campo = ws_instrucciones[f'A{row}']
+        cell_campo.value = campo
+        cell_campo.font = Font(bold=True, color="4D148C")
+        cell_campo.fill = PatternFill(start_color="F0F0F0", end_color="F0F0F0", fill_type="solid")
+        cell_campo.border = border
+        
+        cell_valores = ws_instrucciones[f'B{row}']
+        cell_valores.value = valores
+        cell_valores.border = border
+        cell_valores.alignment = Alignment(wrap_text=True, vertical="center")
+        
+        ws_instrucciones.row_dimensions[row].height = 30
+        row += 1
+    
+    # Sección: Ejemplos
+    row += 2
+    ws_instrucciones[f'A{row}'] = "EJEMPLO DE DATOS VÁLIDOS"
+    ws_instrucciones[f'A{row}'].font = header_font_dark
+    ws_instrucciones[f'A{row}'].fill = header_fill_light
+    row += 1
+    
+    ejemplo_texto = """
+Tipo Documento: DNI
+Nro. Documento: 12345678 (8 dígitos para DNI)
+Género: M
+Nombres: Juan
+Apellido Paterno: Pérez
+Apellido Materno: García (opcional)
+Fecha Nacimiento: 1990-01-15
+Estado Civil: Casado
+Email: juan.perez@email.com
+Celular: +51 999 999 999
+Dirección: Av. Principal 123, Apto 402
+Departamento: Lima
+Provincia: Lima
+Distrito: Lima
+Fuente Contacto: Referencia
+Proyecto Interés: Villa de los Nísperos
+Estado Prospección: POTENCIAL
+Tipo Compra: Contado
+Prioridad: Media
+    """
+    
+    ws_instrucciones[f'A{row}'] = ejemplo_texto
+    ws_instrucciones[f'A{row}'].alignment = Alignment(wrap_text=True, vertical="top")
+    ws_instrucciones.row_dimensions[row].height = 120
+    
+    # Ajustar anchos
+    ws_instrucciones.column_dimensions['A'].width = 30
+    ws_instrucciones.column_dimensions['B'].width = 60
+    
+    # Guardar archivo en disk
+    wb.save(filepath)
     
     # Enviar archivo
     return send_file(
-        excel_file,
+        filepath,
         mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
         as_attachment=True,
-        download_name=f'Plantilla_Clientes_{datetime.now().strftime("%d_%m_%Y")}.xlsx'
+        download_name=filename
     )
 
 
