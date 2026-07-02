@@ -57,7 +57,9 @@ from app.funciones.permissions import (
     crear_menu_api,
     listar_menus_api,
     crear_submenu_api,
-    listar_permisos_rol_api
+    listar_permisos_rol_api,
+    asignar_multiples_submenus_usuario_api,
+    obtener_menus_usuario_api
 )
 
 # Decorador para requerir autenticación
@@ -816,3 +818,85 @@ def api_crear_submenu():
 def api_listar_permisos_rol(id_rol):
     """API para obtener permisos de un rol"""
     return listar_permisos_rol_api(id_rol)
+
+
+# ============================================================================
+# RUTAS PARA GESTIÓN DE PERMISOS POR ÁREA
+# ============================================================================
+# COMENTADAS: Funciones no implementadas en permissions.py
+# @main_bp.route('/api/permisos-area/crear', methods=['POST'])
+# @login_required
+# def api_crear_permiso_area():
+#     """API para crear un permiso por área"""
+#     return crear_permiso_area_api()
+#
+#
+# @main_bp.route('/api/permisos-area/<int:id_area>', methods=['GET'])
+# @login_required
+# def api_listar_permisos_area(id_area):
+#     """API para obtener permisos de un área específica"""
+#     return listar_permisos_area_api(id_area)
+#
+#
+# @main_bp.route('/api/permisos-area/<int:id_permiso>', methods=['PUT'])
+# @login_required
+# def api_actualizar_permiso_area(id_permiso):
+#     """API para actualizar un permiso de área"""
+#     return actualizar_permiso_area_api(id_permiso)
+#
+#
+# @main_bp.route('/api/permisos-area/<int:id_permiso>', methods=['DELETE'])
+# @login_required
+# def api_eliminar_permiso_area(id_permiso):
+#     """API para eliminar un permiso de área"""
+#     return eliminar_permiso_area_api(id_permiso)
+
+
+# ============================================================================
+# RUTAS PARA GESTIÓN DE EXCEPCIONES DE PERMISOS POR USUARIO
+# ============================================================================
+# COMENTADAS: Funciones no implementadas en permissions.py
+# @main_bp.route('/api/excepciones-permiso/crear', methods=['POST'])
+# @login_required
+# def api_crear_excepcion_permiso_usuario():
+#     """API para crear una excepción de permiso para un usuario"""
+#     return crear_excepcion_permiso_usuario_api()
+#
+#
+# @main_bp.route('/api/excepciones-permiso/<num_documento>', methods=['GET'])
+# @login_required
+# def api_listar_excepciones_permiso_usuario(num_documento):
+#     """API para obtener excepciones de permiso de un usuario"""
+#     return listar_excepciones_permiso_usuario_api(num_documento)
+#
+#
+# @main_bp.route('/api/excepciones-permiso/<int:id_usuario_permiso>', methods=['PUT'])
+# @login_required
+# def api_actualizar_excepcion_permiso_usuario(id_usuario_permiso):
+#     """API para actualizar una excepción de permiso de usuario"""
+#     return actualizar_excepcion_permiso_usuario_api(id_usuario_permiso)
+#
+#
+# @main_bp.route('/api/excepciones-permiso/<int:id_usuario_permiso>', methods=['DELETE'])
+# @login_required
+# def api_eliminar_excepcion_permiso_usuario(id_usuario_permiso):
+#     """API para eliminar una excepción de permiso de usuario"""
+#     return eliminar_excepcion_permiso_usuario_api(id_usuario_permiso)
+
+
+# ============================================================================
+# RUTAS PARA ASIGNAR MÚLTIPLES SUBMENÚS A USUARIO (OPCIÓN 1)
+# ============================================================================
+
+@main_bp.route('/api/usuario-submenus/asignar-multiples', methods=['POST'])
+@login_required
+def api_asignar_multiples_submenus_usuario():
+    """API para asignar múltiples submenús a un usuario de una sola vez"""
+    return asignar_multiples_submenus_usuario_api()
+
+
+@main_bp.route('/api/usuario-menus/<num_documento>', methods=['GET'])
+@login_required
+def api_obtener_menus_usuario(num_documento):
+    """API para obtener menús consolidados que un usuario puede ver"""
+    return obtener_menus_usuario_api(num_documento)
